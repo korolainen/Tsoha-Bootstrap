@@ -4,6 +4,7 @@ Yleisiä linkkejä:
 
 * http://valkorol.users.cs.helsinki.fi/tsoha/
 * http://valkorol.users.cs.helsinki.fi/tsoha/doc/dokumentaatio.pdf
+* https://github.com/korolainen/Tsoha-Bootstrap
 
 ## Työn aihe
 
