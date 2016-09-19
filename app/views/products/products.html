@@ -1,10 +1,161 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <title>Hinnat &amp; Listat</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Fonts -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Lato:300,400,700,900' rel='stylesheet' type='text/css'>
+    
+    <!-- CSS Libs -->
+    <link rel="stylesheet" type="text/css" href="{{base_path}}/vendor/flat-admin/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="{{base_path}}/vendor/flat-admin/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{base_path}}/assets/css/site.css">
+    <!-- CSS App -->
+    <link rel="stylesheet" type="text/css" href="{{base_path}}/vendor/flat-admin/css/style.css">
+    <link rel="stylesheet" type="text/css" href="{{base_path}}/vendor/flat-admin/css/themes/flat-blue.css">
 </head>
-<body>
-<h1>Otsikko</h1>
+
+<body class="flat-blue">
+    <div class="app-container">
+        <div class="row content-container">
+            <nav class="navbar navbar-default navbar-fixed-top navbar-top">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-expand-toggle">
+                            <i class="fa fa-bars icon"></i>
+                        </button>
+                        <ol class="breadcrumb navbar-breadcrumb">
+                            <li class="active">Haku</li>
+                        </ol>
+                        <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+                            <i class="fa fa-th icon"></i>
+                        </button>
+                    </div>
+                    <ul class="nav navbar-nav navbar-right">
+                        <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
+                            <i class="fa fa-times icon"></i>
+                        </button>
+                        <li class="dropdown profile">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Käyttäjä <span class="caret"></span></a>
+                            <ul class="dropdown-menu animated fadeInDown">
+                                <li>
+                                    <div class="profile-info">
+                                        <h4 class="username">Käyttäjä </h4>
+                                        <p>user@email.com</p>
+                                        <div class="btn-group margin-bottom-2x" role="group">
+                                            <button type="button" class="btn btn-default"><i class="fa fa-user"></i> Profiili</button>
+                                            <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> Kirjaudu ulos</button>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+            <div class="side-menu sidebar-inverse">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="side-menu-container">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">
+                                <div class="icon fa fa-shopping-basket"></div>
+                                <div class="title">Hinnat &amp; Listat</div>
+                            </a>
+                            <button type="button" class="navbar-expand-toggle pull-right visible-xs">
+                                <i class="fa fa-times icon"></i>
+                            </button>
+                        </div>
+                        <ul class="nav navbar-nav">
+                            <li>
+                                <a href="{{base_path}}/search">
+                                    <span class="icon fa fa-search"></span><span class="title">Haku</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{base_path}}/products">
+                                    <span class="icon fa fa-barcode"></span><span class="title">Tuotteet</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{base_path}}/shoppinglists">
+                                    <span class="icon fa fa-th-list"></span><span class="title">Ostoslistat</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{base_path}}/stores">
+                                    <span class="icon fa fa-shopping-cart"></span><span class="title">Kaupat</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{base_path}}/groups">
+                                    <span class="icon fa fa-users"></span><span class="title">Ryhmät</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- /.navbar-collapse -->
+                </nav>
+            </div>
+
+            
+            <!-- Main Content -->
+            <div class="container-fluid">
+            
+            
+            <!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
+			
+			
+                <div class="side-body padding-top">
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                            <a href="#">
+                                <div class="card red summary-inline">
+                                    <div class="card-body">
+                                        <i class="icon fa fa-barcode fa-4x"></i>
+                                        <div class="content">
+                                            <div class="title">Tuotteet</div>
+                                        </div>
+                                        <div class="clear-both"></div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+					<div class="row">
+				        <div class="col-md-6">
+				            <div id="custom-search-input">
+				                <div class="input-group col-md-12">
+				                    <input type="text" class="form-control input-lg" placeholder="Hae..." />
+				                    <span class="input-group-btn">
+				                        <button class="btn btn-info btn-lg" type="button">
+				                            <i class="glyphicon glyphicon-search"></i>
+				                        </button>
+				                    </span>
+				                </div>
+				            </div>
+				        </div>
+					</div>
+                </div>
+            </div>
+        </div>
+        <footer class="app-footer">
+            <div class="wrapper">
+                <a href="http://tsoha.github.io/">Tsoha</a> - <a href="https://www.cs.helsinki.fi/courses/582203/2016/s/a/1">2016</a>
+                <span class="pull-right"><a href="{{base_path}}/license">License</a></span> 
+            </div>
+        </footer>
+
+      <!-- jQuery -->
+      <script src="{{base_path}}/vendor/jquery.min.js"></script>
+
+      <!-- Bootstrap (skriptitiedosto) -->
+      <script src="{{base_path}}/vendor/bootstrap/js/bootstrap.min.js"></script>
+      
+      <!-- Oma skriptitiedostomme -->
+      <script src="{{base_path}}/assets/js/site.js"></script>
+            <!-- Javascript -->
+            <script type="text/javascript" src="{{base_path}}/vendor/flat-admin/js/app.js"></script>
 </body>
+
 </html>

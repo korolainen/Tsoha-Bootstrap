@@ -28,12 +28,12 @@
     	View::make('shoppinglists/shoppinglist.html');
     }
     
-  	public static function shops(){
-    	View::make('shops/shops.html');
+  	public static function stores(){
+    	View::make('stores/stores.html');
     }
     
-    public static function shop(){
-    	View::make('shops/shop.html');
+    public static function store(){
+    	View::make('stores/store.html');
     }
     
   	public static function products(){

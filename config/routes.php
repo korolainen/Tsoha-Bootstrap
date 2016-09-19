@@ -16,13 +16,13 @@
   		HelloWorldController::groups();
   	});
 	$routes->get('/shoppinglists', function() {
-  		HelloWorldController::groups();
+  		HelloWorldController::shoppinglists();
   	});
-	$routes->get('/shops', function() {
-  		HelloWorldController::shops();
+	$routes->get('/stores', function() {
+  		HelloWorldController::stores();
   	});
 	$routes->get('/products', function() {
-  		HelloWorldController::shops();
+  		HelloWorldController::products();
   	});
 	$routes->get('/search', function() {
   		HelloWorldController::search();
@@ -39,8 +39,8 @@
 		$routes->get('/shoppinglists/'.intval($_GET['no']), function() {
 			HelloWorldController::shoppinglist();
 		});
-		$routes->get('/shops/'.intval($_GET['no']), function() {
-			HelloWorldController::shop();
+		$routes->get('/stores/'.intval($_GET['no']), function() {
+			HelloWorldController::stores();
 		});
 		$routes->get('/products/'.intval($_GET['no']), function() {
 			HelloWorldController::product();
