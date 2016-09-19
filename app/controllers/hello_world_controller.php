@@ -36,8 +36,24 @@
     	View::make('shops/shop.html');
     }
     
+  	public static function products(){
+    	View::make('products/products.html');
+    }
+    
+    public static function product(){
+    	View::make('products/product.html');
+    }
+    
     public static function login(){
     	View::make('login/login.html');
+    }
+    
+  	public static function search(){
+    	View::make('search/search.html');
+    }
+    
+  	public static function license(){
+    	View::make('references/license.html');
     }
     
     

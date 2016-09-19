@@ -3,6 +3,13 @@
 Yleisiä linkkejä:
 
 * http://valkorol.users.cs.helsinki.fi/tsoha/
+* http://valkorol.users.cs.helsinki.fi/tsoha/forgotpass
+* http://valkorol.users.cs.helsinki.fi/tsoha/signup
+* http://valkorol.users.cs.helsinki.fi/tsoha/groups
+* http://valkorol.users.cs.helsinki.fi/tsoha/products
+* http://valkorol.users.cs.helsinki.fi/tsoha/search
+* http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglist
+* http://valkorol.users.cs.helsinki.fi/tsoha/stores
 * http://valkorol.users.cs.helsinki.fi/tsoha/doc/dokumentaatio.pdf
 * https://github.com/korolainen/Tsoha-Bootstrap
 

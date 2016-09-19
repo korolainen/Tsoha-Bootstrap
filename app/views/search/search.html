@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>my shopping list</title>
+    <title>Hinnat &amp; Listat</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Fonts -->
     <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:300,400' rel='stylesheet' type='text/css'>
@@ -25,7 +25,7 @@
                             <i class="fa fa-bars icon"></i>
                         </button>
                         <ol class="breadcrumb navbar-breadcrumb">
-                            <li class="active">Search</li>
+                            <li class="active">Haku</li>
                         </ol>
                         <button type="button" class="navbar-right-expand-toggle pull-right visible-xs">
                             <i class="fa fa-th icon"></i>
@@ -33,15 +33,15 @@
                     </div>
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown profile">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">User <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Käyttäjä <span class="caret"></span></a>
                             <ul class="dropdown-menu animated fadeInDown">
                                 <li>
                                     <div class="profile-info">
-                                        <h4 class="username">User </h4>
+                                        <h4 class="username">Käyttäjä </h4>
                                         <p>user@email.com</p>
                                         <div class="btn-group margin-bottom-2x" role="group">
-                                            <button type="button" class="btn btn-default"><i class="fa fa-user"></i> Profile</button>
-                                            <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> Logout</button>
+                                            <button type="button" class="btn btn-default"><i class="fa fa-user"></i> Profiili</button>
+                                            <button type="button" class="btn btn-default"><i class="fa fa-sign-out"></i> Kirjaudu ulos</button>
                                         </div>
                                     </div>
                                 </li>
@@ -56,7 +56,7 @@
                         <div class="navbar-header">
                             <a class="navbar-brand" href="#">
                                 <div class="icon fa fa-shopping-basket"></div>
-                                <div class="title">my shopping cart</div>
+                                <div class="title">Hinnat &amp; Listat</div>
                             </a>
                             <button type="button" class="navbar-expand-toggle pull-right visible-xs">
                                 <i class="fa fa-times icon"></i>
@@ -64,28 +64,28 @@
                         </div>
                         <ul class="nav navbar-nav">
                             <li>
-                                <a href="license.html">
-                                    <span class="icon fa fa-search"></span><span class="title">Search</span>
+                                <a href="{{base_path}}/search">
+                                    <span class="icon fa fa-search"></span><span class="title">Haku</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="lists.html">
-                                    <span class="icon fa fa-barcode"></span><span class="title">Products</span>
+                                <a href="{{base_path}}/products">
+                                    <span class="icon fa fa-barcode"></span><span class="title">Tuotteet</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="lists.html">
-                                    <span class="icon fa fa-th-list"></span><span class="title">Lists</span>
+                                <a href="{{base_path}}/shoppinglists">
+                                    <span class="icon fa fa-th-list"></span><span class="title">Ostoslistat</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="shops.html">
-                                    <span class="icon fa fa-shopping-cart"></span><span class="title">Stores</span>
+                                <a href="{{base_path}}/shops">
+                                    <span class="icon fa fa-shopping-cart"></span><span class="title">Kaupat</span>
                                 </a>
                             </li>
                             <li>
-                                <a href="groups.html">
-                                    <span class="icon fa fa-users"></span><span class="title">Groups</span>
+                                <a href="{{base_path}}/groups">
+                                    <span class="icon fa fa-users"></span><span class="title">Ryhmät</span>
                                 </a>
                             </li>
                         </ul>
@@ -103,7 +103,7 @@
                                     <div class="card-body">
                                         <i class="icon fa fa-barcode fa-4x"></i>
                                         <div class="content">
-                                            <div class="title">Products</div>
+                                            <div class="title">Tuotteet</div>
                                         </div>
                                         <div class="clear-both"></div>
                                     </div>
@@ -116,7 +116,7 @@
                                     <div class="card-body">
                                         <i class="icon fa fa-th-list fa-4x"></i>
                                         <div class="content">
-                                            <div class="title">Lists</div>
+                                            <div class="title">Ostoslistat</div>
                                         </div>
                                         <div class="clear-both"></div>
                                     </div>
@@ -129,7 +129,7 @@
                                     <div class="card-body">
                                         <i class="icon fa fa-shopping-cart fa-4x"></i>
                                         <div class="content">
-                                            <div class="title">Stores</div>
+                                            <div class="title">Kaupat</div>
                                         </div>
                                         <div class="clear-both"></div>
                                     </div>
@@ -142,7 +142,7 @@
                                     <div class="card-body">
                                         <i class="icon fa fa-users fa-4x"></i>
                                         <div class="content">
-                                            <div class="title">Groups</div>
+                                            <div class="title">Ryhmät</div>
                                         </div>
                                         <div class="clear-both"></div>
                                     </div>
@@ -169,8 +169,8 @@
       <!-- Oma skriptitiedostomme -->
       <script src="{{base_path}}/assets/js/site.js"></script>
             <!-- Javascript -->
-            <script type="text/javascript" src="../js/app.js"></script>
-            <script type="text/javascript" src="../js/index.js"></script>
+            <script type="text/javascript" src="{{base_path}}/vendor/flat-admin/js/app.js"></script>
+            <script type="text/javascript" src="{{base_path}}/vendor/flat-admin/js/index.js"></script>
 </body>
 
 </html>
