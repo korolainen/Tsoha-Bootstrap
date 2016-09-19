@@ -1,3 +1,5 @@
 $(document).ready(function(){
-  //alert('Hello World!');
+	$('.pickdatehere').datepicker({
+		dateFormat: "dd.mm.yy"
+	});
 });

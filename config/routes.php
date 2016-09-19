@@ -30,8 +30,26 @@
 	$routes->get('/license', function() {
   		HelloWorldController::license();
   	});
-  	
-
+	$routes->get('/profile', function() {
+  		HelloWorldController::profile();
+  	});
+	$routes->get('/logout', function() {
+  		HelloWorldController::logout();
+  	});
+	
+		$routes->get('/groups/1', function() {
+			HelloWorldController::group();
+		});
+		$routes->get('/shoppinglists/1', function() {
+			HelloWorldController::shoppinglist();
+		});
+		$routes->get('/stores/1', function() {
+			HelloWorldController::store();
+		});
+		$routes->get('/products/1', function() {
+			HelloWorldController::product();
+		});
+	/*
 	if(array_key_exists('no', $_GET)){
 		$routes->get('/groups/'.intval($_GET['no']), function() {
 			HelloWorldController::group();
@@ -40,9 +58,9 @@
 			HelloWorldController::shoppinglist();
 		});
 		$routes->get('/stores/'.intval($_GET['no']), function() {
-			HelloWorldController::stores();
+			HelloWorldController::store();
 		});
 		$routes->get('/products/'.intval($_GET['no']), function() {
 			HelloWorldController::product();
 		});
-	}
+	}*/

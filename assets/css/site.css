@@ -41,3 +41,16 @@
 #custom-search-input .glyphicon-search{
     font-size: 23px;
 }
+
+.close-ext-menu{
+    padding: 20px;
+    background-color: transparent;
+    border: 0px;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
+    -moz-transition: all 0.25s linear;
+    -webkit-transition: all 0.25s linear;
+    transition: all 0.25s linear;
+    opacity: 0.75;
+}

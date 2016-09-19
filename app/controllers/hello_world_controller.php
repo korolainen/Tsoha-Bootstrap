@@ -28,6 +28,14 @@
     	View::make('shoppinglists/shoppinglist.html');
     }
     
+  	public static function profile(){
+    	View::make('login/profile.html');
+    }
+    
+  	public static function logout(){
+    	View::make('login/logout.html');
+    }
+    
   	public static function stores(){
     	View::make('stores/stores.html');
     }
