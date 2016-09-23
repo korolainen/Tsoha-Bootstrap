@@ -1,4 +1,8 @@
 
+DROP VIEW IF EXISTS all_usergroup_users;
+DROP VIEW IF EXISTS shoppinglist_users;
+DROP VIEW IF EXISTS shop_users;
+
 DROP TABLE IF EXISTS shoppinglist_product CASCADE;
 DROP TABLE IF EXISTS shoppinglist_usergroup CASCADE;
 DROP TABLE IF EXISTS shoppinglist CASCADE;

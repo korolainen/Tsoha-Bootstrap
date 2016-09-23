@@ -211,3 +211,45 @@ CONSTRAINT shoppinglist_product_created_by_FK
 ) 
 ;
 
+
+
+CREATE algorithm=merge VIEW all_usergroup_users AS 
+	(SELECT u.created_by AS users_id, u.id AS usergroup_id FROM usergroup u)
+UNION
+	(SELECT uu.users_id, uu.usergroup_id FROM usergroup_users uu);
+
+	
+
+CREATE algorithm=merge VIEW shoppinglist_users AS 
+	(SELECT s.created_by AS users_id, s.id AS shoppinglist_id FROM shoppinglist s)
+UNION
+	(SELECT uu.users_id, su.shoppinglist_id
+	FROM usergroup_users uu
+	JOIN shoppinglist_usergroup su ON uu.usergroup_id=su.usergroup_id
+	)
+UNION
+	(SELECT u.created_by AS users_id, slu.shoppinglist_id
+	FROM shoppinglist_usergroup slu
+	JOIN usergroup u ON u.id=slu.usergroup_id
+	)
+;
+
+	
+
+CREATE algorithm=merge VIEW shop_users AS 
+	(SELECT s.created_by AS users_id, s.id AS shop_id FROM shop s)
+UNION
+	(SELECT uu.users_id, su.shop_id
+	FROM usergroup_users uu
+	JOIN shop_usergroup su ON uu.usergroup_id=su.usergroup_id
+	)
+UNION
+	(SELECT u.created_by AS users_id, slu.shop_id
+	FROM shop_usergroup slu
+	JOIN usergroup u ON u.id=slu.usergroup_id
+	)
+;
+
+
+
+

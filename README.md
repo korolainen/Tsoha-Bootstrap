@@ -15,7 +15,7 @@ Yleisiä linkkejä:
 * http://valkorol.users.cs.helsinki.fi/tsoha/stores/1
 * http://valkorol.users.cs.helsinki.fi/tsoha/groups/1
 * http://valkorol.users.cs.helsinki.fi/tsoha/profile
-* http://valkorol.users.cs.helsinki.fi/tsoha/doc/dokumentaatio.pdf
+* https://github.com/korolainen/Tsoha-Bootstrap/blob/master/doc/dokumentaatio.pdf
 * https://github.com/korolainen/Tsoha-Bootstrap
 
 ## Työn aihe
