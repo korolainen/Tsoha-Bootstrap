@@ -2,11 +2,13 @@
 class FrontController extends BaseController{
 
 	public static function login(){
+		
 		View::make('login/login.html');
 	}  
   	
   	public static function logout(){
-    	View::make('login/logout.html');
+  		LoggedUser::logout();
+    	Redirect::to('/');
     }
     
 	public static function forgotpass(){

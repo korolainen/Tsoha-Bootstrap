@@ -2,20 +2,25 @@
 class LoggedUser{
     private static $SESSION_KEY = 'shopuserkey';
     private static $user_secure_key = '';
-    private static $user_id = 1;//TODO muutetaan
+    private static $user_id = 0;
     private static $data = array();
+    private static $is_logged = false;
     
 	public static function init_login(){
 		self::$user_secure_key = Session::get(self::$SESSION_KEY);
 		if(empty(self::$user_secure_key)){
 			self::$user_secure_key = Cookies::get(self::$SESSION_KEY);
 		}
-		$row = User::get_by_secure_key(self::$user_secure_key);
+		$row = Me::get_by_secure_key(self::$user_secure_key);
 		self::set_user_data($row);
 	}
 	
 	public static function id(){
 		return self::$user_id;
+	}
+	
+	public static function is_logged(){
+		return self::$is_logged;
 	}
 	
     public static function set_user_data($row){
@@ -24,6 +29,7 @@ class LoggedUser{
 			Cookies::set(self::$SESSION_KEY, $row['id']);
 			self::$data = $row;
 			self::$user_id = intval($row['id']);
+			self::$is_logged = true;
     	}
     }
 	
@@ -31,7 +37,8 @@ class LoggedUser{
         self::destroy_session_and_cookies();
         $row = User::get_by_account_and_pass($username, $password);
         if(isset($row['id'])){
-        	$secure_key = md5($row['id'].substr($row['hash'], 33));
+        	$salt = substr($row['hash'], 33);
+        	$secure_key = md5($row['id'].$salt);
 			Session::set(self::$SESSION_KEY, $secure_key);
 			if($remember_me){
 			    Cookies::set(self::$SESSION_KEY, $secure_key);
@@ -55,6 +62,7 @@ class LoggedUser{
 		}
 	}
 	private static function destroy_session_and_cookies(){
+		self::$is_logged = false;
         self::destroy_session();
         self::destroy_cookies();
 	}

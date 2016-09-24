@@ -9,13 +9,13 @@ class DataModel extends BaseModel{
 	
 	/* SELECT */
 	
-	protected static function _get($bind_params = array(), $where = '', $where_bind_params = array()){
+	protected static function _get($bind_params = array(), $where = '', $where_bind_params = array(), $limit = ''){
 		$where = Query_Helper::where($bind_params, $where, 'WHERE');
 		$items = array();
 		$called_class = get_called_class();
 		$method = 'get_table_name';
 		if(!is_callable(array($called_class, $method))) return null;
-		$statement = 'SELECT * FROM '.call_user_func(array($called_class, $method)).' '.$where.';';
+		$statement = 'SELECT * FROM '.call_user_func(array($called_class, $method)).' '.$where.' '.$limit.';';
 		$query = DB::connection()->prepare($statement);
 		if(!empty($bind_params)){
 			foreach ($bind_params as $col_key=>$col_val){
@@ -32,7 +32,7 @@ class DataModel extends BaseModel{
 	}
 	
 	protected static function _get_by_id($id, $where = '', $where_bind_params = array()){
-		return self::_get(array('id'=>$id), $where, $where_bind_params);
+		return self::_get(array('id'=>$id), $where, $where_bind_params, 'LIMIT 1');
 	}
 	
 	protected static function _all(){

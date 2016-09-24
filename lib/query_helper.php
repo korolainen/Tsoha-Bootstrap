@@ -50,7 +50,7 @@ class Query_Helper{
 		if(empty($class)) $class = get_called_class();
 		if(!class_exists($class, false)) return null;
 		$items = array();
-		while($row = $sql->fetch(2)){
+		while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 			$items[$row[$linking_key]] = new $class($row);
 		}
 		return $items;

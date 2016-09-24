@@ -46,7 +46,7 @@ class Product extends DataModelCreatedBy implements DataTable{
 		$query->bindParam(':shop_users_id', LoggedUser::id());
 		$query->execute();
 		$items = array();
-		while($row = $query->fetch(2)){
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
 			if(array_key_exists($row['cheapest_shop_id'], $shops)){
 				$row['cheapest_shop'] = $shops[$row['cheapest_shop_id']];
 			}
