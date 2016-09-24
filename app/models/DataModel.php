@@ -13,16 +13,22 @@ class DataModel extends BaseModel{
 		$where = Query_Helper::where($bind_params, $where, 'WHERE');
 		$items = array();
 		$called_class = get_called_class();
-		if(!Query_Helper::is_table_name_callable($called_class)) return null;
-		$query = DB::connection()->prepare('SELECT * FROM '.$called_class::get_table_name().' '.$where.';');
-		foreach ($bind_params as $col_key=>$col_val){
-			$query->bindParam(':'.$col_key, $col_val);
+		$method = 'get_table_name';
+		if(!is_callable(array($called_class, $method))) return null;
+		$statement = 'SELECT * FROM '.call_user_func(array($called_class, $method)).' '.$where.';';
+		$query = DB::connection()->prepare($statement);
+		if(!empty($bind_params)){
+			foreach ($bind_params as $col_key=>$col_val){
+				$query->bindParam(':'.$col_key, $col_val);
+			}
 		}
-		foreach ($where_bind_params as $col_key=>$col_val){
-			$query->bindParam(':'.$col_key, $col_val);
+		if(!empty($where_bind_params)){
+			foreach ($where_bind_params as $col_key=>$col_val){
+				$query->bindParam(':'.$col_key, $col_val);
+			}
 		}
-		$sql = $query->execute();
-		return Query_Helper::build_items($sql, $called_class);
+		$query->execute();
+		return Query_Helper::build_items($query, $called_class);
 	}
 	
 	protected static function _get_by_id($id, $where = '', $where_bind_params = array()){
@@ -37,8 +43,10 @@ class DataModel extends BaseModel{
 		$called_class = get_called_class();
 		if(!Query_Helper::is_table_name_callable($called_class)) return null;
 		$query = DB::connection()->prepare($select);
-		foreach ($bind_params as $col_key=>$col_val){
-			$query->bindParam(':'.$col_key, $col_val);
+		if(!empty($bind_params)){
+			foreach ($bind_params as $col_key=>$col_val){
+				$query->bindParam(':'.$col_key, $col_val);
+			}
 		}
 		return $query->execute();
 	}
@@ -55,8 +63,10 @@ class DataModel extends BaseModel{
 		if(!Query_Helper::is_table_name_callable($called_class)) return;
 		$insert = Query_Helper::build_insert($called_class::get_table_name(), $bind_params);
 		$query = DB::connection()->prepare($insert);
-		foreach ($bind_params as $col_key=>$col_val){
-			$query->bindParam(':'.$col_key, $col_val);
+		if(!empty($bind_params)){
+			foreach ($bind_params as $col_key=>$col_val){
+				$query->bindParam(':'.$col_key, $col_val);
+			}
 		}
 		$query->execute();
 	}
@@ -80,12 +90,17 @@ class DataModel extends BaseModel{
 											SET '.$set.'
 											WHERE '.$key.' = :id '.$where.'
 											LIMIT 1;');
-		foreach ($data as $col_key=>$col_val){
-			$query->bindParam(':'.$col_key, $col_val);
+
+		if(!empty($data)){
+			foreach ($data as $col_key=>$col_val){
+				$query->bindParam(':'.$col_key, $col_val);
+			}
 		}
 		$query->bindParam(':id', $id);
-		foreach ($where_bind_params as $col_key=>$col_val){
-			$query->bindParam(':'.$col_key, $col_val);
+		if(!empty($where_bind_params)){
+			foreach ($where_bind_params as $col_key=>$col_val){
+				$query->bindParam(':'.$col_key, $col_val);
+			}
 		}
 		$query->execute();
 	}

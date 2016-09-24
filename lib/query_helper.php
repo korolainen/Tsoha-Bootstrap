@@ -1,32 +1,24 @@
 <?php
 class Query_Helper{
-
-	public static function is_table_name_callable($class){
-		//ensimmäinen is_callable on periaatteessa turha, koska kaikki DataModel:ia
-		//laajentavat luokat toteuttavat rajapintaluokan DataTable
-		//joka sisältää metodin 'get_table_name()'
-		if(!is_callable(array($class, 'get_table_name'))) return false;
-		$table_name = self::get_table_name();
-		if(!is_callable(array($class, $table_name))) return false;
-	}
 	
-	private static function build_statement($data, $delimiter){
+	private static function build_statement($data = array(), $delimiter = ','){
 		$set = '';
 		$delimiter_start = '';
 		foreach ($data as $col_key=>$col_val){
-			$set = $delimiter.$col_key.'=:'.$col_key;
+			$set .= $delimiter_start.$col_key.'=:'.$col_key;
 			$delimiter_start = $delimiter;
 		}
 		return $set;
 	}
 	
-	public static function build_bind($data){
-		return self::build_statement($data, ', ');
+	public static function build_bind($data = array()){
+		if(empty($data)) return '';
+		return self::build_statement($data);
 	}
 	
-	public static function build_and($data){
+	public static function build_and($data = array()){
+		if(empty($data)) return '';
 		$statement = self::build_statement($data, ' AND ');
-		if(empty($statement)) return '';
 		return '('.$statement.')';
 	}
 	
@@ -54,17 +46,14 @@ class Query_Helper{
 		return $insert;
 	}
 	
-	public static function build_items($sql, $class = ''){
+	public static function build_items($sql, $class = '', $linking_key = 'id'){
 		if(empty($class)) $class = get_called_class();
 		if(!class_exists($class, false)) return null;
-		return $sql->fetchAll(PDO::FETCH_CLASS, $class);
-		
-		/*
+		$items = array();
 		while($row = $sql->fetch(2)){
-			$items[] = new $class($row);
+			$items[$row[$linking_key]] = new $class($row);
 		}
 		return $items;
-		*/
 	}
 	
 	public static function where($bind_params, $where, $statement_prefix = ''){
@@ -75,7 +64,7 @@ class Query_Helper{
 		if(!empty($where)) $statement = '('.$statement.')';
 		$start = '';
 		if(!empty($statement_prefix)) $start = ' '.$statement_prefix.' ';
-		if($add_where_statement) $statement = $start.$statement;
+		$statement = $start.$statement;
 		return $statement;
 	}
 	

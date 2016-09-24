@@ -42,7 +42,7 @@
                             <ul class="dropdown-menu animated fadeInDown">
                                 <li>
                                     <div class="profile-info">
-                                        <h4 class="username">Käyttäjä </h4>
+                                        <h4 class="username">{{user.name}}</h4>
                                         <p>user@email.com</p>
                                         <div class="btn-group margin-bottom-2x" role="group">
                                             <button type="button" class="btn btn-default" onclick="window.location.href='{{base_path}}/profile'"><i class="fa fa-user"></i> Profiili</button>
@@ -84,7 +84,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="{{base_path}}/stores">
+                                <a href="{{base_path}}/shops">
                                     <span class="icon fa fa-shopping-cart"></span><span class="title">Kaupat</span>
                                 </a>
                             </li>
@@ -109,12 +109,12 @@
 			
                 <div class="side-body padding-top">
                     <div class="row">
-                        <div class="col-lg-3 col-xs-12">
+                        <div class="col-xs-9 col-sm-10">
                             <a href="#">
                                 <div class="card red summary-inline">
                                     <div class="card-body">
-                                        <i class="icon fa fa-barcode fa-4x"></i>
-                                        <div class="content">
+                                        <i class="hidden-xs icon fa fa-barcode fa-4x"></i>
+                                        <div class="content title-content">
                                             <div class="title">Tuotteet</div>
                                         </div>
                                         <div class="clear-both"></div>
@@ -122,12 +122,24 @@
                                 </div>
                             </a>
                         </div>
+				        <div class="col-xs-3 col-sm-2">
+                            <a href="#">
+                                <div class="card red summary-inline">
+                                    <div class="card-body add-new-item-link">
+                                        <div class="content">
+                                            <div class="title"> + </div>
+                                        </div>
+                                        <div class="clear-both"></div>
+                                    </div>
+                                </div>
+                            </a>
+						</div>
                     </div>
 					<div class="row">
 				        <div class="col-xs-12">
 				            <div id="custom-search-input">
 				                <div class="input-group col-md-12">
-				                    <input type="text" class="form-control input-lg" placeholder="Hae..." />
+				                    <input type="text" class="form-control input-lg" placeholder="Hae..." data-action="filter" data-filters="#dev-table" />
 				                    <span class="input-group-btn">
 				                        <button class="btn btn-info btn-lg" type="button">
 				                            <i class="glyphicon glyphicon-search"></i>
@@ -142,7 +154,7 @@
 				        <div class="col-xs-12">
 				            <div class="panel panel-default panel-table">
 				              <div class="panel-body">
-				                <table class="table table-striped table-bordered table-list">
+				                <table class="table table-striped table-bordered table-list" id="dev-table">
 				                  <thead>
 				                    <tr>
 				                        <!-- <th class="hidden-xs">ID</th> -->
@@ -153,27 +165,27 @@
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
+				                  		{% for product in products %}
 				                          <tr>
-				                            <td>Maito</td>
-				                            <td>Lidl</td>
-				                            <td>S-market, Lidl</td>
+				                            <td><a href="/products/product/{{product.id}}" data-filter="target">{{product.name}}</a></td>
+				                            <td><a href="/shops/shop/{{product.cheapest_shop.id}}">{{product.cheapest_shop.name}}</a></td>
+				                            <td>
+												<ul class="additional-list-info">
+				                  					{% for shop in product.shops %}
+													<li><a href="/shops/shop/{{shop.id}}">{{shop.name}}</a></li>
+													{% endfor %}
+												</ul>
+											</td>
 				                            <td align="center">
 				                              <a class="btn btn-default"><em class="fa fa-pencil"></em></a>
+				                              {% if product.allow_remove %}
 				                              <a class="btn btn-danger"><em class="fa fa-trash"></em></a>
+				                              {% endif %}
 				                            </td>
 				                            <!-- <td class="hidden-xs">1</td> -->
 				                          </tr>
-				                          <tr>
-				                            <td>Voi</td>
-				                            <td>S-market</td>
-				                            <td>S-market, Lidl, K-kauppa</td>
-				                            <td align="center">
-				                              <a class="btn btn-default"><em class="fa fa-pencil"></em></a>
-				                              <a class="btn btn-danger"><em class="fa fa-trash"></em></a>
-				                            </td>
-				                            <!-- <td class="hidden-xs">1</td> -->
-				                          </tr>
-				                        </tbody>
+										{% endfor %}
+				                	</tbody>
 				                </table>
 				              </div>
 				            </div>

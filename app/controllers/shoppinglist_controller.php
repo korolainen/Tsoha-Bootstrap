@@ -2,7 +2,8 @@
 class ShoppinglistController extends BaseController{
 
 	public static function shoppinglists(){
-		View::make('shoppinglists/shoppinglists.html');
+		$shoppinglists = Shoppinglist::all();
+		View::make('shoppinglists/shoppinglists.html', array('shoppinglists' => $shoppinglists));
 	}
 	
 	public static function shoppinglist(){

@@ -2,7 +2,8 @@
 class ProfileController extends BaseController{
 
 	public static function profile(){
-		View::make('login/profile.html');
+		$me = Me::get_logged_user();
+		View::make('login/profile.html', array('me' => $me));
 	}
 	
 }

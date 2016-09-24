@@ -1,9 +1,9 @@
 <?php
 class ProductController extends BaseController{
 
-
 	public static function products(){
-		View::make('products/products.html');
+		$products = Product::all();
+		View::make('products/products.html', array('products' => $products, 'user'=>Me::get()));
 	}
 	
 	public static function product(){

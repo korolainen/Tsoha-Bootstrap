@@ -109,3 +109,40 @@ used to vertically center elements, may need modification if you're not using de
 .panel-table .panel-body .table-bordered > tbody > tr > td{
   line-height: 34px;
 }
+
+
+div.card.summary-inline .add-new-item-link div.content{
+	text-align: center;
+	float: none;
+}
+div.card.summary-inline .add-new-item-link .content div.title{
+	text-align: center;
+}
+
+ul.additional-list-info {
+  display: inline;
+  list-style: none;
+  padding-left: 0;
+}
+
+ul.additional-list-info li {
+  display: inline;
+  padding-left: 0;
+}
+
+ul.additional-list-info li:after {
+  content: ", ";
+}
+
+ul.additional-list-info li:last-of-type:after {
+  content: "";
+}
+
+@media (max-width: 767px){
+	div.card.summary-inline .card-body .title-content div.title{
+	    text-align: left;
+	}
+	div.card.summary-inline .card-body div.title-content{
+		float: left;
+	}
+}

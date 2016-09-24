@@ -9,7 +9,8 @@ class ShopController extends BaseController{
 
 
 	public static function shops(){
-		View::make('shops/shops.html');
+		$shops = Shop::all();
+		View::make('shops/shops.html', array('shops' => $shops));
 	}
 	
 	public static function shop(){

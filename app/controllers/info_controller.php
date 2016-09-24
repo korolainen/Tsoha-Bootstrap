@@ -1,10 +1,10 @@
 <?php
 
-  class InfoController extends BaseController{
+class InfoController extends BaseController{
     
   	public static function license(){
-  		View::make('references/license.html');
+  		View::make('info/license.html');
   	}
   
     
-  }
+}

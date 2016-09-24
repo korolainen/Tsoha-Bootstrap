@@ -213,14 +213,14 @@ CONSTRAINT shoppinglist_product_created_by_FK
 
 
 
-CREATE algorithm=merge VIEW all_usergroup_users AS 
+CREATE VIEW all_usergroup_users AS 
 	(SELECT u.created_by AS users_id, u.id AS usergroup_id FROM usergroup u)
 UNION
 	(SELECT uu.users_id, uu.usergroup_id FROM usergroup_users uu);
 
 	
 
-CREATE algorithm=merge VIEW shoppinglist_users AS 
+CREATE VIEW shoppinglist_users AS 
 	(SELECT s.created_by AS users_id, s.id AS shoppinglist_id FROM shoppinglist s)
 UNION
 	(SELECT uu.users_id, su.shoppinglist_id
@@ -236,7 +236,7 @@ UNION
 
 	
 
-CREATE algorithm=merge VIEW shop_users AS 
+CREATE VIEW shop_users AS 
 	(SELECT s.created_by AS users_id, s.id AS shop_id FROM shop s)
 UNION
 	(SELECT uu.users_id, su.shop_id
@@ -249,7 +249,4 @@ UNION
 	JOIN usergroup u ON u.id=slu.usergroup_id
 	)
 ;
-
-
-
 

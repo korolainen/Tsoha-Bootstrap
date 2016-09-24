@@ -9,8 +9,8 @@ class Shoppinglist extends DataModelCreatedBy implements DataTable{
 	public static function all(){
 		return self::_get(null,
 						'id IN(SELECT shoppinglist_id
-							FROM shoppinglist_users
-							WHERE users_id=:users_id)',
+								FROM shoppinglist_users
+								WHERE users_id=:users_id)',
 						array('users_id'=>LoggedUser::id())
 		);
 	}

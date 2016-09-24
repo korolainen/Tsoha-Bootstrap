@@ -11,8 +11,8 @@ class Shop extends DataModelCreatedBy implements DataTable{
 		return self::_get(array('created_by'=>LoggedUser::id()), 
 					' OR id IN(SELECT shop_id
 								FROM '.ShopUsergroup::get_table_name().'
-								WHERE usergroup_id IN(SELECT id
-													FROM '.Usergroup::get_table_name().'
+								WHERE usergroup_id IN(SELECT usergroup_id
+													FROM '.UsergroupUsers::get_table_name().'
 													WHERE users_id=:users_id
 												)
 									) ',
