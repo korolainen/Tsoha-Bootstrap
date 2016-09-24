@@ -1,4 +1,5 @@
 <?php
+
 class Shop extends DataModelCreatedBy implements DataTable{
 	public $id, $name, $created_by;
 	public static function get_table_name(){ return 'shop'; }

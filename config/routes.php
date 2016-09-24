@@ -1,54 +1,65 @@
 <?php
 
   	$routes->get('/', function() {
-    	HelloWorldController::index();
+    	FrontController::login();
   	});
   	$routes->get('/forgotpass', function() {
-    	HelloWorldController::forgotpass();
+    	FrontController::forgotpass();
   	});
   	$routes->get('/signup', function() {
-    	HelloWorldController::register();
+    	FrontController::register();
+  	});
+	$routes->get('/logout', function() {
+  		FrontController::logout();
   	});
 
+
+	$routes->get('/search', function() {
+		SearchController::search();
+	});
+	
+	
+	$routes->get('/profile', function() {
+		ProfileController::profile();
+	});
   	
   
   	$routes->get('/groups', function() {
   		HelloWorldController::groups();
   	});
+	$routes->get('/groups/1', function() {
+		HelloWorldController::group();
+	});
+	
+	
+	$routes->get('/shops', function() {
+  		ShopController::shops();
+  	});
+	$routes->get('/shops/1', function() {
+		ShopController::shop();
+	});
+	
+	
 	$routes->get('/shoppinglists', function() {
-  		HelloWorldController::shoppinglists();
+  		ShoppinglistController::shoppinglists();
   	});
-	$routes->get('/stores', function() {
-  		HelloWorldController::stores();
-  	});
+	$routes->get('/shoppinglists/1', function() {
+		HelloWorldController::shoppinglist();
+	});
+	
+	
 	$routes->get('/products', function() {
-  		HelloWorldController::products();
+  		ProductController::products();
   	});
-	$routes->get('/search', function() {
-  		HelloWorldController::search();
-  	});
+	$routes->get('/products/1', function() {
+		ProductController::product();
+	});
+	
+	
 	$routes->get('/license', function() {
-  		HelloWorldController::license();
-  	});
-	$routes->get('/profile', function() {
-  		HelloWorldController::profile();
-  	});
-	$routes->get('/logout', function() {
-  		HelloWorldController::logout();
+  		InfoController::license();
   	});
 	
-		$routes->get('/groups/1', function() {
-			HelloWorldController::group();
-		});
-		$routes->get('/shoppinglists/1', function() {
-			HelloWorldController::shoppinglist();
-		});
-		$routes->get('/stores/1', function() {
-			HelloWorldController::store();
-		});
-		$routes->get('/products/1', function() {
-			HelloWorldController::product();
-		});
 	/*
 	if(array_key_exists('no', $_GET)){
 		$routes->get('/groups/'.intval($_GET['no']), function() {
@@ -57,8 +68,8 @@
 		$routes->get('/shoppinglists/'.intval($_GET['no']), function() {
 			HelloWorldController::shoppinglist();
 		});
-		$routes->get('/stores/'.intval($_GET['no']), function() {
-			HelloWorldController::store();
+		$routes->get('/shops/'.intval($_GET['no']), function() {
+			HelloWorldController::shop();
 		});
 		$routes->get('/products/'.intval($_GET['no']), function() {
 			HelloWorldController::product();

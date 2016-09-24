@@ -8,7 +8,7 @@ Yleisiä linkkejä:
 * http://valkorol.users.cs.helsinki.fi/tsoha/search
 * http://valkorol.users.cs.helsinki.fi/tsoha/products
 * http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglists
-* http://valkorol.users.cs.helsinki.fi/tsoha/stores
+* http://valkorol.users.cs.helsinki.fi/tsoha/shops
 * http://valkorol.users.cs.helsinki.fi/tsoha/groups
 * http://valkorol.users.cs.helsinki.fi/tsoha/products/1
 * http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglists/1
