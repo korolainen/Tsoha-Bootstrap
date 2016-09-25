@@ -6,18 +6,42 @@ class UsergroupUsers extends DataModel implements DataTable{
 		parent::__construct($attributes);
 	}
 	
-	public static function all($usergroup_id, $keys){
-		$keys = Query_Helper::prefix_array_keys($keys, 'b');
-		$sql = self::_select_execute('SELECT '.implode(',', $keys).'
+	public static function all(){
+		$sql = self::_select_execute('SELECT a.usergroup_id, a.users_id, 
+											CONCAT(a.usergroup_id, \'-\', a.users_id) AS id
 										FROM '.self::get_table_name().' a
 										JOIN '.User::get_table_name().' b ON b.id = a.users_id
 										WHERE b.created_by=:my_id 
-											OR a.usergroup_id=:usergroup_id',
+											OR a.usergroup_id IN(SELECT auu.usergroup_id
+																FROM all_usergroup_users auu
+																WHERE users_id=:my_id_usergroup)',
 										array('my_id' => LoggedUser::id(),
-											'usergroup_id' => $usergroup_id
+											'my_id_usergroup' => LoggedUser::id()
 										)
 		);
-		return Query_Helper::build_items($sql, 'User');
+		return Query_Helper::build_items($sql, 'UsergroupUsers');
+	}
+	
+	public static function usergroups($user_id){
+		$sql = self::_select_execute('SELECT usergroup_id, 
+											users_id, 
+											CONCAT(usergroup_id, \'-\', users_id) AS id
+										FROM all_usergroup_users 
+										WHERE users_id=:user_id',
+										array('user_id' => $user_id)
+		);
+		return Query_Helper::build_items($sql, 'UsergroupUsers');
+	}
+	
+	public static function users($usergroup_id){
+		$sql = self::_select_execute('SELECT usergroup_id, 
+											users_id, 
+											CONCAT(usergroup_id, \'-\', users_id) AS id
+										FROM all_usergroup_users 
+										WHERE usergroup_id=:usergroup_id',
+										array('usergroup_id' => $usergroup_id)
+		);
+		return Query_Helper::build_items($sql, 'UsergroupUsers');
 	}
 	
 	public static function insert($usergroup_id, $users_id){

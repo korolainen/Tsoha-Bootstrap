@@ -6,26 +6,58 @@ class ShopUsergroup extends DataModelCreatedBy implements DataTable{
 		parent::__construct($attributes);
 	}
 	
-	public static function all($usergroup_id, $keys){
-		$keys = Query_Helper::prefix_array_keys($keys, 'b');
-		$sql = self::_select_execute('SELECT '.implode(',', $keys).'
+	public static function all(){
+		$sql = self::_select_execute('SELECT a.usergroup_id, a.shop_id, a.created_by,
+											CONCAT(a.usergroup_id, \'-\', a.shop_id) AS id
 									FROM '.self::get_table_name().' a
-									JOIN '.Shoppinglist::get_table_name().' b ON b.id = a.shop_id
-									JOIN '.Usergroup::get_table_name().' d ON d.id = a.usergroup_id
-									WHERE (b.created_by=:my_id 
-										OR b.usergroup_id IN(SELECT c.usergroup_id 
-															FROM '.UsergroupUsers::get_table_name().' c
-															WHERE c.users_id = :my_id_c
+									WHERE (a.created_by=:my_id 
+										OR a.usergroup_id IN(SELECT b.usergroup_id 
+															FROM shop_users b
+															WHERE b.shop_id = a.shop_id
 															)
-										OR d.created_by=:my_id_d)
+										)
 										AND a.usergroup_id=:usergroup_id',
 									array('my_id' => LoggedUser::id(),
-											'my_id_c' => LoggedUser::id(),
-											'my_id_d' => LoggedUser::id(),
 										'usergroup_id' => $usergroup_id
 									)
 		);
-		return Query_Helper::build_items($sql, 'Shoppinglist');
+		return Query_Helper::build_items($sql, 'ShopUsergroup');
+	}
+	
+	public static function shops($usergroup_id){
+		$sql = self::_select_execute('SELECT a.usergroup_id, a.shop_id, a.created_by,
+											CONCAT(a.usergroup_id, \'-\', a.shop_id) AS id
+									FROM '.self::get_table_name().' a
+									WHERE (a.created_by=:my_id 
+										OR a.usergroup_id IN(SELECT b.usergroup_id 
+															FROM shop_users b
+															WHERE b.shop_id = a.shop_id
+															)
+										)
+										AND a.usergroup_id=:usergroup_id',
+									array('my_id' => LoggedUser::id(),
+										'usergroup_id' => $usergroup_id
+									)
+		);
+		return Query_Helper::build_items($sql, 'ShopUsergroup');
+	}
+	
+	public static function usergroups($shop_id){
+		$sql = self::_select_execute('SELECT a.usergroup_id, a.shop_id, a.created_by,
+											CONCAT(a.usergroup_id, \'-\', a.shop_id) AS id
+									FROM '.self::get_table_name().' a
+									WHERE (a.created_by=:my_id 
+										OR a.usergroup_id IN(SELECT b.usergroup_id 
+															FROM shop_users b
+															WHERE b.shop_id = a.shop_id
+															)
+										)
+										AND a.shop_id=:shop_id',
+									array('my_id' => LoggedUser::id(),
+										'shop_id' => $shop_id
+									)
+		);
+		return Query_Helper::build_items($sql, 'ShopUsergroup');
 	}
 	
 	public static function insert($usergroup_id, $users_id){

@@ -1,22 +1,39 @@
 <?php
 
 class Shop extends DataModelCreatedBy implements DataTable{
-	public $id, $name, $created_by;
+	public $id, $name, $created_by,
+			$usergroup,
+			$allow_remove;
 	public static function get_table_name(){ return 'shop'; }
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
 	
 	public static function all(){
-		return self::_get(array('created_by'=>LoggedUser::id()), 
-					' OR id IN(SELECT shop_id
-								FROM '.ShopUsergroup::get_table_name().'
-								WHERE usergroup_id IN(SELECT usergroup_id
-													FROM '.UsergroupUsers::get_table_name().'
-													WHERE users_id=:users_id
-												)
-									) ',
-					array('users_id'=>LoggedUser::id()));
+		$usergroups = Usergroup::all();
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT b.usergroup_id 
+								FROM shop_usergroup b
+								WHERE b.shop_id = p.id
+								LIMIT 1
+							) AS usergroup_id,
+							(p.created_by=:me) AS allow_remove
+				FROM '.self::get_table_name().' p
+				WHERE p.id IN(SELECT su.shop_id
+								FROM shop_users su
+								WHERE su.users_id=:users_id);';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':users_id', LoggedUser::id());
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			if(array_key_exists($row['usergroup_id'], $usergroups)){
+				$row['usergroup'] = $usergroups[$row['usergroup_id']];
+			}
+			$items[$row['id']] = new Shop($row);
+		}
+		return $items;
 	}
 
 	public static function get($id){

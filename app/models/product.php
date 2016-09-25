@@ -9,7 +9,7 @@ class Product extends DataModelCreatedBy implements DataTable{
 	}
 	
 	public static function all(){
-		$shops = Shop::all();
+		$shops = Shop::all();//ORDER BY pp.name ASC
 		$statement = 'SELECT p.id, p.name, p.default_unit_id, p.created_by,
 							(SELECT spp.shop_id 
 								FROM shop_product spp
@@ -19,6 +19,7 @@ class Product extends DataModelCreatedBy implements DataTable{
 							) cheapest_shop_id,
 							(SELECT array_to_string(array_agg(sp.shop_id),\',\')
 								FROM shop_product sp
+								JOIN product pp ON pp.id = sp.product_id
 								WHERE sp.product_id = p.id
 								GROUP BY sp.product_id
 							) AS shop_ids,

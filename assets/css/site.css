@@ -137,7 +137,9 @@ ul.additional-list-info li:after {
 ul.additional-list-info li:last-of-type:after {
   content: "";
 }
-
+tr.old-shoppinglist-row td{
+	background-color: #e5e5e5;
+}
 @media (max-width: 767px){
 	div.card.summary-inline .card-body .title-content div.title{
 	    text-align: left;

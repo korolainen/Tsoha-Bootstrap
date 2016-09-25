@@ -5,14 +5,14 @@
   	
 
     public static function get_user_logged_in(){
-      // Toteuta kirjautuneen käyttäjän haku tähän
-      return null;
+      self::check_logged_in();
+      return Me::get();
     }
 
     public static function check_logged_in(){
-      if(!LoggedUser::is_logged()){
+      /*if(!LoggedUser::is_logged()){
       	Redirect::to('/');
-      }
+      }*/
     }
 
   }

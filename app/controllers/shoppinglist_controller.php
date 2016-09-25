@@ -8,8 +8,19 @@ class ShoppinglistController extends BaseController{
 	}
 	
 	public static function shoppinglist(){
-		self::check_logged_in();
 		View::make('shoppinglists/shoppinglist.html');
+	}
+	
+	public static function create_new(){
+		
+	}
+	
+	public static function edit(){
+		
+	}
+	
+	public static function remove(){
+		
 	}
 	
 }

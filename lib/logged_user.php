@@ -2,7 +2,7 @@
 class LoggedUser{
     private static $SESSION_KEY = 'shopuserkey';
     private static $user_secure_key = '';
-    private static $user_id = 0;
+    private static $user_id = 1;
     private static $data = array();
     private static $is_logged = false;
     

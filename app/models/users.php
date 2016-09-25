@@ -10,6 +10,9 @@ class User extends UserModel implements DataTable{
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
+	public static function all(){
+		return self::_all();
+	}
 	public static function get($id){
 		return self::_get(array('id'=>$id));
 	}

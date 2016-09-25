@@ -1,0 +1,29 @@
+{% macro header_new(title, color, href) %}
+<div class="row">
+	<div class="col-xs-9 col-sm-10">
+	    <a href="{{href}}">
+	        <div class="card {{color}} summary-inline">
+	            <div class="card-body">
+	                <i class="hidden-xs icon fa fa-th-list fa-4x"></i>
+	                <div class="content title-content">
+	                    <div class="title">{{title}}</div>
+	                </div>
+	                <div class="clear-both"></div>
+	            </div>
+	        </div>
+	    </a>
+	</div>
+	<div class="col-xs-3 col-sm-2">
+	    <a href="{{href}}/new">
+	        <div class="card {{color}} summary-inline">
+	            <div class="card-body add-new-item-link">
+	                <div class="content">
+	                    <div class="title"> + </div>
+	                </div>
+	                <div class="clear-both"></div>
+	            </div>
+	        </div>
+	    </a>
+	</div>
+</div>
+{% endmacro %}
