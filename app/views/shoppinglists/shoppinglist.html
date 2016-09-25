@@ -9,7 +9,7 @@
                             <div class="card">
                                 <div class="card-header">
                                     <div class="card-title">
-                                        <div class="title">Eväät 18. päivä</div>
+                                        <div class="title">{{shoppinglist.name}}, {{shoppinglist.active_date}}</div>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -18,13 +18,13 @@
                                 
                                     <div class="sub-title">Nimi</div>
                                     <div>
-                                        <input type="text" class="form-control" value="Eväät 18. päivä" />
+                                        <input type="text" class="form-control" value="{{shoppinglist.name}}" />
                                     </div>
                                     <div class="sub-title">Voimassa</div>
                                     <div>
                                     		<!-- Source: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
 							                <div class='input-group date' id='datetimepicker1'>
-							                    <input type='text' class="pickdatehere form-control" value="20.09.2016" />
+							                    <input type='text' class="pickdatehere form-control" value="{{shoppinglist.active_date}}" />
 							                    <span class="input-group-addon">
 							                        <span class="glyphicon glyphicon-calendar"></span>
 							                    </span>

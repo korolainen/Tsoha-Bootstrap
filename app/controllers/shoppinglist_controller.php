@@ -7,19 +7,20 @@ class ShoppinglistController extends BaseController{
 		View::make('shoppinglists/shoppinglists.html', array('shoppinglists' => $shoppinglists));
 	}
 	
-	public static function shoppinglist(){
-		View::make('shoppinglists/shoppinglist.html');
+	public static function shoppinglist($id){
+		$shoppinglist = Shoppinglist::get($id);
+		View::make('shoppinglists/shoppinglist.html', array('shoppinglist' => $shoppinglist));
 	}
 	
 	public static function create_new(){
 		
 	}
 	
-	public static function edit(){
+	public static function edit($id){
 		
 	}
 	
-	public static function remove(){
+	public static function remove($id){
 		
 	}
 	

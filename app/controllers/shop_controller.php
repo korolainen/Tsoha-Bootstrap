@@ -13,19 +13,20 @@ class ShopController extends BaseController{
 		View::make('shops/shops.html', array('shops' => $shops));
 	}
 	
-	public static function shop(){
-		View::make('shops/shop.html');
+	public static function shop($id){
+		$shop = Shop::get($id);
+		View::make('shops/shop.html', array('shop' => $shop));
 	}
 	
 	public static function create_new(){
 		
 	}
 	
-	public static function edit(){
+	public static function edit($id){
 		
 	}
 	
-	public static function remove(){
+	public static function remove($id){
 		
 	}
 }

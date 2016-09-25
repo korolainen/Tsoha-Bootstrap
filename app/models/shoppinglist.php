@@ -43,13 +43,15 @@ class Shoppinglist extends DataModelCreatedBy implements DataTable{
 	}
 
 	public static function get($id){
-		return self::_get_by_id($id,
+		$data = self::_get_by_id($id,
 								' AND (id IN(SELECT shoppinglist_id
 												FROM shoppinglist_users
 												WHERE users_id=:users_id)
 										)',
 								array('users_id'=>LoggedUser::id())
 		);
+		if(!empty($data->active)) $data->active_date = date('d.m.Y',strtotime($data->active));
+		return $data;
 	}
 
 	public static function update($cols, $id){

@@ -6,16 +6,16 @@ class ProductController extends BaseController{
 		View::make('products/products.html', array('products' => $products, 'user'=>Me::get()));
 	}
 	
-	public static function product(){
-		View::make('products/product.html');
+	public static function product($id){
+		$product = Product::get($id);
+		View::make('products/product.html', array('product' => $product));
 	}
 	
-	public static function edit(){
+	public static function edit($id){
 		
 	}
 	
-	public static function remove(){
-		self::check_logged_in();
+	public static function remove($id){
 		
 	}
 }

@@ -32,7 +32,9 @@ class DataModel extends BaseModel{
 	}
 	
 	protected static function _get_by_id($id, $where = '', $where_bind_params = array()){
-		return self::_get(array('id'=>$id), $where, $where_bind_params, 'LIMIT 1');
+		$items = self::_get(array('id'=>$id), $where, $where_bind_params, 'LIMIT 1');
+		if(empty($items)) return null;
+		return current($items);
 	}
 	
 	protected static function _all(){
