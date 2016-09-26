@@ -25,7 +25,12 @@ class ShopController extends BaseController{
 	}
 	
 	public static function create_new(){
-		
+		if(array_key_exists('name', $_POST)){
+			$shop = new Shop(array('name' => $_POST['name']));
+			$shop->save();
+			self::return_back('/shops/shop/'.$shop->id);
+		}
+		self::return_back('/shops');
 	}
 	
 	public static function edit($id){

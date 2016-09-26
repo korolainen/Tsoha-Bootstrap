@@ -54,6 +54,9 @@
 		ShopController::edit($id);
 	});
 	$routes->get('/shops/new', function() {
+		View::make('shops/new_shop.html');
+	});
+	$routes->post('/shops/new', function() {
 		ShopController::create_new();
 	});
 	

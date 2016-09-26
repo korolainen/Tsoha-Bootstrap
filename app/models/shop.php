@@ -47,10 +47,12 @@ class Shop extends DataModelCreatedBy implements DataTable{
 				FROM '.self::get_table_name().' p
 				WHERE p.id IN(SELECT su.shop_id
 								FROM shop_users su
-								WHERE su.users_id=:users_id);';
+								WHERE su.users_id=:users_id)
+						AND p.id=:id;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':me', LoggedUser::id());
 		$query->bindParam(':users_id', LoggedUser::id());
+		$query->bindParam(':id', $id);
 		$query->execute();
 		$row = $query->fetch(PDO::FETCH_ASSOC);
 		$item = new Shop($row);
@@ -79,9 +81,14 @@ class Shop extends DataModelCreatedBy implements DataTable{
 		$query->bindParam(':created_by', LoggedUser::id());
 		$query->execute();
 	}
-	
-	public static function add($cols){
-		return self::_insert_my($cols);
+
+
+	public function save(){
+		$statement = 'INSERT INTO shop(name, created_by) VALUES(:name, :created_by) RETURNING id;';
+		$query = DB::connection()->prepare($statement);
+		$query->execute(array('name'=>$this->name, 'created_by'=>LoggedUser::id()));
+		$row = $query->fetch(PDO::FETCH_ASSOC);
+		$this->id = $row['id'];
 	}
 	
 }

@@ -1,0 +1,34 @@
+{% extends "private.html" %}
+{% block content %}
+{% import "macros/forms.html" as forms %}
+{% import "macros/buttons.html" as buttons %}
+            	<div class="side-body padding-top">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                            	<div class="card-header">
+									<div class=".col-xs-9 .col-md-7">
+								    	<div class="card-title">
+								        	<div class="title"><a href="{{base_path}}/shops"><span class="icon fa fa-shopping-cart"></span></a> Uusi kauppa</div>
+										</div>
+								    </div>
+								</div>
+                                <div class="card-body">
+                                	<form action="{{base_path}}/shops/new" method="post">
+	                                	<div class="form-group">
+	                                    	<div class="sub-title">Nimi</div>
+		                                    <div>
+		                                        <input type="text" class="form-control new-item-focus" name="name" value="{{shop.name}}" />
+		                                    </div>
+	                                    </div>
+	                                    <div class="form-group">
+	                                    	<button type="submit" class="btn btn-success">Tallenna</button>
+	                                    	<button type="button" onClick="history.go(-1);" class="btn btn-default">Peruuta</button>
+	                                    </div>
+                                	</form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endblock %}
