@@ -30,8 +30,8 @@
 				                            <td><a href="{{base_path}}/shops/shop/{{shop.id}}" data-filter="target">{{shop.name}}</a></td>
 				                            <td><a href="{{base_path}}/usergroups/{{shop.usergroup.id}}">{{shop.usergroup.name}}</a></td>
 				                            <td align="center">
-				                              <a href="{{base_path}}/shops/shop/{{shop.id}}" class="btn btn-default"><em class="fa fa-pencil"></em></a>
-				                              {{forms.remove("#{base_path}/shops/shop/#{shop.id}/remove")}}
+				                              <a href="{{base_path}}/shops/shop/{{shop.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
+				                              {{forms.remove("#{base_path}/shops/remove/#{shop.id}")}}
 				                            </td>
 				                            <!-- <td class="hidden-xs">1</td> -->
 				                          </tr>

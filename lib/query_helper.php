@@ -30,7 +30,7 @@ class Query_Helper{
 		return $prefix_keys;
 	}
 	
-	public static function build_insert($table_name, $bind_params){
+	public static function build_insert($table_name, $bind_params, $key = 'id'){
 		$insert = 'INSERT INTO '.$table_name.'(';
 		$delimiter = '';
 		foreach ($bind_params as $col_key=>$col_val){
@@ -38,11 +38,12 @@ class Query_Helper{
 			$delimiter = ',';
 		}
 		$insert .= ') VALUES(';
+		$delimiter = '';
 		foreach ($bind_params as $col_key=>$col_val){
 			$insert .= $delimiter.':'.$col_key;
 			$delimiter = ',';
 		}
-		$insert .= ');';
+		$insert .= ') RETURNING '.$key.';';
 		return $insert;
 	}
 	

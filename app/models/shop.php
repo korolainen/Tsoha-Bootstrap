@@ -2,7 +2,7 @@
 
 class Shop extends DataModelCreatedBy implements DataTable{
 	public $id, $name, $created_by,
-			$usergroup,
+			$usergroup_id,
 			$allow_remove;
 	public static function get_table_name(){ return 'shop'; }
 	public function __construct($attributes = null){
@@ -37,26 +37,47 @@ class Shop extends DataModelCreatedBy implements DataTable{
 	}
 
 	public static function get($id){
-		return self::_get_by_id($id,
-				' AND id IN(SELECT shop_id
-							FROM shop_users
-							WHERE users_id=:users_id)',
-				array('users_id'=>LoggedUser::id())
-		);
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT b.usergroup_id
+								FROM shop_usergroup b
+								WHERE b.shop_id = p.id
+								LIMIT 1
+							) AS usergroup_id,
+							(p.created_by=:me) AS allow_remove
+				FROM '.self::get_table_name().' p
+				WHERE p.id IN(SELECT su.shop_id
+								FROM shop_users su
+								WHERE su.users_id=:users_id);';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':users_id', LoggedUser::id());
+		$query->execute();
+		$row = $query->fetch(PDO::FETCH_ASSOC);
+		$item = new Shop($row);
+		return $item;
 	}
 	
-	public static function update($cols, $id){
-		self::_update_by_id($cols, 
-							$id, 
-							' AND id IN(SELECT shop_id
-										FROM shop_users
-										WHERE users_id=:users_id)',
-							array('users_id' => LoggedUser::id())
-		);
+	public static function update($name, $id){
+		$statement = 'UPDATE '.self::get_table_name().'
+					SET name=:name
+					WHERE id=:id 
+						AND id IN(SELECT shop_id
+							FROM shop_users
+							WHERE users_id=:users_id);';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':name', $name);
+		$query->bindParam(':id', $id);
+		$query->bindParam(':users_id', LoggedUser::id());
+		$query->execute();
 	}
+	
 	
 	public static function remove($id){
-		self::_remove_my($id);
+		$statement = 'DELETE FROM shop WHERE id=:id AND created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':id', $id);
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
 	}
 	
 	public static function add($cols){

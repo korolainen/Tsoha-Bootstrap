@@ -13,34 +13,33 @@
 								        	<div class="title"><span class="icon fa fa-shopping-cart"></span> {{shop.name}}</div>
 										</div>
 								    </div>
-								    {{buttons.header_edit()}}    
+								    {% if visibility.editbutton %}
+								    	{{buttons.header_edit()}}  
+								    {% endif %}  
 								</div>
-                                <div class="card-body edit-toggle-hidden">
-                                	<form action="#" method="post">
+                                <div class="card-body {{visibility.edit}}">
+                                	<form action="{{base_path}}/shops/shop/{{shop.id}}/edit" method="post">
 	                                	<div class="form-group">
-	                                
-	                                    <div class="sub-title">Nimi</div>
-	                                    <div>
-	                                        <input type="text" class="form-control" value="{{shop.name}}" />
-	                                    </div>
-	                                    
-	                                    
+	                                    	<div class="sub-title">Nimi</div>
+		                                    <div>
+		                                        <input type="text" class="form-control" name="name" value="{{shop.name}}" />
+		                                    </div>
 	                                    </div>
 	                                    <div class="form-group">
 	                                    	<button type="submit" class="btn btn-success">Tallenna</button>
+	                                    	<button type="button" onClick="history.go(-1);" class="btn btn-default">Peruuta</button>
 	                                    </div>
-                                    
                                 	</form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row {{visibility.list_products}}">
                         <div class="col-xs-12">
-                        	<div class="add-toggle-block">
+                        	<div class="{{visibility.add}}">
 		                    	{{forms.filter_contents("new-product-name")}}
 		                    </div>
-		                    <div class="add-toggle-hidden">
+		                    <div class="{{visibility.add_product}}">
 			                    <div class="card">
 	                            	<div class="card-header">
 										<div class=".col-xs-9 .col-md-7">
@@ -50,31 +49,29 @@
 									    </div>   
 									</div>
 	                                <div class="card-body">
-	                                	<form action="/shopproducts/new/{{shop.id}}/{{product.id}}" method="post">
-	                                	<div class="form-group">
-	                                
-		                                    <div class="sub-title">Tuote</div>
-		                                    <div>
-		                                        <input type="text" class="form-control" id="new-product-name" name="name" value="" />
+	                                	<form action="{{base_path}}/shopproducts/new/{{shop.id}}" method="post">
+		                                	<div class="form-group">
+		                                
+			                                    <div class="sub-title">Tuote</div>
+			                                    <div>
+			                                        <input type="text" class="form-control" id="new-product-name" name="name" value="" />
+			                                    </div>
+		                                
+			                                    <div class="sub-title">Hinta</div>
+			                                    <div>
+			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />
+			                                    </div>
 		                                    </div>
-	                                
-		                                    <div class="sub-title">Hinta</div>
-		                                    <div>
-		                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />
+		                                    <div class="form-group">
+		                                    	<button type="submit" class="btn btn-success">Tallenna</button>
+		                                    	<button type="button" onClick="history.go(-1);" class="btn btn-default">Peruuta</button>
 		                                    </div>
-	                                    
-	                                    	<input type="hidden" name="return" value="{{here}}" />
-	                                    </div>
-	                                    <div class="form-group">
-	                                    	<button type="submit" class="btn btn-success">Tallenna</button>
-	                                    	<button type="button" onClick="window.location.reload();" class="btn btn-default">Peruuta</button>
-	                                    </div>
 	                                    
 	                                	</form>
 	                                </div>
 	                            </div>
 		                    </div>
-                        	<div class="panel panel-default panel-table add-toggle-block">
+                        	<div class="panel panel-default panel-table {{visibility.add}}">
 				              <div class="panel-body">
 				                <table class="table table-striped table-bordered table-list" id="dev-table">
 				                  <thead>
@@ -82,24 +79,28 @@
 				                        <!-- <th class="hidden-xs">ID</th> -->
 				                        <th class="editor-column"></th>
 				                        <th>Tuote</th>
+				                        <th class="narrow-column">Halvin</th>
 				                        <th>Hinta</th>
-				                        <th>Muut kaupat</th>
 				                        <th></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
-				                  		{% for product in shop_products %}
+				                  		{% for shop_product in shop_products %}
 				                          <tr>
 				                            <td class="editor-column" align="center">
-				                              	<button type="button" class="btn btn-success save-inline-button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/shopproduct/{{shop.id}}/{{product.id}}/edit" data-id="{{product.id}}"><em class="fa fa-save"></em></button>
+				                              	<button type="button" class="btn btn-success save-inline-button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/edit/{{shop.id}}/{{shop_product.product_id}}" data-id="{{shop_product.product_id}}"><em class="fa fa-save"></em></button>
 				                            </td>
-				                            <td><p class="h4"><a href="{{base_path}}/products/product/{{product.id}}" data-filter="target">{{product.name_html}}</a></p></td>
-				                            <td><input type="text" class="price-input form-control input-lg inline-edit" name="price" value="{{product.price_html}}" /></td>
-				                            <td></td>
+				                            <td><p class="h4"><a href="{{base_path}}/products/product/{{shop_product.product_id}}" data-filter="target">{{shop_product.name}}</a></p></td>
+				                            <td class="narrow-column">
+												{% if shop_product.is_cheapest %}
+									                <p class="col-xs-12"><i class="fa fa-check-square-o" aria-hidden="true"></i></p>
+									            {% else %}
+									                <p class="col-xs-12"><i class="fa fa-square-o" aria-hidden="true"></i></p>
+									            {% endif %}
+											</td>
+				                            <td><input type="text" class="price-input form-control input-lg inline-edit serialize-value" name="price" value="{{shop_product.price}}" /></td>
 				                            <td align="center">
-				                              	<form method="post" class="inline-remove" action="{{base_path}}/shops/shop/{{product.id}}/remove" style="display: inline-block;">
-													<button type="submit" class="btn btn-danger"><em class="fa fa-trash"></em></button>
-												</form>
+				                              	<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/remove/{{shop.id}}/{{shop_product.product_id}}"><em class="fa fa-trash"></em></button>
 				                            </td>
 				                            <!-- <td class="hidden-xs">1</td> -->
 				                          </tr>
@@ -109,9 +110,9 @@
 				              </div>
 				            </div>
                         </div>
-                        <div class="col-xs-12 add-toggle-block">
+                        <div class="col-xs-12 {{visibility.add}}">
 	                        <div class="pull-right">
-	                        	{{forms.remove("#{base_path}/shops/shop/#{shop.id}/remove")}}
+	                        	{{forms.remove("#{base_path}/shops/remove/#{shop.id}")}}
 	                        </div>
                         </div>
                     </div>

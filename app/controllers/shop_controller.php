@@ -16,7 +16,12 @@ class ShopController extends BaseController{
 	public static function shop($id){
 		$shop = Shop::get($id);
 		$products = ShopProduct::products_in_shop($id);
-		View::make('shops/shop.html', array('shop' => $shop, 'shop_products' => $products));
+		View::make('shops/shop.html', 
+					array('shop' => $shop, 
+						'shop_products' => $products, 
+						'visibility' => self::visibility()
+					)
+		);
 	}
 	
 	public static function create_new(){
@@ -24,10 +29,14 @@ class ShopController extends BaseController{
 	}
 	
 	public static function edit($id){
-		
+		if(array_key_exists('name', $_POST)){
+			Shop::update($_POST['name'], $id);
+		}
+		self::return_back('/shops/shop/'.$id);
 	}
 	
 	public static function remove($id){
-		
+		Shop::remove($id);
+		self::return_back('/shops');
 	}
 }

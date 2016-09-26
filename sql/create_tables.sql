@@ -45,26 +45,12 @@ CONSTRAINT usergroup_user_users_id_FK
 ) 
 ;
 
-CREATE TABLE unit (
-id SERIAL,
-name VARCHAR(20) NOT NULL,
-CONSTRAINT unit_PK 
-	PRIMARY KEY (id)
-) 
-;
-
 CREATE TABLE product (
 id SERIAL,
 name VARCHAR(200) NOT NULL,
-default_unit_id INTEGER NOT NULL,
 created_by INTEGER NOT NULL,
 CONSTRAINT product_PK 
 	PRIMARY KEY (id),
-CONSTRAINT product_default_unit_id_FK 
-	FOREIGN KEY (default_unit_id)
-	REFERENCES unit (id)
-		ON DELETE NO ACTION
-		ON UPDATE CASCADE,
 CONSTRAINT product_created_by_FK 
 	FOREIGN KEY (created_by)
 	REFERENCES users (id)
@@ -114,8 +100,6 @@ CREATE TABLE shop_product (
 product_id INTEGER NOT NULL,
 shop_id INTEGER NOT NULL,
 price DECIMAL(18,5) NULL DEFAULT 0,
-quantity DECIMAL(18,5) NULL,
-unit_id INTEGER NOT NULL,
 created_by INTEGER NOT NULL,
 updated TIMESTAMP NOT NULL DEFAULT NOW(),
 CONSTRAINT shop_product_PK 
@@ -129,11 +113,6 @@ CONSTRAINT shop_product_shop_id_FK
 	FOREIGN KEY (shop_id)
 	REFERENCES shop (id)
 		ON DELETE CASCADE 
-		ON UPDATE CASCADE,
-CONSTRAINT shop_product_unit_id_FK 
-	FOREIGN KEY (unit_id)
-	REFERENCES unit (id)
-		ON DELETE NO ACTION
 		ON UPDATE CASCADE,
 CONSTRAINT shopproduct_created_by_FK 
 	FOREIGN KEY (created_by)
@@ -187,7 +166,6 @@ CREATE TABLE shoppinglist_product (
 shoppinglist_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
 description VARCHAR(255) NOT NULL,
-unit_id INTEGER NOT NULL,
 quantity DECIMAL(18,5) NULL,
 created_by INTEGER NOT NULL,
 created TIMESTAMP NOT NULL DEFAULT NOW(),

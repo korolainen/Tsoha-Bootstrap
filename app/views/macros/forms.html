@@ -1,7 +1,5 @@
 {% macro remove(action) %}
-<form method="post" action="{{action}}" style="display: inline-block;">
-  <button type="submit" class="btn btn-danger"><em class="fa fa-trash"></em></button>
-</form>
+<button type="submit" class="btn btn-danger" onclick="window.location.href='{{action}}';"><em class="fa fa-trash"></em></button>
 {% endmacro %}
 
 {% macro filter() %}

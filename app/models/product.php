@@ -1,7 +1,6 @@
 <?php
 class Product extends DataModelCreatedBy implements DataTable{
-	public $id, $name, $default_unit_id, $created_by, $price,
-			$price_html, $name_html,
+	public $id, $name, $created_by, 
 			$cheapest_shop_id, $cheapest_shop, $shop_ids, $shops,
 			$allow_remove;
 	public static function get_table_name(){ return 'product'; }
@@ -9,13 +8,14 @@ class Product extends DataModelCreatedBy implements DataTable{
 		parent::__construct($attributes);
 	}
 	
+	
 	public static function all(){
 		$shops = Shop::all();//ORDER BY pp.name ASC
-		$statement = 'SELECT p.id, p.name, p.default_unit_id, p.created_by,
+		$statement = 'SELECT p.id, p.name, p.created_by,
 							(SELECT spp.shop_id 
 								FROM shop_product spp
 								WHERE spp.product_id = p.id
-								ORDER BY price ASC
+								ORDER BY spp.price ASC
 								LIMIT 1
 							) cheapest_shop_id,
 							(SELECT array_to_string(array_agg(sp.shop_id),\',\')
@@ -60,15 +60,10 @@ class Product extends DataModelCreatedBy implements DataTable{
 				}
 			}
 			$row['shops'] = $product_shops;
-			$row = self::build_html_fields($row); 
+			//$row['name_html'] = CheckData::character_escape($row['name']);
 			$items[$row['id']] = new Product($row);
 		}
 		return $items;
-	}
-	public static function build_html_fields($row){
-		$row['price_html'] = CheckData::float_to_currency($row['price']);
-		$row['name_html'] = CheckData::character_escape($row['name']);
-		return $row;
 	}
 	
 	public static function get($id){
@@ -93,11 +88,20 @@ class Product extends DataModelCreatedBy implements DataTable{
 		);
 	}
 	
-	public static function add($cols){
-		return self::_insert_my($cols);
+	public function save(){
+		$statement = 'INSERT INTO product(name,created_by) VALUES(:name,:created_by) RETURNING id;';
+		$query = DB::connection()->prepare($statement);
+		$query->execute(array('name'=>$this->name, 'created_by'=>LoggedUser::id()));
+		$row = $query->fetch();
+		$this->id = $row['id'];
+		return $this->id;
 	}
 	
 	public static function remove($id){
-		self::_remove_my($id);
+		$statement = 'DELETE FROM product WHERE id=:id AND created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':id', $id);
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
 	}
 }

@@ -64,13 +64,15 @@ class DataModel extends BaseModel{
 		$called_class = get_called_class();
 		if(!is_callable(array($called_class, self::$base_method))) return;
 		$insert = Query_Helper::build_insert($called_class::get_table_name(), $bind_params);
+		var_dump($insert);
+		exit();
 		$query = DB::connection()->prepare($insert);
 		if(!empty($bind_params)){
 			foreach ($bind_params as $col_key=>$col_val){
 				$query->bindParam(':'.$col_key, $col_val);
 			}
 		}
-		$query->execute();
+		return $query->execute();
 	}
 	
 	
@@ -88,24 +90,21 @@ class DataModel extends BaseModel{
 		$called_class = get_called_class();
 		if(!is_callable(array($called_class, self::$base_method))) return;
 		$set = Query_Helper::build_bind($data);
-		$query = DB::connection()->prepare('UPDATE '.$called_class::get_table_name().'
+		$statement = 'UPDATE '.$called_class::get_table_name().'
 											SET '.$set.'
-											WHERE '.$key.' = :id '.$where.'
-											LIMIT 1;');
+											WHERE '.$key.' = :id '.$where.';';
+		$query = DB::connection()->prepare($statement);
 		if(!empty($data)){
 			foreach ($data as $col_key=>$col_val){
-				var_dump($col_key);
 				$query->bindParam(':'.$col_key, $col_val);
 			}
 		}
 		$query->bindParam(':id', $id);
 		if(!empty($where_bind_params)){
 			foreach ($where_bind_params as $col_key=>$col_val){
-				var_dump($col_key);
 				$query->bindParam(':'.$col_key, $col_val);
 			}
 		}
-		exit();
 		$query->execute();
 	}
 	

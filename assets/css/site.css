@@ -163,6 +163,11 @@ tr.old-shoppinglist-row td{
     text-align: center;
     width: 100px;
 }
+.panel-table .panel-body .table-bordered > thead > tr > td.narrow-column,
+.panel-table .panel-body .table-bordered > thead > tr > th.narrow-column {
+    text-align: center;
+    max-width: 100px;
+}
 td.editor-column button.save-inline-button:focus{
 	outline: none;
 }

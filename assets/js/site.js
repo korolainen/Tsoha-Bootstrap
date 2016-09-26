@@ -42,54 +42,87 @@
 })(jQuery);
 
 $(document).ready(function(){
+	
+	flash_line = function(elem, color){
+		elem.parent().parent().find('td')
+			.stop()
+			.css("background-color", color)
+			.animate({ backgroundColor: "#ffffff"}, 
+ 			   {
+	         	     duration: 1500,
+	         	     complete: function(){
+	         	    	 elem.parent().parent().find('td').removeAttr('style');
+	         	     }
+         	    }
+		);
+    	elem.removeAttr('style');
+    	elem.parent().parent().find('td').removeAttr('style');
+	};
+
+	flash_success = function(elem){
+		flash_line(elem, "#90EE90");
+	};
+	flash_error = function(elem){
+		flash_line(elem, "#FFC0CB");
+	};
 	$('.pickdatehere').datepicker({
 		dateFormat: "dd.mm.yy"
 	});
+	
 	$('[data-action="filter"]').filterTable();
+	
 	$('button.edit-item-toggle').click(function(){
         $(".edit-toggle-hidden").slideToggle("slow");
         $(".edit-toggle-block").slideToggle("slow");
     });
+	
 	$('.save-inline-button').click(function(){
 		var elem = $(this);
 		elem.focusout();
         var loader_src = elem.attr('data-loader');
         elem.css({'background':'url("'+loader_src+'") 0 0 no-repeat','border':'0'});
         var action = elem.attr('data-action');
-        /*http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php*/
-        var message = $.param($(this).parent().parent().find(':input'));
+        //http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php
+        var values = {};
+        $(this).parent().parent().find('.serialize-value').each(function(){
+        	values[$(this).attr('name')] = $(this).val();
+        });
         $.ajax({
             type: "POST",
             url: action,
-            data: message,
+            data: values,
             success: function(data) {
-            	console.log(data);
-            	elem.parent().parent().find('td').stop().css("background-color", "#90EE90").animate({ backgroundColor: "#ffffff"}, 
-            			   {
-		            	     duration: 1500,
-		            	     complete: function(){
-		            	    	 elem.parent().parent().find('td').removeAttr('style');
-		            	     }
-		            	    });
-            	elem.removeAttr('style');
+            	flash_success(elem);
             },
-            error: function() {
-            	elem.parent().parent().find('td').stop().css("background-color", "#FFC0CB").animate({ backgroundColor: "#ffffff"}, 
-         			   {
-		           	     duration: 1500,
-		           	     complete: function(){
-		           	    	 elem.parent().parent().find('td').removeAttr('style');
-		           	     }
-		           	    });
-            	elem.removeAttr('style');
-            	elem.parent().parent().find('td').removeAttr('style');
+            error: function(data) {
+            	flash_error(elem);
             	console.log('Epäonnistui!');
             }
         });
     });
+	
+	$('.remove-inline-button').click(function(){
+		var elem = $(this);
+		elem.focusout();
+        var loader_src = elem.attr('data-loader');
+        elem.css({'background':'url("'+loader_src+'") 0 0 no-repeat','border':'0'});
+        var action = elem.attr('data-action');
+        $.ajax({url: action,
+            success: function(data) {
+            	flash_success(elem);
+            	elem.parent().parent().remove();
+            },
+            error: function(data) {
+            	flash_error(elem);
+            	console.log('Epäonnistui!');
+            }
+        });
+    });
+	
     $('input.inline-edit').on('input', function(){
     	$(this).parent().parent().find('td').css("background-color", "#FFFF9C");
     });
+    
     $('#item-search').on('input', function(){
     	var val = $(this).val();
     	$($(this).attr('data-target')).val(val);
@@ -101,6 +134,7 @@ $(document).ready(function(){
     		$('#add-item-button').addClass('btn-default');
     	}
     });
+    
     $('button#add-item-button').click(function(){
     	var id = $(this).attr('data-focus');
         $(".add-toggle-hidden").slideToggle("fast", "swing", function(){
@@ -108,7 +142,5 @@ $(document).ready(function(){
         		$(id).focus();
         	});
         });
-        
-        
     });
 });
