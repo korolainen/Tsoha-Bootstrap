@@ -10,10 +10,10 @@ Yleisiä linkkejä:
 * http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglists
 * http://valkorol.users.cs.helsinki.fi/tsoha/shops
 * http://valkorol.users.cs.helsinki.fi/tsoha/groups
-* http://valkorol.users.cs.helsinki.fi/tsoha/products/1
-* http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglists/1
-* http://valkorol.users.cs.helsinki.fi/tsoha/stores/1
-* http://valkorol.users.cs.helsinki.fi/tsoha/groups/1
+* http://valkorol.users.cs.helsinki.fi/tsoha/products/product/1
+* http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglists/shoppinglist/1
+* http://valkorol.users.cs.helsinki.fi/tsoha/shops/shop/1
+* http://valkorol.users.cs.helsinki.fi/tsoha/groups/group/1
 * http://valkorol.users.cs.helsinki.fi/tsoha/profile
 * https://github.com/korolainen/Tsoha-Bootstrap/blob/master/doc/dokumentaatio.pdf
 * https://github.com/korolainen/Tsoha-Bootstrap

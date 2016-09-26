@@ -148,3 +148,24 @@ tr.old-shoppinglist-row td{
 		float: left;
 	}
 }
+
+.edit-toggle-hidden,
+.add-toggle-hidden{
+	display: none;
+}
+
+.edit-toggle-block,
+.add-toggle-block{
+	display: block;
+}
+.panel-table .panel-body .table-bordered > thead > tr > td.editor-column,
+.panel-table .panel-body .table-bordered > thead > tr > th.editor-column {
+    text-align: center;
+    width: 100px;
+}
+td.editor-column button.save-inline-button:focus{
+	outline: none;
+}
+.price-input{
+	max-width: 180px;
+}

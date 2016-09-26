@@ -5,6 +5,7 @@
 {% endmacro %}
 
 {% macro filter() %}
+<!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
 <div class="row">
    <div class="col-xs-12">
        <div id="custom-search-input">
@@ -18,5 +19,26 @@
            </div>
        </div>
    </div>
+</div>
+{% endmacro %}
+
+{% macro filter_contents(target, focus) %}
+<!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
+<div class="row">
+    <div class="col-xs-10 col-sm-11">
+       <div id="custom-search-input">
+           <div class="input-group">
+               <input type="text" id="item-search" class="form-control input-lg" placeholder="Hae..." data-target="#{{target}}" data-action="filter" data-filters="#dev-table" />
+               <span class="input-group-btn">
+                   <button class="btn btn-info btn-lg" type="button">
+                       <i class="glyphicon glyphicon-search"></i>
+                   </button>
+               </span>
+           </div>
+       </div>
+    </div>
+    <div class="col-xs-2 col-sm-1">
+   		<button id="add-item-button" data-focus="#{{target}}" type="button" class="btn btn-default add-item" ><em class="fa fa-plus"></em></button>
+    </div>   
 </div>
 {% endmacro %}

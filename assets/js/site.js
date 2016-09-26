@@ -46,4 +46,69 @@ $(document).ready(function(){
 		dateFormat: "dd.mm.yy"
 	});
 	$('[data-action="filter"]').filterTable();
+	$('button.edit-item-toggle').click(function(){
+        $(".edit-toggle-hidden").slideToggle("slow");
+        $(".edit-toggle-block").slideToggle("slow");
+    });
+	$('.save-inline-button').click(function(){
+		var elem = $(this);
+		elem.focusout();
+        var loader_src = elem.attr('data-loader');
+        elem.css({'background':'url("'+loader_src+'") 0 0 no-repeat','border':'0'});
+        var action = elem.attr('data-action');
+        /*http://stackoverflow.com/questions/15173965/serializing-and-submitting-a-form-with-jquery-post-and-php*/
+        var message = $.param($(this).parent().parent().find(':input'));
+        $.ajax({
+            type: "POST",
+            url: action,
+            data: message,
+            success: function(data) {
+            	console.log(data);
+            	elem.parent().parent().find('td').stop().css("background-color", "#90EE90").animate({ backgroundColor: "#ffffff"}, 
+            			   {
+		            	     duration: 1500,
+		            	     complete: function(){
+		            	    	 elem.parent().parent().find('td').removeAttr('style');
+		            	     }
+		            	    });
+            	elem.removeAttr('style');
+            },
+            error: function() {
+            	elem.parent().parent().find('td').stop().css("background-color", "#FFC0CB").animate({ backgroundColor: "#ffffff"}, 
+         			   {
+		           	     duration: 1500,
+		           	     complete: function(){
+		           	    	 elem.parent().parent().find('td').removeAttr('style');
+		           	     }
+		           	    });
+            	elem.removeAttr('style');
+            	elem.parent().parent().find('td').removeAttr('style');
+            	console.log('Epäonnistui!');
+            }
+        });
+    });
+    $('input.inline-edit').on('input', function(){
+    	$(this).parent().parent().find('td').css("background-color", "#FFFF9C");
+    });
+    $('#item-search').on('input', function(){
+    	var val = $(this).val();
+    	$($(this).attr('data-target')).val(val);
+    	if(val.length>0) {
+    		$('#add-item-button').removeClass('btn-default');
+    		$('#add-item-button').addClass('btn-success');
+    	}else{
+    		$('#add-item-button').removeClass('btn-success');
+    		$('#add-item-button').addClass('btn-default');
+    	}
+    });
+    $('button#add-item-button').click(function(){
+    	var id = $(this).attr('data-focus');
+        $(".add-toggle-hidden").slideToggle("fast", "swing", function(){
+        	$(".add-toggle-block").slideToggle("fast", "swing", function(){
+        		$(id).focus();
+        	});
+        });
+        
+        
+    });
 });

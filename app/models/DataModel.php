@@ -1,5 +1,6 @@
 <?php
 class DataModel extends BaseModel{
+	protected static $base_method = 'get_table_name';
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
@@ -13,9 +14,8 @@ class DataModel extends BaseModel{
 		$where = Query_Helper::where($bind_params, $where, 'WHERE');
 		$items = array();
 		$called_class = get_called_class();
-		$method = 'get_table_name';
-		if(!is_callable(array($called_class, $method))) return null;
-		$statement = 'SELECT * FROM '.call_user_func(array($called_class, $method)).' '.$where.' '.$limit.';';
+		if(!is_callable(array($called_class, self::$base_method))) return null;
+		$statement = 'SELECT * FROM '.call_user_func(array($called_class, self::$base_method)).' '.$where.' '.$limit.';';
 		$query = DB::connection()->prepare($statement);
 		if(!empty($bind_params)){
 			foreach ($bind_params as $col_key=>$col_val){
@@ -43,7 +43,7 @@ class DataModel extends BaseModel{
 	
 	protected static function _select_execute($select, $bind_params = array()){
 		$called_class = get_called_class();
-		if(!Query_Helper::is_table_name_callable($called_class)) return null;
+		if(!is_callable(array($called_class, self::$base_method))) return null;
 		$query = DB::connection()->prepare($select);
 		if(!empty($bind_params)){
 			foreach ($bind_params as $col_key=>$col_val){
@@ -62,7 +62,7 @@ class DataModel extends BaseModel{
 
 	protected static function _insert($bind_params){
 		$called_class = get_called_class();
-		if(!Query_Helper::is_table_name_callable($called_class)) return;
+		if(!is_callable(array($called_class, self::$base_method))) return;
 		$insert = Query_Helper::build_insert($called_class::get_table_name(), $bind_params);
 		$query = DB::connection()->prepare($insert);
 		if(!empty($bind_params)){
@@ -86,24 +86,26 @@ class DataModel extends BaseModel{
 
 	protected static function _update($data, $key, $id, $where = '', $where_bind_params = array()){
 		$called_class = get_called_class();
-		if(!Query_Helper::is_table_name_callable($called_class)) return;
+		if(!is_callable(array($called_class, self::$base_method))) return;
 		$set = Query_Helper::build_bind($data);
 		$query = DB::connection()->prepare('UPDATE '.$called_class::get_table_name().'
 											SET '.$set.'
 											WHERE '.$key.' = :id '.$where.'
 											LIMIT 1;');
-
 		if(!empty($data)){
 			foreach ($data as $col_key=>$col_val){
+				var_dump($col_key);
 				$query->bindParam(':'.$col_key, $col_val);
 			}
 		}
 		$query->bindParam(':id', $id);
 		if(!empty($where_bind_params)){
 			foreach ($where_bind_params as $col_key=>$col_val){
+				var_dump($col_key);
 				$query->bindParam(':'.$col_key, $col_val);
 			}
 		}
+		exit();
 		$query->execute();
 	}
 	
@@ -123,7 +125,7 @@ class DataModel extends BaseModel{
 	protected static function _remove($key, $id, $bind_params = array(), $where = '', $where_bind_params = array()){
 		$where = Query_Helper::where($bind_params, $where, 'AND');
 		$called_class = get_called_class();
-		if(!Query_Helper::is_table_name_callable($called_class)) return;
+		if(!is_callable(array($called_class, self::$base_method))) return;
 		$query = DB::connection()->prepare('DELETE FROM '.$called_class::get_table_name().' 
 											WHERE '.$key.' = :id '.$where.' 
 											LIMIT 1;');

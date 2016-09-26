@@ -74,18 +74,26 @@
 		ShoppinglistController::create_new();
 	});
 	
+
+	$routes->get('/shopproducts/shopproduct/:shop_id/:product_id/edit', function($shop_id, $product_id) {
+		ShopProductController::edit($shop_id, $product_id);
+	});
+	$routes->post('/shopproducts/shopproduct/:shop_id/:product_id/edit', function($shop_id, $product_id) {
+		ShopProductController::edit($shop_id, $product_id);
+	});
+	
 	
 	$routes->get('/products', function() {
   		ProductController::products();
   	});
-	$routes->get('/products/product/:id', function($id) {
-		ProductController::product($id);
+	$routes->get('/products/product/:id/edit', function($id) {
+		ProductController::edit($id);
 	});
 	$routes->get('/products/product/:id/remove', function($id) {
 		ProductController::remove($id);
 	});
-	$routes->post('/products/product/:id/edit', function($id) {
-		ProductController::edit($id);
+	$routes->get('/products/product/:id', function($id) {
+		ProductController::product($id);
 	});
 	$routes->get('/products/new', function() {
 		ProductController::create_new();

@@ -15,7 +15,8 @@ class ShopController extends BaseController{
 	
 	public static function shop($id){
 		$shop = Shop::get($id);
-		View::make('shops/shop.html', array('shop' => $shop));
+		$products = ShopProduct::products_in_shop($id);
+		View::make('shops/shop.html', array('shop' => $shop, 'shop_products' => $products));
 	}
 	
 	public static function create_new(){

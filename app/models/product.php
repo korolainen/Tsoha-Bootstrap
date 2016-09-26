@@ -1,6 +1,7 @@
 <?php
 class Product extends DataModelCreatedBy implements DataTable{
-	public $id, $name, $default_unit_id, $created_by,
+	public $id, $name, $default_unit_id, $created_by, $price,
+			$price_html, $name_html,
 			$cheapest_shop_id, $cheapest_shop, $shop_ids, $shops,
 			$allow_remove;
 	public static function get_table_name(){ return 'product'; }
@@ -59,9 +60,15 @@ class Product extends DataModelCreatedBy implements DataTable{
 				}
 			}
 			$row['shops'] = $product_shops;
+			$row = self::build_html_fields($row); 
 			$items[$row['id']] = new Product($row);
 		}
 		return $items;
+	}
+	public static function build_html_fields($row){
+		$row['price_html'] = CheckData::float_to_currency($row['price']);
+		$row['name_html'] = CheckData::character_escape($row['name']);
+		return $row;
 	}
 	
 	public static function get($id){
