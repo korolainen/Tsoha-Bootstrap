@@ -1,9 +1,8 @@
 <?php
-class Usergroup extends DataModelCreatedBy implements DataTable{
+class Usergroup extends BaseModel{
 	public $id, $name, $created_by,
 			$users,
 			$allow_remove;
-	public static function get_table_name(){ return 'usergroup'; }
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
@@ -67,7 +66,7 @@ class Usergroup extends DataModelCreatedBy implements DataTable{
 		return null;
 	}
 	
-	public static function update($name, $id){
+	public static function update(){
 		$statement = 'UPDATE usergroup
 					SET name=:name
 					WHERE id=:id
@@ -75,8 +74,8 @@ class Usergroup extends DataModelCreatedBy implements DataTable{
 							FROM usergroup_users
 							WHERE users_id=:users_id);';
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':name', $name);
-		$query->bindParam(':id', $id);
+		$query->bindParam(':name', $this->name);
+		$query->bindParam(':id', $this->id);
 		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 	}

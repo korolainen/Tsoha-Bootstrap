@@ -50,7 +50,8 @@ class ShopController extends BaseController{
 	
 	public static function edit($id){
 		if(isset($_POST['name'])){
-			Shop::update($_POST['name'], $id);
+			$shop = new Shop(array('name' => $_POST['name'], 'id' => $id));
+			$shop->update();
 		}
 		self::return_back('/shops/shop/'.$id);
 	}

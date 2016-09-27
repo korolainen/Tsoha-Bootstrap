@@ -1,12 +1,11 @@
 <?php
-class Shoppinglist extends DataModelCreatedBy implements DataTable{
+class Shoppinglist extends BaseModel{
 	public $id, $name, $created_by, $active,
 			$is_active,
 			$active_date,
 			$usergroup,
 			$current,
 			$allow_remove;
-	public static function get_table_name(){ return 'shoppinglist'; }
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
@@ -21,7 +20,7 @@ class Shoppinglist extends DataModelCreatedBy implements DataTable{
 							) AS usergroup_id,
 							(p.created_by=:me) AS allow_remove,
 							(DATE \'tomorrow\' > NOW()) AS is_active
-				FROM '.self::get_table_name().' p
+				FROM shoppinglist p
 				WHERE p.id IN(SELECT su.shoppinglist_id
 								FROM shoppinglist_users su
 								WHERE su.users_id=:users_id)
@@ -52,7 +51,7 @@ class Shoppinglist extends DataModelCreatedBy implements DataTable{
 							) AS usergroup_id,
 							(p.created_by=:me) AS allow_remove,
 							(DATE \'tomorrow\' > NOW()) AS is_active
-				FROM '.self::get_table_name().' p
+				FROM shoppinglist p
 				WHERE p.id IN(SELECT su.shoppinglist_id
 								FROM shoppinglist_users su
 								WHERE su.users_id=:users_id)

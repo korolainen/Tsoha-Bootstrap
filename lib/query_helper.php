@@ -1,4 +1,5 @@
 <?php
+/*
 class Query_Helper{
 	
 	private static function build_statement($data = array(), $delimiter = ','){
@@ -70,3 +71,4 @@ class Query_Helper{
 	}
 	
 }
+*/

@@ -10,7 +10,7 @@
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
-								        	<div class="title">{{shoppinglist.name}}, {{shoppinglist.active_date}}</div>
+								        	<div class="title"><a href="{{base_path}}/products"><span class="icon fa fa-th-list"></span></a> {{shoppinglist.name}}, {{shoppinglist.active_date}}</div>
 										</div>
 								    </div>
 								    {% if visibility.editbutton %}
@@ -19,7 +19,7 @@
 								</div>
 								
                                 <div class="card-body edit-toggle-hidden">
-                                	<form action="#" method="post">
+                                	<form action="{{base_path}}/shoppinglists/edit/{{shoppinglist.id}}" method="post">
 		                                <div class="form-group">
 		                                
 		                                    <div class="sub-title">Nimi</div>

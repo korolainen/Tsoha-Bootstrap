@@ -38,7 +38,8 @@ class ShoppinglistController extends BaseController{
 	
 	public static function edit($id){
 		if(isset($_POST['name']) && isset($_POST['active'])){
-			Shoppinglist::update($_POST['name'], $_POST['active'], $id);
+			$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active'], 'id' => $id));
+			$shoppinglist->update();
 		}
 		self::return_back('/shoppinglists/shoppinglist/'.$id);
 	}

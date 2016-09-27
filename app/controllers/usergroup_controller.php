@@ -37,7 +37,8 @@ class UsergroupController extends BaseController{
 	
 	public static function edit($id){
 		if(isset($_POST['name'])){
-			Usergroup::update($_POST['name'], $id);
+			$usergroup = new Usergroup(array('name' => $_POST['name'], 'id' => $id));
+			$usergroup->update();
 		}
 		self::return_back('/groups/group/'.$id);
 	}

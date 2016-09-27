@@ -1,12 +1,11 @@
 <?php
-class UserModel extends DataModel implements DataTable{
+class UserModel extends BaseModel{
 	public $id, $account, $first_name, $last_name, $phone, $hash;
-	public static function get_table_name(){ return 'users'; }
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
 }
-class User extends UserModel implements DataTable{
+class User extends UserModel{
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
@@ -23,9 +22,14 @@ class User extends UserModel implements DataTable{
 		return $query->fetch(PDO::FETCH_ASSOC);
 	}
 	public static function get($id){
-		$item = self::_get(array('id'=>$id));
-		if(empty($item)) return null; 
-		return current($item);
+		$statement = 'SELECT id, account, first_name, last_name, phone, hash
+						FROM users
+						WHERE id=:id
+						LIMIT 1;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':id', $id);
+		$query->execute();
+		return $query->fetch(PDO::FETCH_ASSOC);
 	}
 	public function save(){
 		$statement = 'INSERT INTO users(account, first_name, last_name, phone, hash) 
@@ -69,9 +73,13 @@ class User extends UserModel implements DataTable{
 		}
 		return null;
 	}
+	/**
+	 * https://crackstation.net/hashing-security.htm
+	 * Salasanan tallentaminen salt:n avulla
+	 * */
 	public static function get_by_account_and_pass($username, $password){
 		$statement = 'SELECT id, hash
-                    	FROM '.self::get_table_name().'
+                    	FROM users
                     	WHERE account LIKE :account 
                     		AND SUBSTRING(hash, 1, 32)=MD5(:password || SUBSTRING(hash, 33)) 
 				            LIMIT 1;';
@@ -82,22 +90,38 @@ class User extends UserModel implements DataTable{
 		return $query->fetch(PDO::FETCH_ASSOC);
 	}
 }
-class Me extends UserModel implements DataTable{
+class Me extends UserModel{
 	public function __construct($attributes){
 		parent::__construct($attributes);
 	}
 	public static function get(){
-		return self::_get_by_id(LoggedUser::id());
+		return User::get(LoggedUser::id());
 	}
-	public static function update($cols){
-		self::_update_by_id($cols, LoggedUser::id());
+	public function update(){
+		$hash = LoggedUser::hash();
+		if(!empty($this->hash)){
+			$hash = $this->hash;
+		}
+		$statement = 'UPDATE users
+					SET last_name=:last_name, first_name=:first_name, phone=:phone, hash=:hash 
+					WHERE id=:id;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':last_name', $this->last_name);
+		$query->bindParam(':first_name', $this->first_name);
+		$query->bindParam(':phone', $this->phone);
+		$query->bindParam(':hash', $this->hash);
+		$query->bindParam(':id', LoggedUser::id());
+		$query->execute();
 	}
 	public static function remove(){
-		self::_remove_by_id(LoggedUser::id());
+		$statement = 'DELETE FROM users WHERE id=:id;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':id', LoggedUser::id());
+		$query->execute();
 	}
 	public static function get_by_secure_key($key){
 		$statement = 'SELECT id, account, first_name, last_name, phone, hash
-						FROM '.self::get_table_name().'
+						FROM users
 						WHERE MD5(id::text || SUBSTRING(hash, 33)) LIKE :key
 						LIMIT 1;';
 		$query = DB::connection()->prepare($statement);

@@ -21,7 +21,8 @@ class ProductController extends BaseController{
 	
 	public static function edit($id){
 		if(isset($_POST['name'])){
-			Shop::update($_POST['name'], $id);
+			$product = new Product(array('name' => $_POST['name'], 'id' => $id));
+			$product->update();
 		}
 		self::return_back('/products/product/'.$id);
 	}

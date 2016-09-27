@@ -1,14 +1,10 @@
 {% extends "private.html" %}
 {% block content %}
 {% import "macros/headers.html" as headers %}
-            
-            
             <!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
-			
-			
                 <div class="side-body padding-top">
 					<div class="row">
-				        <div class="col-md-6">
+				        <div class="col-md-12">
 				            <div id="custom-search-input">
 				                <div class="input-group col-md-12">
 				                    <input type="text" class="form-control input-lg" placeholder="Hae..." />
@@ -21,9 +17,9 @@
 				            </div>
 				        </div>
 					</div>
-					{{headers.category_title("Tuotteet", "red", "#{base_path}/products")}}
-					{{headers.category_title("Ostoslistat", "yellow", "#{base_path}/shoppinglists")}}
-					{{headers.category_title("Kaupat", "green", "#{base_path}/shops")}}
-					{{headers.category_title("Ryhmät", "blue", "#{base_path}/groups")}}
+					{{headers.category_title("Tuotteet", "red", "#{base_path}/products", "barcode")}}
+					{{headers.category_title("Ostoslistat", "yellow", "#{base_path}/shoppinglists", "th-list")}}
+					{{headers.category_title("Kaupat", "green", "#{base_path}/shops", "shopping-cart")}}
+					{{headers.category_title("Ryhmät", "blue", "#{base_path}/groups", "users")}}
                 </div>
 {% endblock %}

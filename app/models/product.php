@@ -1,9 +1,8 @@
 <?php
-class Product extends DataModelCreatedBy implements DataTable{
+class Product extends BaseModel{
 	public $id, $name, $created_by, 
-			$cheapest_shop_id, $cheapest_shop, $shop_ids, $shops,
+			$cheapest_shop_id, $cheapest_shop, $cheapest_price, $shop_ids, $shops,
 			$allow_remove;
-	public static function get_table_name(){ return 'product'; }
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
@@ -18,6 +17,12 @@ class Product extends DataModelCreatedBy implements DataTable{
 								ORDER BY spp.price ASC
 								LIMIT 1
 							) cheapest_shop_id,
+							(SELECT spp.price 
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+								ORDER BY spp.price ASC
+								LIMIT 1
+							) cheapest_price,
 							(SELECT array_to_string(array_agg(sp.shop_id),\',\')
 								FROM shop_product sp
 								JOIN product pp ON pp.id = sp.product_id
@@ -67,14 +72,14 @@ class Product extends DataModelCreatedBy implements DataTable{
 	}
 
 
-	public static function update($name, $id){
+	public function update($id){
 		$statement = 'UPDATE product
 					SET name=:name
 					WHERE id=:id
 						AND created_by=:created_by;';
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':name', $name);
-		$query->bindParam(':id', $id);
+		$query->bindParam(':name', $this->name);
+		$query->bindParam(':id', $this->id);
 		$query->bindParam(':created_by', LoggedUser::id());
 		$query->execute();
 	}

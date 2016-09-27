@@ -1,10 +1,9 @@
 <?php
 
-class Shop extends DataModelCreatedBy implements DataTable{
+class Shop extends BaseModel{
 	public $id, $name, $created_by,
 			$usergroup_id,
 			$allow_remove;
-	public static function get_table_name(){ return 'shop'; }
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}
@@ -18,7 +17,7 @@ class Shop extends DataModelCreatedBy implements DataTable{
 								LIMIT 1
 							) AS usergroup_id,
 							(p.created_by=:me) AS allow_remove
-				FROM '.self::get_table_name().' p
+				FROM shop p
 				WHERE p.id IN(SELECT su.shop_id
 								FROM shop_users su
 								WHERE su.users_id=:users_id);';
@@ -44,7 +43,7 @@ class Shop extends DataModelCreatedBy implements DataTable{
 								LIMIT 1
 							) AS usergroup_id,
 							(p.created_by=:me) AS allow_remove
-				FROM '.self::get_table_name().' p
+				FROM shop p
 				WHERE p.id IN(SELECT su.shop_id
 								FROM shop_users su
 								WHERE su.users_id=:users_id)
@@ -55,11 +54,10 @@ class Shop extends DataModelCreatedBy implements DataTable{
 		$query->bindParam(':id', $id);
 		$query->execute();
 		$row = $query->fetch(PDO::FETCH_ASSOC);
-		$item = new Shop($row);
-		return $item;
+		return new Shop($row);
 	}
 	
-	public static function update($name, $id){
+	public function update(){
 		$statement = 'UPDATE shop
 					SET name=:name
 					WHERE id=:id 
@@ -67,8 +65,8 @@ class Shop extends DataModelCreatedBy implements DataTable{
 							FROM shop_users
 							WHERE users_id=:users_id);';
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':name', $name);
-		$query->bindParam(':id', $id);
+		$query->bindParam(':name', $this->name);
+		$query->bindParam(':id', $this->id);
 		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 	}

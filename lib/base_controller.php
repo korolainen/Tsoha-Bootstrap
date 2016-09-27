@@ -3,7 +3,7 @@
   class BaseController{
 
   	public static function return_back($path){
-  		if(array_key_exists('return', $_POST)){
+  		if(isset($_POST['return'])){
   			$path = $_POST['return'];
   		}
   		Redirect::to($path);

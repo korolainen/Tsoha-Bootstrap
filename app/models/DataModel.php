@@ -1,4 +1,5 @@
 <?php
+/*
 class DataModel extends BaseModel{
 	protected static $base_method = 'get_table_name';
 	public function __construct($attributes = null){
@@ -8,7 +9,7 @@ class DataModel extends BaseModel{
 	
 	
 	
-	/* SELECT */
+	// SELECT 
 	
 	protected static function _get($bind_params = array(), $where = '', $where_bind_params = array(), $limit = ''){
 		$where = Query_Helper::where($bind_params, $where, 'WHERE');
@@ -42,8 +43,6 @@ class DataModel extends BaseModel{
 	}
 	
 	protected static function _select_execute($select, $bind_params = array()){
-		$called_class = get_called_class();
-		if(!is_callable(array($called_class, self::$base_method))) return null;
 		$query = DB::connection()->prepare($select);
 		if(!empty($bind_params)){
 			foreach ($bind_params as $col_key=>$col_val){
@@ -58,7 +57,7 @@ class DataModel extends BaseModel{
 	
 	
 	
-	/* INSERT */
+	// INSERT
 
 	protected static function _insert($bind_params){
 		$called_class = get_called_class();
@@ -82,7 +81,7 @@ class DataModel extends BaseModel{
 	
 	
 	
-	/* UPDATE */
+	// UPDATE
 
 	protected static function _update($data, $key, $id, $where = '', $where_bind_params = array()){
 		$called_class = get_called_class();
@@ -117,7 +116,7 @@ class DataModel extends BaseModel{
 	
 	
 	
-	/* DELETE */
+	// DELETE
 	
 	protected static function _remove($key, $id, $bind_params = array(), $where = '', $where_bind_params = array()){
 		$where = Query_Helper::where($bind_params, $where, 'AND');
@@ -152,6 +151,7 @@ class DataModelCreatedBy extends DataModel{
 		self::_remove_by_id($id, array('created_by' => LoggedUser::id()));
 	}
 }
+*/
 /*
 class DataModelCreatedBy extends DataModel{
 	public function __construct($attributes){

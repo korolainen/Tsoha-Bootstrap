@@ -2,13 +2,9 @@
 {% block content %}
 {% import "macros/forms.html" as forms %}
 {% import "macros/headers.html" as headers %}
-            
-            
             <!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
-			
-			
                 <div class="side-body padding-top">
-                	{{headers.category_title("Kaupat", "green", "#{base_path}/shops")}}
+                	{{headers.category_title("Kaupat", "green", "#{base_path}/shops", "shopping-cart")}}
 					{{forms.filter()}}
 					<!-- http://bootsnipp.com/snippets/featured/table-panel-with-pagination -->
 					<div class="row">
@@ -30,7 +26,6 @@
 				                              <a href="{{base_path}}/shops/shop/{{shop.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
 				                              {{forms.remove("#{base_path}/shops/remove/#{shop.id}")}}
 				                            </td>
-				                            <!-- <td class="hidden-xs">1</td> -->
 				                          </tr>
 										{% endfor %}
 				                	</tbody>
