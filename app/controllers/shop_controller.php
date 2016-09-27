@@ -30,10 +30,10 @@ class ShopController extends BaseController{
 	}
 	
 	public static function create_new(){
-		if(array_key_exists('name', $_POST)){
+		if(isset($_POST['name'])){
 			$shop = new Shop(array('name' => $_POST['name']));
 			$shop_id = $shop->save();
-			if(array_key_exists('group', $_POST)){
+			if(isset($_POST['group'])){
 				$usergroups = array();
 				foreach($_POST['group'] as $usergroup_id){
 					if(isset($usergroups[$usergroup_id])) continue;
@@ -49,7 +49,7 @@ class ShopController extends BaseController{
 	}
 	
 	public static function edit($id){
-		if(array_key_exists('name', $_POST)){
+		if(isset($_POST['name'])){
 			Shop::update($_POST['name'], $id);
 		}
 		self::return_back('/shops/shop/'.$id);

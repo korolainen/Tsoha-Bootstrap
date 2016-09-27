@@ -10,7 +10,6 @@
   	}
 
   	public static function get_user_logged_in(){
-  		self::check_logged_in();
   		return Me::get();
   	}
 

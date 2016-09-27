@@ -1,7 +1,7 @@
 <?php
 class FrontController extends BaseController{
 
-	public static function login(){
+	public static function login_page(){
 		View::make('login/login.html');
 	}  
   	

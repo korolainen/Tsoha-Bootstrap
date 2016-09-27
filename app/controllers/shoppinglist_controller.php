@@ -18,7 +18,7 @@ class ShoppinglistController extends BaseController{
 	}
 	
 	public static function create_new(){
-		if(array_key_exists('name', $_POST) && array_key_exists('active', $_POST)){
+		if(isset($_POST['name']) && isset($_POST['active'])){
 			$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active']));//TODO active
 			$shoppinglist_id = $shoppinglist->save();
 			if(array_key_exists('group', $_POST)){
@@ -37,7 +37,7 @@ class ShoppinglistController extends BaseController{
 	}
 	
 	public static function edit($id){
-		if(array_key_exists('name', $_POST) && array_key_exists('active', $_POST)){
+		if(isset($_POST['name']) && isset($_POST['active'])){
 			Shoppinglist::update($_POST['name'], $_POST['active'], $id);
 		}
 		self::return_back('/shoppinglists/shoppinglist/'.$id);

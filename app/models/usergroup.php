@@ -9,7 +9,7 @@ class Usergroup extends DataModelCreatedBy implements DataTable{
 	}
 	
 	public static function all(){
-		$users = User::all();
+		$users = User::get_users_i_know();
 		$statement = 'SELECT p.id, p.name, p.created_by,
 							(SELECT array_to_string(array_agg(sp.users_id),\',\')
 								FROM all_usergroup_users sp
@@ -38,7 +38,7 @@ class Usergroup extends DataModelCreatedBy implements DataTable{
 	}
 	
 	public static function get($id){
-		$users = User::all();
+		$users = User::get_users_i_know();
 		$statement = 'SELECT p.id, p.name, p.created_by,
 							(SELECT array_to_string(array_agg(sp.users_id),\',\')
 								FROM all_usergroup_users sp

@@ -16,7 +16,7 @@ class UsergroupController extends BaseController{
 	}
 	
 	public static function create_new(){
-		if(array_key_exists('name', $_POST)){
+		if(isset($_POST['name'])){
 			$usergroup = new Usergroup(array('name' => $_POST['name']));
 			$usergroup_id = $usergroup->save();
 			if(array_key_exists('account_name', $_POST)){
@@ -36,7 +36,7 @@ class UsergroupController extends BaseController{
 	
 	
 	public static function edit($id){
-		if(array_key_exists('name', $_POST)){
+		if(isset($_POST['name'])){
 			Usergroup::update($_POST['name'], $id);
 		}
 		self::return_back('/groups/group/'.$id);

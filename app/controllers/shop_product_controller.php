@@ -3,7 +3,7 @@ class ShopProductController extends BaseController{
 
 
 	public static function edit($shop_id, $product_id){
-		if(array_key_exists('price', $_POST)){
+		if(isset($_POST['price'])){
 			$data = array('price' => CheckData::text_to_float($_POST['price']));
 			ShopProduct::update($data, $product_id, $shop_id);
 		}

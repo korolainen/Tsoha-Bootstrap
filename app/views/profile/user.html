@@ -1,0 +1,27 @@
+{% extends "private.html" %}
+{% block content %}
+{% import "macros/forms.html" as forms %}
+            	<div class="side-body padding-top">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="card-title">
+                                        <div class="title"><a href="{{base_path}}/groups"><span class="icon fa fa-users"></span></a> Käyttäjä: {{user.first_name}} {{user.last_name}}</div>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                	<div class="form-group">
+	                                    <div class="sub-title">Puhelin</div>
+	                                    <div>
+	                                        <p><a href="tel:{{user.phone}}">{{user.phone}}</a></p>
+	                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+{% endblock %}

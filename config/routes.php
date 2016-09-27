@@ -1,7 +1,10 @@
 <?php
 
-  	$routes->get('/', function() {
-    	FrontController::login();
+	$routes->get('/', function() {
+		FrontController::login_page();
+	});
+  	$routes->post('/login', function() {
+    	ProfileController::login();
   	});
   	$routes->get('/forgotpass', function() {
     	FrontController::forgotpass();
@@ -9,80 +12,91 @@
   	$routes->get('/signup', function() {
     	FrontController::register();
   	});
+  	$routes->post('/signup/new', function() {
+    	UserController::create_new();
+  	});
 	$routes->get('/logout', function() {
   		FrontController::logout();
   	});
 
 
-	$routes->get('/search', function() {
+	
+	function check_logged_in(){
+		BaseController::check_logged_in();
+	}
+	
+	$routes->get('/search', 'check_logged_in', function() {
 		SearchController::search();
 	});
 	
-	
-	$routes->get('/profile', function() {
+
+	$routes->get('/profile', 'check_logged_in', function() {
 		ProfileController::profile();
 	});
-	$routes->get('/users/check_account', function() {
-		ProfileController::check_account();
+	$routes->get('/users/user/:id', 'check_logged_in', function($id) {
+		UserController::get($id);
+	});
+	$routes->get('/users/check_account', 'check_logged_in', function() {
+		UserController::check_account();
 	});
   	
   
-  	$routes->get('/groups', function() {
+  	$routes->get('/groups', 'check_logged_in', function() {
   		UsergroupController::groups();
   	});
-	$routes->get('/groups/group/:id', function($id) {
+	$routes->get('/groups/group/:id', 'check_logged_in', function($id) {
 		UsergroupController::group($id);
 	});
-	$routes->get('/groups/remove/:id', function($id) {
+	$routes->get('/groups/remove/:id', 'check_logged_in', function($id) {
 		UsergroupController::remove($id);
 	});
-	$routes->post('/groups/edit/:id', function($id) {
+	$routes->post('/groups/edit/:id', 'check_logged_in', function($id) {
 		UsergroupController::edit($id);
 	});
-	$routes->get('/groups/new', function() {
+	$routes->get('/groups/new', 'check_logged_in', function() {
 		UsergroupController::create_new_form();
 	});
-	$routes->post('/groups/new', function() {
+	$routes->post('/groups/new', 'check_logged_in', function() {
 		UsergroupController::create_new();
 	});
 	
 
-	$routes->get('/shops', function() {
+	$routes->get('/shops', 'check_logged_in', function() {
   		ShopController::shops();
   	});
-	$routes->get('/shops/shop/:id', function($id) {
+	$routes->get('/shops/shop/:id', 'check_logged_in', function($id) {
 		ShopController::shop($id);
 	});
-	$routes->get('/shops/remove/:id', function($id) {
+	$routes->get('/shops/remove/:id', 'check_logged_in', function($id) {
 		ShopController::remove($id);
 	});
-	$routes->post('/shops/edit/:id', function($id) {
+	$routes->post('/shops/edit/:id', 'check_logged_in', function($id) {
 		ShopController::edit($id);
 	});
-	$routes->get('/shops/new', function() {
+	$routes->get('/shops/new', 'check_logged_in', function() {
 		ShopController::create_new_form();
 	});
-	$routes->post('/shops/new', function() {
+	$routes->post('/shops/new', 'check_logged_in', function() {
 		ShopController::create_new();
 	});
 	
 	
-	$routes->get('/shoppinglists', function() {
+	$routes->get('/shoppinglists', 'check_logged_in', function() {
   		ShoppinglistController::shoppinglists();
   	});
-	$routes->get('/shoppinglists/shoppinglist/:id', function($id) {
+	$routes->get('/shoppinglists/shoppinglist/:id', 'check_logged_in', function($id) {
 		ShoppinglistController::shoppinglist($id);
 	});
-	$routes->get('/shoppinglists/remove/:id', function($id) {
+	$routes->get('/shoppinglists/remove/:id', 'check_logged_in', function($id) {
 		ShoppinglistController::remove($id);
 	});
-	$routes->post('/shoppinglists/edit/:id', function($id) {
+	$routes->post('/shoppinglists/edit/:id', 'check_logged_in', function($id) {
 		ShoppinglistController::edit($id);
 	});
-	$routes->get('/shoppinglists/new', function() {
+	$routes->get('/shoppinglists/new', 'check_logged_in', function() {
 		ShoppinglistController::create_new_form();
 	});
-	$routes->post('/shoppinglists/new', function() {
+	$routes->post('/shoppinglists/new', 'check_logged_in', function() {
 		ShoppinglistController::create_new();
 	});
 	
@@ -90,13 +104,13 @@
 	
 	
 	
-	$routes->post('/shopproducts/edit/:shop_id/:product_id', function($shop_id, $product_id) {
+	$routes->post('/shopproducts/edit/:shop_id/:product_id', 'check_logged_in', function($shop_id, $product_id) {
 		ShopProductController::edit($shop_id, $product_id);
 	});
-	$routes->post('/shopproducts/new/:shop_id', function($shop_id) {
+	$routes->post('/shopproducts/new/:shop_id', 'check_logged_in', function($shop_id) {
 		ShopProductController::add($shop_id);
 	});
-	$routes->get('/shopproducts/remove/:shop_id/:product_id', function($shop_id, $product_id) {
+	$routes->get('/shopproducts/remove/:shop_id/:product_id', 'check_logged_in', function($shop_id, $product_id) {
 		ShopProductController::remove($shop_id, $product_id);
 	});
 	

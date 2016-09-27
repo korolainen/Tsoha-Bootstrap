@@ -13,7 +13,7 @@ class LoggedUser{
     private static $is_logged = false;
     
 	public static function init_login(){
-		Session::set(self::SESSION_KEY, '9c0db2fbc31e06d481f02eedc0aa1f19'); //TODO comment out
+		//Session::set(self::SESSION_KEY, '9c0db2fbc31e06d481f02eedc0aa1f19'); //TODO comment out
 		
 		self::$user_secure_key = Session::get(self::SESSION_KEY);
 		if(empty(self::$user_secure_key)){
@@ -32,7 +32,7 @@ class LoggedUser{
 	}
 	
     public static function set_user_data($row){
-    	if(array_key_exists('account', $row)){
+    	if(isset($row['account'])){
     		$secure_key = self::build_secure_key($row['hash'], $row['id']);
 			Session::set(self::SESSION_KEY, $secure_key);
 			Cookies::set(self::SESSION_KEY, $secure_key);
@@ -43,7 +43,7 @@ class LoggedUser{
     }
 	
     private static function build_secure_key($hash, $id){
-    	$salt = substr($hash, 33);
+    	$salt = substr($hash, 32);
     	return md5($id.$salt);
     }
     
@@ -65,7 +65,7 @@ class LoggedUser{
 
     private static function destroy_session(){
     	foreach($_SESSION as $k => $v){
-    		unset($_SESSION[k]);
+    		unset($_SESSION[$k]);
     	}
     }
 	private static function destroy_cookies(){

@@ -12,4 +12,14 @@ class ProfileController extends BaseController{
 		exit();
 	}
 	
+	public static function login(){
+		if(!isset($_POST['account']) || !isset($_POST['password'])) Redirect::to('');
+		$remember_me = false;
+		if(isset($_POST['remember'])) $remember_me = true; 
+		if(LoggedUser::login($_POST['account'], $_POST['password'], $remember_me)){
+			Redirect::to('/search');
+		}
+		Redirect::to('');
+	}
+	
 }
