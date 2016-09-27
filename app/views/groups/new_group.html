@@ -1,0 +1,14 @@
+{% extends "private.html" %}
+{% block content %}
+{% import "macros/forms.html" as forms %}
+ 	{{forms.new_begin("#{base_path}/groups","users","Uusi ryhmä", "#{base_path}/groups/new")}}
+ 		{{forms.new_name()}}
+	  	<div class="form-group">
+	      	<div class="sub-title">Käyttäjät</div>
+	      	<div id="accounts" data-action="{{base_path}}/users/check_account">
+			   	<div class="add-account"><input type="text" class="form-control" name="account_name[]" value="" /></div>
+		    </div>
+		    <button type="button" id="add-accountline" class="btn btn-success"> + </button>
+	    </div>
+	{{forms.new_end()}}
+{% endblock %}

@@ -60,11 +60,21 @@ class ShopUsergroup extends DataModelCreatedBy implements DataTable{
 		return Query_Helper::build_items($sql, 'ShopUsergroup');
 	}
 	
-	public static function insert($usergroup_id, $users_id){
-		self::_insert_my(array('usergroup_id'=>$usergroup_id,'shop_id'=>$users_id));
+	public static function insert($shop_id, $usergroup_id){
+		$statement = 'INSERT INTO shop_usergroup(usergroup_id,shop_id, created_by) 
+					VALUES(:usergroup_id,:shop_id,:created_by);';
+		$query = DB::connection()->prepare($statement);
+		$query->execute(array('usergroup_id'=>$usergroup_id, 'shop_id'=>$shop_id, 'created_by'=>LoggedUser::id()));
 	}
 	
-	public static function remove($id){
-		self::_remove_my($id);
+	public static function remove($shop_id, $usergroup_id){
+		$statement = 'DELETE FROM shoppinlist_usergroup WHERE shop_id=:shop_id 
+															AND usergroup_id=:usergroup_id
+															AND created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shop_id', $shop_id);
+		$query->bindParam(':usergroup_id', $usergroup_id);
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
 	}
 }

@@ -1,42 +1,110 @@
 {% macro remove(action) %}
-<button type="submit" class="btn btn-danger" onclick="window.location.href='{{action}}';"><em class="fa fa-trash"></em></button>
+	<button type="submit" class="btn btn-danger" onclick="window.location.href='{{action}}';"><em class="fa fa-trash"></em></button>
 {% endmacro %}
 
 {% macro filter() %}
-<!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
-<div class="row">
-   <div class="col-xs-12">
-       <div id="custom-search-input">
-           <div class="input-group col-md-12">
-               <input type="text" class="form-control input-lg" placeholder="Hae..." data-action="filter" data-filters="#dev-table" />
-               <span class="input-group-btn">
-                   <button class="btn btn-info btn-lg" type="button">
-                       <i class="glyphicon glyphicon-search"></i>
-                   </button>
-               </span>
-           </div>
-       </div>
-   </div>
-</div>
+	<!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
+	<div class="row">
+	   <div class="col-xs-12">
+	       <div id="custom-search-input">
+	           <div class="input-group col-md-12">
+	               <input type="text" class="form-control input-lg" placeholder="Hae..." data-action="filter" data-filters="#dev-table" />
+	               <span class="input-group-btn">
+	                   <button class="btn btn-info btn-lg" type="button">
+	                       <i class="glyphicon glyphicon-search"></i>
+	                   </button>
+	               </span>
+	           </div>
+	       </div>
+	   </div>
+	</div>
 {% endmacro %}
 
 {% macro filter_contents(target, focus) %}
-<!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
-<div class="row">
-    <div class="col-xs-10 col-sm-11">
-       <div id="custom-search-input">
-           <div class="input-group">
-               <input type="text" id="item-search" class="form-control input-lg" placeholder="Hae..." data-target="#{{target}}" data-action="filter" data-filters="#dev-table" />
-               <span class="input-group-btn">
-                   <button class="btn btn-info btn-lg" type="button">
-                       <i class="glyphicon glyphicon-search"></i>
-                   </button>
-               </span>
-           </div>
-       </div>
+	<!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
+	<div class="row">
+	    <div class="col-xs-10 col-sm-11">
+	       <div id="custom-search-input">
+	           <div class="input-group">
+	               <input type="text" id="item-search" class="form-control input-lg" placeholder="Hae..." data-target="#{{target}}" data-action="filter" data-filters="#dev-table" />
+	               <span class="input-group-btn">
+	                   <button class="btn btn-info btn-lg" type="button">
+	                       <i class="glyphicon glyphicon-search"></i>
+	                   </button>
+	               </span>
+	           </div>
+	       </div>
+	    </div>
+	    <div class="col-xs-2 col-sm-1">
+	   		<button id="add-item-button" data-focus="#{{target}}" type="button" class="btn btn-default add-item" ><em class="fa fa-plus"></em></button>
+	    </div>   
+	</div>
+{% endmacro %}
+
+
+{% macro new_begin(path, icon, name, action) %}
+				<div class="side-body padding-top">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="card">
+                        		<div class="card-header">
+									<div class="card-header">
+										<div class=".col-xs-9 .col-md-7">
+									    	<div class="card-title">
+									        	<div class="title"><a href="{{path}}"><span class="icon fa fa-{{icon}}"></span></a> {{name}}</div>
+											</div>
+									    </div>
+									</div>
+								</div> 
+                                <div class="card-body">
+                                	<form action="{{action}}" method="post">
+{% endmacro %}
+{% macro new_end() %}
+	{% import _self as forms %}
+										{{forms.save_cancel_buttons()}}
+                                	</form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+{% endmacro %}
+
+{% macro new_name() %}
+	<div class="form-group">
+      	<div class="sub-title">Nimi</div>
+	   	<div>
+	    	<input type="text" class="form-control new-item-focus" name="name" value="" />
+	    </div>
     </div>
-    <div class="col-xs-2 col-sm-1">
-   		<button id="add-item-button" data-focus="#{{target}}" type="button" class="btn btn-default add-item" ><em class="fa fa-plus"></em></button>
-    </div>   
-</div>
+{% endmacro %}
+
+{% macro cancel_button(target) %}
+	<button type="button" onClick="{{target}}" class="btn btn-default">Peruuta</button>
+{% endmacro %}
+
+{% macro cancel_button_history_back() %}
+	{% import _self as forms %}
+	{{ forms.cancel_button("history.go(-1);") }}
+{% endmacro %}
+
+{% macro cancel_button_reload() %}
+	{% import _self as forms %}
+	{{ forms.cancel_button("window.location.reload();") }}
+{% endmacro %}
+
+{% macro save_cancel_buttons() %}
+	{% import _self as forms %}
+	<div class="form-group">
+		<button type="submit" class="btn btn-success">Tallenna</button>
+		{{ forms.cancel_button_history_back() }}
+	</div>
+{% endmacro %}
+
+{% macro save_reload_buttons() %}
+	{% import _self as forms %}
+	<div class="form-group">
+		<button type="submit" class="btn btn-success">Tallenna</button>
+		{{ forms.cancel_button_reload() }}
+	</div>
 {% endmacro %}

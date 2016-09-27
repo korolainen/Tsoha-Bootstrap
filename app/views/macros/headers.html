@@ -1,4 +1,4 @@
-{% macro header_new(title, color, href) %}
+{% macro category_title(title, color, href) %}
 <div class="row">
 	<div class="col-xs-9 col-sm-10">
 	    <a href="{{href}}">
@@ -28,7 +28,17 @@
 </div>
 {% endmacro %}
 
-{% macro header_edit() %}
+{% macro new_item_title(path, name) %}
+<div class="card-header">
+	<div class=".col-xs-9 .col-md-7">
+    	<div class="card-title">
+        	<div class="title"><a href="{{path}}"><span class="icon fa fa-shopping-cart"></span></a> {{name}}</div>
+		</div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro edit_button() %}
 <div class=".col-xs-3 .col-md-5 add-toggle-block">
 	<div class="pull-right">
  		<button type="button" class="btn btn-default edit-item-toggle"><em class="fa fa-pencil"></em></button>

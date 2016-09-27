@@ -45,7 +45,9 @@ class UsergroupUsers extends DataModel implements DataTable{
 	}
 	
 	public static function insert($usergroup_id, $users_id){
-		self::_insert(array('usergroup_id'=>$usergroup_id,'users_id'=>$users_id));
+		$statement = 'INSERT INTO usergroup_users(usergroup_id,users_id) VALUES(:usergroup_id,:users_id);';
+		$query = DB::connection()->prepare($statement);
+		$query->execute(array('usergroup_id'=>$usergroup_id, 'users_id'=>$users_id));
 	}
 	
 	public static function remove($id){

@@ -22,6 +22,9 @@
 	$routes->get('/profile', function() {
 		ProfileController::profile();
 	});
+	$routes->get('/users/check_account', function() {
+		ProfileController::check_account();
+	});
   	
   
   	$routes->get('/groups', function() {
@@ -30,13 +33,16 @@
 	$routes->get('/groups/group/:id', function($id) {
 		UsergroupController::group($id);
 	});
-	$routes->get('/groups/group/:id/remove', function($id) {
+	$routes->get('/groups/remove/:id', function($id) {
 		UsergroupController::remove($id);
 	});
-	$routes->post('/groups/group/:id/edit', function($id) {
+	$routes->post('/groups/edit/:id', function($id) {
 		UsergroupController::edit($id);
 	});
 	$routes->get('/groups/new', function() {
+		UsergroupController::create_new_form();
+	});
+	$routes->post('/groups/new', function() {
 		UsergroupController::create_new();
 	});
 	
@@ -54,7 +60,7 @@
 		ShopController::edit($id);
 	});
 	$routes->get('/shops/new', function() {
-		View::make('shops/new_shop.html');
+		ShopController::create_new_form();
 	});
 	$routes->post('/shops/new', function() {
 		ShopController::create_new();
@@ -74,6 +80,9 @@
 		ShoppinglistController::edit($id);
 	});
 	$routes->get('/shoppinglists/new', function() {
+		ShoppinglistController::create_new_form();
+	});
+	$routes->post('/shoppinglists/new', function() {
 		ShoppinglistController::create_new();
 	});
 	
@@ -108,6 +117,9 @@
 		ProductController::product($id);
 	});
 	$routes->get('/products/new', function() {
+		ProductController::create_new_form();
+	});
+	$routes->post('/products/new', function() {
 		ProductController::create_new();
 	});
 	

@@ -1,9 +1,8 @@
 {% extends "private.html" %}
 {% block content %}
 {% import "macros/forms.html" as forms %}
-{% import "macros/buttons.html" as buttons %}
+{% import "macros/headers.html" as headers %}
             	<div class="side-body padding-top">
-                	<!-- {{buttons.header_new("Kaupat", "green", "#{base_path}/shops")}}  -->
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
@@ -14,7 +13,7 @@
 										</div>
 								    </div>
 								    {% if visibility.editbutton %}
-								    	{{buttons.header_edit()}}  
+								    	{{headers.edit_button()}}  
 								    {% endif %}  
 								</div>
                                 <div class="card-body {{visibility.edit}}">
@@ -25,10 +24,7 @@
 		                                        <input type="text" class="form-control" name="name" value="{{shop.name}}" />
 		                                    </div>
 	                                    </div>
-	                                    <div class="form-group">
-	                                    	<button type="submit" class="btn btn-success">Tallenna</button>
-	                                    	<button type="button" onClick="history.go(-1);" class="btn btn-default">Peruuta</button>
-	                                    </div>
+	                                    {{forms.save_cancel_buttons()}}
                                 	</form>
                                 </div>
                             </div>
@@ -62,10 +58,7 @@
 			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />
 			                                    </div>
 		                                    </div>
-		                                    <div class="form-group">
-		                                    	<button type="submit" class="btn btn-success">Tallenna</button>
-		                                    	<button type="button" onClick="history.go(-1);" class="btn btn-default">Peruuta</button>
-		                                    </div>
+		                                    {{forms.save_reload_buttons()}}
 	                                    
 	                                	</form>
 	                                </div>

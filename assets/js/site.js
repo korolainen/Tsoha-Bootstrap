@@ -145,4 +145,39 @@ $(document).ready(function(){
     });
     
     $('input.new-item-focus').focus();
+    
+    accounts_check = function(){
+    	var action = $('#accounts').attr('data-action');
+    	var pattern = new RegExp(/^[+a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i);
+    	$('#accounts input').off('input');
+    	$('#accounts input').on('input', function(){
+    		var elem = $(this);
+    		var val = $(this).val();
+    		if (val.length<=0){
+    			$(this).css("background-color", "#ffffff");
+    		}else if(pattern.test(val)){
+    	    	$(this).css("background-color", "#ffffff");
+    	    	var address = action+'?account='+encodeURIComponent(val);
+    			$.ajax({url: address,
+    	            success: function(data) {
+    	            	if(data=='ok'){
+    	            		elem.css("background-color", "#90EE90");
+    	            	}else{
+    	            		elem.css("background-color", "#FFC0CB");
+    	            	}
+    	            },
+    	            error: function(data) {
+    	            	console.log('Epäonnistui!');
+    	            }
+    	        });
+    	    }else{
+    	    	$(this).css("background-color", "#FFC0CB");
+    	    }
+    	});
+    };
+    accounts_check();
+    $('#add-accountline').click(function(){
+    	$('#accounts').append('<div class="add-account"><input type="text" class="form-control" name="account_name[]" value="" /></div>');
+    	accounts_check();
+    });
 });

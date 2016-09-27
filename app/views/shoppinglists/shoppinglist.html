@@ -1,9 +1,8 @@
 {% extends "private.html" %}
 {% block content %}
 {% import "macros/forms.html" as forms %}
-{% import "macros/buttons.html" as buttons %}
+{% import "macros/headers.html" as headers %}
             	<div class="side-body padding-top">
-                    {{buttons.header_new("Ostoslistat", "yellow", "#{base_path}/shoppinglists")}}
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
@@ -14,32 +13,32 @@
 								        	<div class="title">{{shoppinglist.name}}, {{shoppinglist.active_date}}</div>
 										</div>
 								    </div>
-								    {{buttons.header_edit()}}    
+								    {% if visibility.editbutton %}
+								    	{{headers.edit_button()}}  
+								    {% endif %}   
 								</div>
 								
                                 <div class="card-body edit-toggle-hidden">
                                 	<form action="#" method="post">
-                                	<div class="form-group">
-                                
-                                    <div class="sub-title">Nimi</div>
-                                    <div>
-                                        <input type="text" class="form-control" value="{{shoppinglist.name}}" />
-                                    </div>
-                                    <div class="sub-title">Voimassa</div>
-                                    <div>
-                                    		<!-- Source: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-							                <div class='input-group date' id='datetimepicker1'>
-							                    <input type='text' class="pickdatehere form-control" value="{{shoppinglist.active_date}}" />
-							                    <span class="input-group-addon">
-							                        <span class="glyphicon glyphicon-calendar"></span>
-							                    </span>
-							                </div>
-                                    </div>
-                                    </div>
-                                    <div class="form-group">
-                                    	<button type="submit" class="btn btn-success">Tallenna</button>
-                                    </div>
-                                    
+		                                <div class="form-group">
+		                                
+		                                    <div class="sub-title">Nimi</div>
+		                                    <div>
+		                                        <input type="text" class="form-control" value="{{shoppinglist.name}}" />
+		                                    </div>
+		                                    <div class="sub-title">Voimassa</div>
+		                                    <div>
+		                                    		<!-- Source: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
+									                <div class='input-group date' id='datetimepicker1'>
+									                    <input type='text' name="active" class="pickdatehere form-control" value="{{shoppinglist.active_date}}" />
+									                    <span class="input-group-addon">
+									                        <span class="glyphicon glyphicon-calendar"></span>
+									                    </span>
+									                </div>
+		                                    </div>
+	                                    </div>
+	                                    {{forms.save_cancel_buttons()}}
+	                                    
                                 	</form>
                                 </div>
                             </div>
@@ -50,7 +49,7 @@
                         
                         <div class="col-xs-12">
 	                        <div class="pull-right">
-	                        	{{forms.remove("#{base_path}/shoppinglists/shoppinglist/#{shoppinglist.id}/remove")}}
+	                        	{{forms.remove("#{base_path}/shoppinglists/remove/#{shoppinglist.id}")}}
 	                        </div>
                         </div>
                     </div>

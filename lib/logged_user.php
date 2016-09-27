@@ -1,15 +1,23 @@
 <?php
+/*
+ * Käyttäjien avaimet
+ * 1: 9c0db2fbc31e06d481f02eedc0aa1f19
+ * 2: 987213db43a74773834c0b5a0d0f4e47
+ * 3: a79138800ac3fc26ad703aca3d3a6230
+ * */
 class LoggedUser{
-    private static $SESSION_KEY = 'shopuserkey';
+    const SESSION_KEY = 'shopuserkey';
     private static $user_secure_key = '';
-    private static $user_id = 1;
+    private static $user_id = 0;
     private static $data = array();
     private static $is_logged = false;
     
 	public static function init_login(){
-		self::$user_secure_key = Session::get(self::$SESSION_KEY);
+		Session::set(self::SESSION_KEY, '9c0db2fbc31e06d481f02eedc0aa1f19'); //TODO comment out
+		
+		self::$user_secure_key = Session::get(self::SESSION_KEY);
 		if(empty(self::$user_secure_key)){
-			self::$user_secure_key = Cookies::get(self::$SESSION_KEY);
+			self::$user_secure_key = Cookies::get(self::SESSION_KEY);
 		}
 		$row = Me::get_by_secure_key(self::$user_secure_key);
 		self::set_user_data($row);
@@ -25,23 +33,28 @@ class LoggedUser{
 	
     public static function set_user_data($row){
     	if(array_key_exists('account', $row)){
-			Session::set(self::$SESSION_KEY, $row['id']);
-			Cookies::set(self::$SESSION_KEY, $row['id']);
+    		$secure_key = self::build_secure_key($row['hash'], $row['id']);
+			Session::set(self::SESSION_KEY, $secure_key);
+			Cookies::set(self::SESSION_KEY, $secure_key);
 			self::$data = $row;
 			self::$user_id = intval($row['id']);
 			self::$is_logged = true;
     	}
     }
 	
+    private static function build_secure_key($hash, $id){
+    	$salt = substr($hash, 33);
+    	return md5($id.$salt);
+    }
+    
     public static function login($username, $password, $remember_me = false){
         self::destroy_session_and_cookies();
         $row = User::get_by_account_and_pass($username, $password);
         if(isset($row['id'])){
-        	$salt = substr($row['hash'], 33);
-        	$secure_key = md5($row['id'].$salt);
-			Session::set(self::$SESSION_KEY, $secure_key);
+        	$secure_key = self::build_secure_key($row['hash'], $row['id']);
+			Session::set(self::SESSION_KEY, $secure_key);
 			if($remember_me){
-			    Cookies::set(self::$SESSION_KEY, $secure_key);
+			    Cookies::set(self::SESSION_KEY, $secure_key);
 			}
             return true;
         }else{
@@ -70,3 +83,4 @@ class LoggedUser{
 	    self::destroy_session_and_cookies();
 	}
 }
+LoggedUser::init_login();

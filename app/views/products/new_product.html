@@ -1,0 +1,7 @@
+{% extends "private.html" %}
+{% block content %}
+{% import "macros/forms.html" as forms %}
+	{{forms.new_begin("#{base_path}/products","barcode","Uusi tuote", "#{base_path}/products/new")}}
+		{{forms.new_name()}}
+	{{forms.new_end()}}
+{% endblock %}

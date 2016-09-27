@@ -1,33 +1,34 @@
 {% extends "private.html" %}
 {% block content %}
+{% import "macros/forms.html" as forms %}
             	<div class="side-body padding-top">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
                                 <div class="card-header">
                                     <div class="card-title">
-                                        <div class="title">Profiili</div>
+                                        <div class="title">Profiili: {{user_logged_in.account}}</div>
                                     </div>
                                 </div>
                                 <div class="card-body">
                                 	<form action="#" method="post">
-                                	<div class="form-group">
-                                
-                                    <div class="sub-title">Etunimi</div>
-                                    <div>
-                                        <input type="text" class="form-control" value="etu" />
-                                    </div>
-                                
-                                    <div class="sub-title">Sukunimi</div>
-                                    <div>
-                                        <input type="text" class="form-control" value="suku" />
-                                    </div>
-                                    
-                                    </div>
-                                    <div class="form-group">
-                                            <button type="submit" class="btn btn-default">Tallenna</button>
-                                    </div>
-                                    
+	                                	<div class="form-group">
+		                                    <div class="sub-title">Etunimi</div>
+		                                    <div>
+		                                        <input type="text" class="form-control" value="{{user_logged_in.first_name}}" />
+		                                    </div>
+		                                
+		                                    <div class="sub-title">Sukunimi</div>
+		                                    <div>
+		                                        <input type="text" class="form-control" value="{{user_logged_in.last_name}}" />
+		                                    </div>
+		                                
+		                                    <div class="sub-title">Puhelin</div>
+		                                    <div>
+		                                        <input type="text" class="form-control" value="{{user_logged_in.phone}}" />
+		                                    </div>
+	                                    </div>
+	                                    {{forms.save_cancel_buttons()}}
                                 	</form>
                                 </div>
                             </div>

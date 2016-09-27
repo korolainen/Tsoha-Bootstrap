@@ -1,13 +1,13 @@
 {% extends "private.html" %}
 {% block content %}
 {% import "macros/forms.html" as forms %}
-{% import "macros/buttons.html" as buttons %}
+{% import "macros/headers.html" as headers %}
             
             <!-- http://bootsnipp.com/snippets/featured/custom-search-input -->
 			
 			
                 <div class="side-body padding-top">
-                	{{buttons.header_new("Ostoslistat", "yellow", "#{base_path}/shoppinglists")}}
+                	{{headers.category_title("Ostoslistat", "yellow", "#{base_path}/shoppinglists")}}
 					{{forms.filter()}}
 					<!-- http://bootsnipp.com/snippets/featured/table-panel-with-pagination -->
 					<div class="row">
@@ -17,10 +17,8 @@
 				                <table class="table table-striped table-bordered table-list" id="dev-table">
 				                  <thead>
 				                    <tr>
-				                        <!-- <th class="hidden-xs">ID</th> -->
 				                        <th>Nimi</th>
 				                        <th>Voimassa</th>
-				                        <th>Käyttäjäryhmä</th>
 				                        <th><em class="fa fa-cog"></em></th>
 				                    </tr> 
 				                  </thead>
@@ -29,10 +27,9 @@
 				                          <tr class="{{shoppinglist.current}}">
 				                            <td><a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}" data-filter="target">{{shoppinglist.name}}</a></td>
 				                            <td>{{shoppinglist.active_date}}</td>
-				                            <td><a href="{{base_path}}/usergroups/{{shop.usergroup.id}}">{{shop.usergroup.name}}</a></td>
 				                            <td align="center">
-				                              <a class="btn btn-default"><em class="fa fa-pencil"></em></a>
-				                              {{forms.remove("#{base_path}/shoppinglists/shoppinglist/#{shoppinglist.id}/remove")}}
+				                              <a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
+				                              {{forms.remove("#{base_path}/shoppinglists/remove/#{shoppinglist.id}")}}
 				                            </td>
 				                            <!-- <td class="hidden-xs">1</td> -->
 				                          </tr>

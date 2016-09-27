@@ -28,11 +28,21 @@ class ShoppinglistUsergroup extends DataModelCreatedBy implements DataTable{
 		return Query_Helper::build_items($sql, 'Shoppinglist');
 	}
 	
-	public static function insert($usergroup_id, $users_id){
-		self::_insert_my(array('usergroup_id'=>$usergroup_id,'users_id'=>$users_id));
+	public static function insert($shoppinglist_id, $usergroup_id){
+		$statement = 'INSERT INTO shoppinglist_usergroup(usergroup_id,shoppinglist_id,created_by) 
+					VALUES(:usergroup_id,:shoppinglist_id,:created_by);';
+		$query = DB::connection()->prepare($statement);
+		$query->execute(array('usergroup_id'=>$usergroup_id, 'shoppinglist_id'=>$shoppinglist_id, 'created_by'=>LoggedUser::id()));
 	}
 	
-	public static function remove($id){
-		self::_remove_my($id);
+	public static function remove($shoppinglist_id, $usergroup_id){
+		$statement = 'DELETE FROM shoppinglist_usergroup WHERE shoppinglist_id=:shoppinglist_id 
+															AND usergroup_id=:usergroup_id
+															AND created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
+		$query->bindParam(':usergroup_id', $usergroup_id);
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
 	}
 }

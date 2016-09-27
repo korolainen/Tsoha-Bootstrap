@@ -19,15 +19,30 @@ class ShopController extends BaseController{
 		View::make('shops/shop.html', 
 					array('shop' => $shop, 
 						'shop_products' => $products, 
-						'visibility' => self::visibility()
+						'visibility' => CssClass::visibility()
 					)
 		);
+	}
+	
+	public static function create_new_form(){
+		$usergroups = Usergroup::all();
+		View::make('shops/new_shop.html', array('usergroups' => $usergroups));
 	}
 	
 	public static function create_new(){
 		if(array_key_exists('name', $_POST)){
 			$shop = new Shop(array('name' => $_POST['name']));
-			$shop->save();
+			$shop_id = $shop->save();
+			if(array_key_exists('group', $_POST)){
+				$usergroups = array();
+				foreach($_POST['group'] as $usergroup_id){
+					if(isset($usergroups[$usergroup_id])) continue;
+					$usergroups[$usergroup_id] = $usergroup_id;
+					$usergroup = Usergroup::get($usergroup_id);
+					if(empty($usergroup)) continue;
+					ShopUsergroup::insert($shop_id, $usergroup->id);
+				}
+			}
 			self::return_back('/shops/shop/'.$shop->id);
 		}
 		self::return_back('/shops');

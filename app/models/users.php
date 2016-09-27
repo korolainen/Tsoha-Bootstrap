@@ -13,8 +13,18 @@ class User extends UserModel implements DataTable{
 	public static function all(){
 		return self::_all();
 	}
+
+	public static function check_account($account){
+		$statement = 'SELECT id FROM users WHERE account LIKE :account LIMIT 1;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':account', $account);
+		$query->execute();
+		return $query->fetch(PDO::FETCH_ASSOC);
+	}
 	public static function get($id){
-		return self::_get(array('id'=>$id));
+		$item = self::_get(array('id'=>$id));
+		if(empty($item)) return null; 
+		return current($item);
 	}
 	public static function add($row){
 		return self::_insert($row);
@@ -37,7 +47,7 @@ class Me extends UserModel implements DataTable{
 		parent::__construct($attributes);
 	}
 	public static function get(){
-		return User::get(LoggedUser::id());
+		return self::_get_by_id(LoggedUser::id());
 	}
 	public static function update($cols){
 		self::_update_by_id($cols, LoggedUser::id());
@@ -46,9 +56,9 @@ class Me extends UserModel implements DataTable{
 		self::_remove_by_id(LoggedUser::id());
 	}
 	public static function get_by_secure_key($key){
-		$statement = 'SELECT id, account, first_name, last_name, phone
+		$statement = 'SELECT id, account, first_name, last_name, phone, hash
 						FROM '.self::get_table_name().'
-						WHERE MD5(CONCAT(id, SUBSTRING(hash, 33))) LIKE :key
+						WHERE MD5(id::text || SUBSTRING(hash, 33)) LIKE :key
 						LIMIT 1;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':key', $key);

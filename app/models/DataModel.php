@@ -64,8 +64,6 @@ class DataModel extends BaseModel{
 		$called_class = get_called_class();
 		if(!is_callable(array($called_class, self::$base_method))) return;
 		$insert = Query_Helper::build_insert($called_class::get_table_name(), $bind_params);
-		var_dump($insert);
-		exit();
 		$query = DB::connection()->prepare($insert);
 		if(!empty($bind_params)){
 			foreach ($bind_params as $col_key=>$col_val){

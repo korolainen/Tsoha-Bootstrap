@@ -60,7 +60,7 @@ class Shop extends DataModelCreatedBy implements DataTable{
 	}
 	
 	public static function update($name, $id){
-		$statement = 'UPDATE '.self::get_table_name().'
+		$statement = 'UPDATE shop
 					SET name=:name
 					WHERE id=:id 
 						AND id IN(SELECT shop_id
@@ -89,6 +89,7 @@ class Shop extends DataModelCreatedBy implements DataTable{
 		$query->execute(array('name'=>$this->name, 'created_by'=>LoggedUser::id()));
 		$row = $query->fetch(PDO::FETCH_ASSOC);
 		$this->id = $row['id'];
+		return $this->id;
 	}
 	
 }

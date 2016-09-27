@@ -16,7 +16,7 @@ class Usergroup extends DataModelCreatedBy implements DataTable{
 								WHERE sp.usergroup_id = p.id
 							) AS user_ids,
 							(created_by=:me) AS allow_remove
-				FROM '.self::get_table_name().' p
+				FROM usergroup p
 				WHERE p.created_by=:created_by;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':me', LoggedUser::id());
@@ -38,39 +38,64 @@ class Usergroup extends DataModelCreatedBy implements DataTable{
 	}
 	
 	public static function get($id){
-		//näytetään ryhmä johon käyttäjä kuuluu tai ryhmä jotka käyttäjä on luonut
-		return self::_get_by_id($id, 
-					' AND (created_by=:created_by 
-							OR id IN(SELECT usergroup_id 
-									FROM '.UsergroupUsers::get_table_name().' 
-									WHERE users_id=:users_id)
-							)',
-					array('created_by'=>LoggedUser::id(), 
-							'users_id'=>LoggedUser::id()
-					)
-		);
+		$users = User::all();
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT array_to_string(array_agg(sp.users_id),\',\')
+								FROM all_usergroup_users sp
+								WHERE sp.usergroup_id = p.id
+							) AS user_ids,
+							(created_by=:me) AS allow_remove
+				FROM usergroup p
+				WHERE p.created_by=:created_by AND p.id=:id;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->bindParam(':id', $id);
+		$query->execute();
+		$items = array();
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$user_ids = explode(',', $row['user_ids']);
+			$group_users = array();
+			foreach ($user_ids as $user){
+				if(array_key_exists($user, $users)){
+					$group_users[] = $users[$user];
+				}
+			}
+			$row['users'] = $group_users;
+			return new Usergroup($row);
+		}
+		return null;
 	}
 	
-	public static function update($cols, $id){
-		//sallitaan päivitys vain jos ryhmä on tehty itse tai on ryhmän jäsen
-		self::_update_by_id($cols, 
-							$id, 
-							' AND (id IN(SELECT usergroup_id 
-										FROM '.UsergroupUsers::get_table_name().'
-										WHERE users_id=:users_id
-										)
-									OR created_by=:my_id
-									)',
-							array('created_by' => LoggedUser::id())
-		);
+	public static function update($name, $id){
+		$statement = 'UPDATE usergroup
+					SET name=:name
+					WHERE id=:id
+						AND id IN(SELECT usergroup_id
+							FROM usergroup_users
+							WHERE users_id=:users_id);';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':name', $name);
+		$query->bindParam(':id', $id);
+		$query->bindParam(':users_id', LoggedUser::id());
+		$query->execute();
 	}
 	
-	public static function add($cols){
-		return self::_insert_my($cols);
+	public function save(){
+		$statement = 'INSERT INTO usergroup(name,created_by) VALUES(:name,:created_by) RETURNING id;';
+		$query = DB::connection()->prepare($statement);
+		$query->execute(array('name'=>$this->name, 'created_by'=>LoggedUser::id()));
+		$row = $query->fetch();
+		$this->id = $row['id'];
+		return $this->id;
 	}
 	
 	public static function remove($id){
-		self::_remove_my($id);
+		$statement = 'DELETE FROM usergroup WHERE id=:id AND created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':id', $id);
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
 	}
 	
 }

@@ -25,7 +25,7 @@ class Product extends DataModelCreatedBy implements DataTable{
 								GROUP BY sp.product_id
 							) AS shop_ids,
 							(created_by=:me) AS allow_remove
-				FROM '.self::get_table_name().' p
+				FROM product p
 				WHERE p.created_by=:created_by 
 					OR p.id IN(SELECT slp.product_id
 								FROM shoppinglist_product slp
@@ -65,27 +65,76 @@ class Product extends DataModelCreatedBy implements DataTable{
 		}
 		return $items;
 	}
+
+
+	public static function update($name, $id){
+		$statement = 'UPDATE product
+					SET name=:name
+					WHERE id=:id
+						AND created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':name', $name);
+		$query->bindParam(':id', $id);
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
+	}
 	
 	public static function get($id){
-		return self::_get_by_id($id,
-				' OR id IN(SELECT product_id
-								FROM shoppinglist_product
-								WHERE shoppinglist_id IN(SELECT shoppinglist_id
-														FROM shoppinglist_users
-														WHERE users_id=:shoppinglist_users_id
+		$shops = Shop::all();//ORDER BY pp.name ASC
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT spp.shop_id
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+								ORDER BY spp.price ASC
+								LIMIT 1
+							) cheapest_shop_id,
+							(SELECT array_to_string(array_agg(sp.shop_id),\',\')
+								FROM shop_product sp
+								JOIN product pp ON pp.id = sp.product_id
+								WHERE sp.product_id = p.id
+								GROUP BY sp.product_id
+							) AS shop_ids,
+							(created_by=:me) AS allow_remove
+				FROM product p
+				WHERE (p.created_by=:created_by
+					OR p.id IN(SELECT slp.product_id
+								FROM shoppinglist_product slp
+								WHERE slp.shoppinglist_id IN(SELECT slu.shoppinglist_id
+														FROM shoppinglist_users slu
+														WHERE slu.users_id=:shoppinglist_users_id
 														)
-								) 
-				 OR id IN(SELECT product_id
-								FROM shop_product
-								WHERE shop_id IN(SELECT shop_id
-														FROM shop_users
-														WHERE users_id=:shop_users_id
+								)
+				 OR p.id IN(SELECT shp.product_id
+								FROM shop_product shp
+								WHERE shp.shop_id IN(SELECT su.shop_id
+														FROM shop_users su
+														WHERE su.users_id=:shop_users_id
 														)
-								) ',
-				array('shoppinglist_users_id'=>LoggedUser::id(),
-						'shop_users_id'=>LoggedUser::id()
-				)
-		);
+								)) AND id=:id;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->bindParam(':shoppinglist_users_id', LoggedUser::id());
+		$query->bindParam(':shop_users_id', LoggedUser::id());
+		$query->bindParam(':id', $id);
+		$query->execute();
+		$items = array();
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			if(array_key_exists($row['cheapest_shop_id'], $shops)){
+				$row['cheapest_shop'] = $shops[$row['cheapest_shop_id']];
+			}
+			$shop_ids = explode(',', $row['shop_ids']);
+			$product_shops = array();
+			foreach ($shop_ids as $shop_id){
+				if(array_key_exists($shop_id, $shops)){
+					$product_shops[] = $shops[$shop_id];
+				}
+			}
+			$row['shops'] = $product_shops;
+			//$row['name_html'] = CheckData::character_escape($row['name']);
+			return new Product($row);
+		}
+		return null;
 	}
 	
 	public function save(){
