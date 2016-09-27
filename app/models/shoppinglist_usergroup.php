@@ -23,6 +23,7 @@ class ShoppinglistUsergroup extends BaseModel{
 		$query->bindParam('my_id_d', LoggedUser::id());
 		$query->bindParam('usergroup_id', $usergroup_id);
 		$query->execute();
+		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
 			$items[$row['id']] = new Shoppinglist($row);
 		}

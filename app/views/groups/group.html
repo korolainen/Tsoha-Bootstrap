@@ -6,46 +6,92 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
-                                
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
-								        	<div class="title">{{group.name}}</div>
+								        	<div class="title"><a href="{{base_path}}/groups"><span class="icon fa fa-users"></span></a> {{group.name}}</div>
 										</div>
 								    </div>
 								    {% if visibility.editbutton %}
 								    	{{headers.edit_button()}}  
 								    {% endif %} 
 								</div>
-								
-                                <div class="card-body edit-toggle-hidden">
+                                <div class="card-body {{visibility.edit}}">
                                 	<form action="{{base_path}}/groups/edit/{{group.id}}" method="post">
 	                                	<div class="form-group">
-	                                
 		                                    <div class="sub-title">Nimi</div>
 		                                    <div>
-		                                        <input type="text" class="form-control" value="{{group.name}}" />
+		                                        <input type="text" class="form-control" name="name" value="{{group.name}}" />
 		                                    </div>
-	                                    
 	                                    </div>
 	                                    {{forms.save_cancel_buttons()}}
-                                    
                                 	</form>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xs-12 edit-toggle-block">
-                        	
+                    </div>
+                    <div class="row {{visibility.list_products}}">
+                        <div class="col-xs-12">
+                        	<div class="{{visibility.add}}">
+	                    	{{forms.filter_contents("new-group-name")}}
+	                    </div>
+	                    <div class="{{visibility.add_product}}">
+		                    <div class="card">
+                            	<div class="card-header">
+									<div class=".col-xs-9 .col-md-7">
+								    	<div class="card-title">
+								        	<div class="title">Lisää käyttäjiä ryhmään</div>
+										</div>
+								    </div>   
+								</div>
+                                <div class="card-body">
+                                	<form action="{{base_path}}/usergroupusers/new/{{group.id}}" method="post">
+	                                	<div class="form-group">
+									      	<div class="sub-title">Käyttäjät</div>
+									      	<div id="accounts" data-action="{{base_path}}/users/check_account">
+											   	<div class="add-account"><input type="text" class="form-control" name="account_name[]" value="" /></div>
+										    </div>
+										    <button type="button" id="add-accountline" class="btn btn-success"> + </button>
+									    </div>
+	                                    {{forms.save_reload_buttons()}}
+                                	</form>
+                                </div>
+                            </div>
+	                    </div>
+                       	<div class="panel panel-default panel-table {{visibility.add}}">
+			              <div class="panel-body">
+			                <table class="table table-striped table-bordered table-list" id="dev-table">
+			                  <thead>
+			                    <tr>
+			                        <th>Käyttäjä</th>
+			                        <th></th>
+			                    </tr> 
+			                  </thead>
+			                  <tbody>
+			                  		{% for user in usergroup_users %}
+			                          <tr>
+			                            <td><p class="h4"><a href="{{base_path}}/users/user/{{user.id}}" data-filter="target">{{user.first_name}} {{user.last_name}}</a></p></td>
+			                            <td align="center">
+			                            	{% if not user.is_my_id %}
+			                              		<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/usergroupusers/remove/{{group.id}}/{{user.users_id}}"><em class="fa fa-trash"></em></button>
+			                              	{% endif %}
+			                            </td>
+			                          </tr>
+									{% endfor %}
+			                	</tbody>
+			                </table>
+			              </div>
+			            </div>
                         </div>
                         
                         
-                        <div class="col-xs-12">
+                        <div class="col-xs-12 {{visibility.add}}">
 	                        <div class="pull-right">
 	                        	{{forms.remove("#{base_path}/groups/remove/#{group.id}")}}
 	                        </div>
                         </div>
                     </div>
-                    
-                    
                 </div>
+                    
+                    
 {% endblock %}

@@ -8,7 +8,10 @@ class UsergroupController extends BaseController{
 	
 	public static function group($id){
 		$group = Usergroup::get($id);
-		View::make('groups/group.html', array('group' => $group, 'visibility' => CssClass::visibility()));
+		$usergroup_users = UsergroupUsers::users($id);
+		View::make('groups/group.html', array('group' => $group, 
+												'visibility' => CssClass::visibility(), 
+												'usergroup_users' => $usergroup_users));
 	}
 	
 	public static function create_new_form(){
@@ -19,7 +22,7 @@ class UsergroupController extends BaseController{
 		if(isset($_POST['name'])){
 			$usergroup = new Usergroup(array('name' => $_POST['name']));
 			$usergroup_id = $usergroup->save();
-			if(array_key_exists('account_name', $_POST)){
+			if(isset($_POST['account_name'])){
 				$account_names = array();
 				foreach($_POST['account_name'] as $account_name){
 					if(isset($account_names[$account_name])) continue;
@@ -28,7 +31,7 @@ class UsergroupController extends BaseController{
 					if(empty($user)) continue;
 					UsergroupUsers::insert($usergroup_id, $user['id']);
 				}
-			}	
+			}
 			self::return_back('/groups/group/'.$usergroup_id);
 		}
 		self::return_back('/groups');

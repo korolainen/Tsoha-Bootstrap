@@ -114,6 +114,17 @@
 		ShopProductController::remove($shop_id, $product_id);
 	});
 	
+
+	
+	
+	
+	$routes->post('/usergroupusers/new/:group_id', 'check_logged_in', function($group_id) {
+		UsergroupUserController::add($group_id);
+	});
+	$routes->get('/usergroupusers/remove/:group_id/:users_id', 'check_logged_in', function($group_id, $users_id) {
+		UsergroupUserController::remove($group_id, $users_id);
+	});
+	
 	
 	
 	

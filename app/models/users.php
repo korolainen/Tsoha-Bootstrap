@@ -62,16 +62,16 @@ class User extends UserModel{
 																		WHERE su.users_id=:shop_users_id
 																		)
 												)
-						)
-						LIMIT 1;';
+						);';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':shoppinglist_users_id', LoggedUser::id());
 		$query->bindParam(':shop_users_id', LoggedUser::id());
 		$query->execute();
-		if($row = $query->fetch(PDO::FETCH_ASSOC)){
-			return new User($row);
+		$item = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$item[$row['id']] = new User($row);
 		}
-		return null;
+		return $item;
 	}
 	/**
 	 * https://crackstation.net/hashing-security.htm

@@ -10,7 +10,7 @@
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
-								        	<div class="title"><a href="{{base_path}}/products"><span class="icon fa fa-th-list"></span></a> {{shoppinglist.name}}, {{shoppinglist.active_date}}</div>
+								        	<div class="title"><a href="{{base_path}}/shoppinglists"><span class="icon fa fa-th-list"></span></a> {{shoppinglist.name}}, {{shoppinglist.active_date}}</div>
 										</div>
 								    </div>
 								    {% if visibility.editbutton %}
@@ -24,7 +24,7 @@
 		                                
 		                                    <div class="sub-title">Nimi</div>
 		                                    <div>
-		                                        <input type="text" class="form-control" value="{{shoppinglist.name}}" />
+		                                        <input type="text" class="form-control" name="name" value="{{shoppinglist.name}}" />
 		                                    </div>
 		                                    <div class="sub-title">Voimassa</div>
 		                                    <div>
