@@ -32,7 +32,7 @@ INSERT INTO shop_product(product_id, shop_id, price, created_by) VALUES(2, 2, 2.
 
 INSERT INTO shoppinglist(name, created_by, active) VALUES('Eväät 18. päivä', 1, '2016-09-26 12:00:00');
 
-INSERT INTO shoppinglist_product(product_id, shoppinglist_id, description, quantity, created_by) VALUES(6, 1, 'murot', 1, 1);
+INSERT INTO shoppinglist_product(product_id, shoppinglist_id, description, quantity, created_by) VALUES(1, 1, 'murot', 1, 1);
 
 
 

@@ -5,7 +5,7 @@ class ShopProduct extends BaseModel{
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}	
-	public static function all(){
+	private static function execute_all(){
 		$statement = 'SELECT product_id,shop_id,price,created_by,updated
 				FROM shop_product
 				WHERE shop_id IN(SELECT shop_id
@@ -15,9 +15,21 @@ class ShopProduct extends BaseModel{
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
+		return $query;
+	}
+	public static function all(){
+		$query = self::execute_all();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
 			$items[] = new ShopProduct($row);
+		}
+		return $items;
+	}
+	public static function all_sorted(){
+		$query = self::execute_all();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$items[$row['shop_id']][$row['product_id']] = new ShopProduct($row);
 		}
 		return $items;
 	}

@@ -20,7 +20,8 @@ class Shop extends BaseModel{
 				FROM shop p
 				WHERE p.id IN(SELECT su.shop_id
 								FROM shop_users su
-								WHERE su.users_id=:users_id);';
+								WHERE su.users_id=:users_id)
+				ORDER BY p.name ASC;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':me', LoggedUser::id());
 		$query->bindParam(':users_id', LoggedUser::id());

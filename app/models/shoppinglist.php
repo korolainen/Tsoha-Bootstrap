@@ -72,7 +72,7 @@ class Shoppinglist extends BaseModel{
 		return null;
 	}
 
-	public static function update($name, $active, $id){
+	public function update(){
 		$statement = 'UPDATE shoppinglist
 					SET name=:name, active=:active
 					WHERE id=:id 
@@ -80,9 +80,9 @@ class Shoppinglist extends BaseModel{
 							FROM shoppinglist_users
 							WHERE users_id=:users_id);';
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':name', $name);
-		$query->bindParam(':active', $active);
-		$query->bindParam(':id', $id);
+		$query->bindParam(':name', $this->name);
+		$query->bindParam(':active', $this->active);
+		$query->bindParam(':id', $this->id);
 		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 	}

@@ -118,6 +118,20 @@
 	
 	
 	
+	$routes->post('/shoppinglistproducts/edit/:shop_id/:product_id', 'check_logged_in', function($shoppinglist_id, $product_id) {
+		ShoppinglistProductController::edit($shoppinglist_id, $product_id);
+	});
+	$routes->post('/shoppinglistproducts/new/:shop_id', 'check_logged_in', function($shoppinglist_id) {
+		ShoppinglistProductController::add($shoppinglist_id);
+	});
+	$routes->get('/shoppinglistproducts/remove/:shop_id/:product_id', 'check_logged_in', function($shoppinglist_id, $product_id) {
+		ShoppinglistProductController::remove($shoppinglist_id, $product_id);
+	});
+	
+
+	
+	
+	
 	$routes->post('/usergroupusers/new/:group_id', 'check_logged_in', function($group_id) {
 		UsergroupUserController::add($group_id);
 	});

@@ -16,7 +16,12 @@ class ProductController extends BaseController{
 	}
 	
 	public static function create_new(){
-		
+		if(!empty($_POST['name'])){
+			$product = new Product(array('name' => $_POST['name']));
+			$product_id = $product->save();
+			self::return_back('/products/product/'.$product_id);
+		}
+		self::return_back('/products');
 	}
 	
 	public static function edit($id){

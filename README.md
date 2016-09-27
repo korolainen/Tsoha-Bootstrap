@@ -1,5 +1,9 @@
 # Tietokantasovelluksen esittelysivu
 
+Käyttäjätunnus: tsoha
+Salasana: tsoha
+
+
 Yleisiä linkkejä:
 
 * http://valkorol.users.cs.helsinki.fi/tsoha/

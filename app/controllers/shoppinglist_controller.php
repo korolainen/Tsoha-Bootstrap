@@ -8,8 +8,10 @@ class ShoppinglistController extends BaseController{
 	
 	public static function shoppinglist($id){
 		$shoppinglist = Shoppinglist::get($id);
+		$shopppinglist_products = ShoppinglistProduct::products_in_shoppinglist($id);
 		View::make('shoppinglists/shoppinglist.html', array('shoppinglist' => $shoppinglist, 
-															'visibility' => CssClass::visibility()));
+															'visibility' => CssClass::visibility(), 
+															'shoppinglist_products' => $shopppinglist_products));
 	}
 	
 	public static function create_new_form(){

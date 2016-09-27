@@ -1,6 +1,7 @@
 <?php
 class ShoppinglistProduct extends BaseModel{
-	public $product_id, $shoppinglist_id, $created_by, $updated, $product, $is_cheapest,
+	public $product_id, $shoppinglist_id, $created_by, $updated, $product, 
+			$cheapest_shop, $cheapest_shop_id, $cheapest_shop_price,
 			$name;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
@@ -33,19 +34,21 @@ class ShoppinglistProduct extends BaseModel{
 		$query->bindParam(':id', $id);
 		$query->execute();
 		$row = $query->fetch(PDO::FETCH_ASSOC);
-		return new ShopProduct($row);
+		return new ShoppinglistProduct($row);
 	}
 
 
 	public static function products_in_shoppinglist($shoppinglist_id){
+		$shops = Shop::all();
+		$shop_products = ShopProduct::all_sorted();
 		$statement = 'SELECT sp.product_id, sp.shoppinglist_id, sp.created_by, 
 							p.id, p.name, p.created_by AS product_created_by, 
-							(sp.price IN(SELECT spp.price 
-								FROM shoppinglist_product spp
+							(SELECT spp.shop_id 
+								FROM shop_product spp
 								WHERE spp.product_id = p.id
 								ORDER BY spp.price ASC
 								LIMIT 1
-							)) AS is_cheapest
+							) AS cheapest_shop_id
 						FROM shoppinglist_product sp
 						JOIN product p ON p.id = sp.product_id
 						WHERE sp.shoppinglist_id=:shoppinglist_id
@@ -55,19 +58,24 @@ class ShoppinglistProduct extends BaseModel{
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$items[] = new ShopProduct($row);
+			if(isset($shops[$row['cheapest_shop_id']])){
+				$row['cheapest_shop'] = $shops[$row['cheapest_shop_id']];
+				if(isset($shop_products[$row['cheapest_shop_id']][$row['product_id']])){
+					$row['cheapest_shop_price'] = $shop_products[$row['cheapest_shop_id']][$row['product_id']]->price;
+				}
+			}
+			$items[] = new ShoppinglistProduct($row);
 			
 		}
 		return $items;
 	}
 	
 	public function save(){
-		$statement = 'INSERT INTO shoppinglist_product(product_id, shoppinglist_id, price, created_by) 
-						VALUES(:product_id, :shoppinglist_id, :price, :created_by);';
+		$statement = 'INSERT INTO shoppinglist_product(product_id, shoppinglist_id, created_by) 
+						VALUES(:product_id, :shoppinglist_id, :created_by);';
 		$query = DB::connection()->prepare($statement);
 		$query->execute(array('product_id'=>$this->product_id, 
 				'shoppinglist_id'=>$this->shoppinglist_id, 
-				'price'=>$this->price, 
 				'created_by'=>LoggedUser::id()));
 	}
 

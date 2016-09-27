@@ -165,7 +165,7 @@ CONSTRAINT shoppinglist_usergroup_created_by_FK
 CREATE TABLE shoppinglist_product (
 shoppinglist_id INTEGER NOT NULL,
 product_id INTEGER NOT NULL,
-description VARCHAR(255) NOT NULL,
+description VARCHAR(255) NULL,
 quantity DECIMAL(18,5) NULL,
 created_by INTEGER NOT NULL,
 created TIMESTAMP NOT NULL DEFAULT NOW(),

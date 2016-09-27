@@ -6,7 +6,6 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
-                                
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
@@ -17,17 +16,15 @@
 								    	{{headers.edit_button()}}  
 								    {% endif %}   
 								</div>
-								
-                                <div class="card-body edit-toggle-hidden">
-                                	<form action="{{base_path}}/shoppinglists/edit/{{shoppinglist.id}}" method="post">
-		                                <div class="form-group">
-		                                
-		                                    <div class="sub-title">Nimi</div>
-		                                    <div>
-		                                        <input type="text" class="form-control" name="name" value="{{shoppinglist.name}}" />
-		                                    </div>
-		                                    <div class="sub-title">Voimassa</div>
-		                                    <div>
+                                	<div class="card-body {{visibility.edit}}">
+                                		<form action="{{base_path}}/shoppinglists/edit/{{shoppinglist.id}}" method="post">
+			                                <div class="form-group">		                                
+			                                    <div class="sub-title">Nimi</div>
+			                                    <div>
+			                                        <input type="text" class="form-control" name="name" value="{{shoppinglist.name}}" />
+			                                    </div>
+			                                    <div class="sub-title">Voimassa</div>
+			                                    <div>
 		                                    		<!-- Source: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
 									                <div class='input-group date' id='datetimepicker1'>
 									                    <input type='text' name="active" class="pickdatehere form-control" value="{{shoppinglist.active_date}}" />
@@ -35,25 +32,78 @@
 									                        <span class="glyphicon glyphicon-calendar"></span>
 									                    </span>
 									                </div>
+			                                    </div>
 		                                    </div>
-	                                    </div>
-	                                    {{forms.save_cancel_buttons()}}
-	                                    
-                                	</form>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xs-12 edit-toggle-block">
-                        	
-                        </div>
-                        
-                        <div class="col-xs-12">
-	                        <div class="pull-right">
-	                        	{{forms.remove("#{base_path}/shoppinglists/remove/#{shoppinglist.id}")}}
+	                                    	{{forms.save_cancel_buttons()}}
+	                                	</form>
+	                                </div>
+	                            </div>
 	                        </div>
                         </div>
-                    </div>
-                    
-                    
-                </div>
+                        <div class="row {{visibility.list_products}}">
+	                        <div class="col-xs-12">
+                        	<div class="{{visibility.add}}">
+		                    	{{forms.filter_contents("new-product-name")}}
+		                    </div>
+		                    <div class="{{visibility.add_product}}">
+			                    <div class="card">
+	                            	<div class="card-header">
+										<div class=".col-xs-9 .col-md-7">
+									    	<div class="card-title">
+									        	<div class="title">Lisää kauppaan tuote</div>
+											</div>
+									    </div>   
+									</div>
+	                                <div class="card-body">
+	                                	<form action="{{base_path}}/shoppinglistproducts/new/{{shoppinglist.id}}" method="post">
+		                                	<div class="form-group">
+			                                    <div class="sub-title">Tuote</div>
+			                                    <div>
+			                                        <input type="text" class="form-control" id="new-product-name" name="name" value="" />
+			                                    </div>
+		                                    </div>
+		                                    {{forms.save_reload_buttons()}}
+	                                    
+	                                	</form>
+	                                </div>
+	                            </div>
+		                    </div>
+                        	<div class="panel panel-default panel-table {{visibility.add}}">
+				              <div class="panel-body">
+				                <table class="table table-striped table-bordered table-list" id="dev-table">
+				                  <thead>
+				                    <tr>
+				                        <th>Tuote</th>
+				                        <th>Halvin</th>
+				                        <th></th>
+				                    </tr> 
+				                  </thead>
+				                  <tbody>
+				                  		{% for shoppinglist_product in shoppinglist_products %}
+				                          <tr>
+				                            <td><p class="h4"><a href="{{base_path}}/products/product/{{shoppinglist_product.product_id}}" data-filter="target">{{shoppinglist_product.name}}</a></p></td>
+				                            <td>
+												<ul class="additional-list-info">
+													<li><a href="{{base_path}}/shops/shop/{{shoppinglist_product.cheapest_shop.id}}">{{shoppinglist_product.cheapest_shop.name}}</a> {{shoppinglist_product.cheapest_shop_price}}</li>
+												</ul>
+											</td>
+				                            <td align="center">
+				                              	<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/remove/{{shoppinglist.id}}/{{shop_product.product_id}}"><em class="fa fa-trash"></em></button>
+				                            </td>
+				                          </tr>
+										{% endfor %}
+				                	</tbody>
+				                </table>
+				              </div>
+				            </div>
+                        </div>
+	                        <div class="col-xs-12 {{visibility.add}}">
+		                        <div class="pull-right">
+		                        	{{forms.remove("#{base_path}/shops/remove/#{shoppinglist.id}")}}
+		                        </div>
+	                        </div>
+	                    </div>
+	                    
+	                    
+	                </div>
 {% endblock %}

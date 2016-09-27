@@ -60,7 +60,7 @@ class Product extends BaseModel{
 			$shop_ids = explode(',', $row['shop_ids']);
 			$product_shops = array();
 			foreach ($shop_ids as $shop_id){
-				if(array_key_exists($shop_id, $shops)){
+				if(isset($shops[$shop_id])){
 					$product_shops[] = $shops[$shop_id];
 				}
 			}
@@ -131,7 +131,7 @@ class Product extends BaseModel{
 			$shop_ids = explode(',', $row['shop_ids']);
 			$product_shops = array();
 			foreach ($shop_ids as $shop_id){
-				if(array_key_exists($shop_id, $shops)){
+				if(isset($shops[$shop_id])){
 					$product_shops[] = $shops[$shop_id];
 				}
 			}
