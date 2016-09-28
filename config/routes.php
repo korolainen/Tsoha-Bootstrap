@@ -188,6 +188,16 @@
 	});
 	
 	
+	
+	
+	$routes->get('/shops/link/:id', 'check_logged_in', function($shop_id) {
+		ShopController::link($shop_id);
+	});
+	$routes->get('/shoppinglists/link/:id', 'check_logged_in', function($shop_id) {
+		ShoppinglistController::link($shop_id);
+	});
+	
+	
 	$routes->get('/license', function() {
   		InfoController::license();
   	});

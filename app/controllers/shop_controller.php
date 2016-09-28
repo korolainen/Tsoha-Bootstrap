@@ -17,6 +17,11 @@ class ShopController extends BaseController{
 		$shops = Shop::find($_GET['q']);
 		View::make('shops/find.html', array('shops' => $shops));
 	}
+	public static function link($shop_id){
+		if(!isset($_GET['q'])) exit();
+		$products = Product::find_not_in_shop($_GET['q'], $shop_id);
+		View::make('products/linkproduct.html', array('products' => $products));
+	}
 	public static function shop($id){
 		$shop = Shop::get($id);
 		$products = ShopProduct::products_in_shop($id);

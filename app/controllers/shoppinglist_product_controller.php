@@ -5,7 +5,8 @@ class ShoppinglistProductController extends BaseController{
 		//if(empty($_POST['name'])) error
 		$name = $_POST['name'];
 		$product_id = CheckData::post_by_key('product_id');
-		if(empty($product_id)){
+		$product = Product::get($product_id);
+		if(empty($product)){
 			$product = new Product(array('name' => $name));
 			$product_id = $product->save();
 		}

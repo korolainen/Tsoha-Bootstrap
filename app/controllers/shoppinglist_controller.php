@@ -10,6 +10,11 @@ class ShoppinglistController extends BaseController{
 		$shoppinglists = Shoppinglist::find($_GET['q']);
 		View::make('shoppinglists/find.html', array('shoppinglists' => $shoppinglists));
 	}
+	public static function link($shoppinglist_id){
+		if(!isset($_GET['q'])) exit();
+		$products = Product::find_not_in_shopinglist($_GET['q'], $shoppinglist_id);
+		View::make('products/linkproduct.html', array('products' => $products));
+	}
 	public static function shoppinglist($id){
 		$shoppinglist = Shoppinglist::get($id);
 		$shopppinglist_products = ShoppinglistProduct::products_in_shoppinglist($id);

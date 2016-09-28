@@ -22,7 +22,8 @@ class ShopProductController extends BaseController{
 		$name = $_POST['name'];
 		$price = CheckData::text_to_float($_POST['price']);
 		$product_id = CheckData::post_by_key('product_id');
-		if(empty($product_id)){
+		$product = Product::get($product_id);
+		if(empty($product)){
 			$product = new Product(array('name' => $name));
 			$product_id = $product->save();
 		}

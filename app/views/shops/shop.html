@@ -32,7 +32,7 @@
                     </div>
                     <div class="row {{visibility.list_products}}">
                         <div class="col-xs-12">
-                        	<div class="{{visibility.add}}">
+                        	<div class="{{visibility.add}}" id="link-product">
 		                    	{{forms.filter_contents("new-product-name")}}
 		                    </div>
 		                    <div class="{{visibility.add_product}}">
@@ -52,7 +52,7 @@
 			                                    <div>
 			                                        <input type="text" class="form-control" id="new-product-name" name="name" value="" />
 			                                    </div>
-		                                
+		                                		<div id="related-products" data-action="{{base_path}}/shops/link/{{shop.id}}"></div>
 			                                    <div class="sub-title">Hinta</div>
 			                                    <div>
 			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />

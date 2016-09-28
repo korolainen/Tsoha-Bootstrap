@@ -245,4 +245,45 @@ $(document).ready(function(){
 	    }
 	});
     
+    link_product = function(elem){
+    	var val = elem.val();
+    	var action = $('#related-products').attr('data-action');
+    	var address = action + '?q='+encodeURIComponent(val);
+    	if(val.length>0){
+    		$.ajax({url: address,
+                success: function(data) {
+                	$('#related-products').html(data);
+                	$('#related-products input.linkitem').first().prop("checked", true);
+                },
+                error: function(data) {
+                	console.log('Epäonnistui!');
+                }
+            });
+    	}else{
+    		$('#related-products').html('');
+    	}
+    };
+    
+    $('#link-product #add-item-button').mouseup(function(){
+    	link_product($('#new-product-name'));
+    });
+    
+    $('#new-product-name').on('input', function(e){
+		if(($(this).attr('data-lastval') != $(this).val())&&($(this).val().length>0)){
+			$(this).attr('data-lastval',$(this).val());
+	    	var elem = $(this);
+			if($(this).val().length<3){
+				link_product(elem);
+			}else{
+		        if (timer){
+		                clearTimeout(timer);
+		        }
+		        timer = setTimeout(function(){
+		        	link_product(elem);
+		        }, 300);
+			}
+	    }else if($(this).val().length<=0){
+	    	$('#related-products').html('');
+	    }
+	});
 });
