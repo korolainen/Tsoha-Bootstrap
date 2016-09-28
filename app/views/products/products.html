@@ -22,7 +22,7 @@
 				                  <tbody>
 				                  		{% for product in products %}
 				                          <tr>
-				                            <td><a href="{{base_path}}/products/product/{{product.id}}" data-filter="target">{{product.name}}</a></td>
+				                            <td><p class="h5"><a href="{{base_path}}/products/product/{{product.id}}" data-filter="target">{{product.name}}</a></p></td>
 				                            <td><a href="{{base_path}}/shops/shop/{{product.cheapest_shop.id}}">{{product.cheapest_shop.name}}</a> {{product.cheapest_price}}</td>
 				                            <td>
 												<ul class="additional-list-info">
@@ -46,5 +46,4 @@
 						</div>
 					</div>
                 </div>
-            </div>
 {% endblock %}

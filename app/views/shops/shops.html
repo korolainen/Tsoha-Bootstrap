@@ -21,7 +21,7 @@
 				                  <tbody>
 				                  		{% for shop in shops %}
 				                          <tr>
-				                            <td><a href="{{base_path}}/shops/shop/{{shop.id}}" data-filter="target">{{shop.name}}</a></td>
+				                            <td><p class="h5"><a href="{{base_path}}/shops/shop/{{shop.id}}" data-filter="target">{{shop.name}}</a></p></td>
 				                            <td align="center">
 				                              <a href="{{base_path}}/shops/shop/{{shop.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
 				                              {{forms.remove("#{base_path}/shops/remove/#{shop.id}")}}

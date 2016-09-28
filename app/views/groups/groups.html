@@ -26,7 +26,7 @@
 				                  <tbody>
 				                  		{% for group in groups %}
 				                          <tr>
-				                            <td><a href="{{base_path}}/groups/group/{{group.id}}" data-filter="target">{{group.name}}</a></td>
+				                            <td><p class="h5"><a href="{{base_path}}/groups/group/{{group.id}}" data-filter="target">{{group.name}}</a></p></td>
 				                            <td>
 												<ul class="additional-list-info">
 				                  					{% for user in group.users %}

@@ -10,7 +10,6 @@ class LoggedUser{
     private static $user_secure_key = '';
     private static $user_id = 0;
     private static $data = array();
-    private static $hash = '';
     private static $is_logged = false;
     
 	public static function init_login(){
@@ -32,11 +31,10 @@ class LoggedUser{
 	}
 	
     public static function set_user_data($row){
-    	if(isset($row['account'])){
+    	if(isset($row['id'])){
     		$secure_key = self::build_secure_key($row['hash'], $row['id']);
 			Session::set(self::SESSION_KEY, $secure_key);
 			self::$data = $row;
-			self::$hash = $row['hash'];
 			self::$user_id = intval($row['id']);
 			self::$is_logged = true;
     	}
@@ -57,7 +55,7 @@ class LoggedUser{
 			}
             return true;
         }else{
-            self::remove();
+            self::logout();
         }
         return false;
     }

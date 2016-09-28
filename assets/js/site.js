@@ -87,12 +87,19 @@ $(document).ready(function(){
         $(this).parent().parent().find('.serialize-value').each(function(){
         	values[$(this).attr('name')] = $(this).val();
         });
+        //$('body').append('<form id="hid" action="'+action+'" method="post"><input type="hidden" name="price" value="0"></form>');
+        //$('#hid').submit();
         $.ajax({
             type: "POST",
             url: action,
             data: values,
             success: function(data) {
+            	//console.log(data);
             	flash_success(elem);
+            	var target = elem.parent().parent().find('i[aria-hidden=true]').first();
+            	if(data!=target.attr('class')){
+            		window.location.reload();
+            	}
             },
             error: function(data) {
             	flash_error(elem);
@@ -102,6 +109,7 @@ $(document).ready(function(){
     });
 	
 	$('.remove-inline-button').click(function(){
+		
 		var elem = $(this);
 		elem.focusout();
         var loader_src = elem.attr('data-loader');
@@ -175,9 +183,12 @@ $(document).ready(function(){
     	    }
     	});
     };
+    
     accounts_check();
     $('#add-accountline').click(function(){
     	$('#accounts').append('<div class="add-account"><input type="text" class="form-control" name="account_name[]" value="" /></div>');
     	accounts_check();
     });
+    
+    
 });

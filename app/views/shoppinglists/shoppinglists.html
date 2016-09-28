@@ -22,7 +22,7 @@
 				                  <tbody>
 				                  		{% for shoppinglist in shoppinglists %}
 				                          <tr class="{{shoppinglist.current}}">
-				                            <td><a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}" data-filter="target">{{shoppinglist.name}}</a></td>
+				                            <td><p class="h5"><a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}" data-filter="target">{{shoppinglist.name}}</a></p></td>
 				                            <td>{{shoppinglist.active_date}}</td>
 				                            <td align="center">
 				                              <a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>

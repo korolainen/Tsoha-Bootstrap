@@ -72,7 +72,7 @@ class Product extends BaseModel{
 	}
 
 
-	public function update($id){
+	public function update(){
 		$statement = 'UPDATE product
 					SET name=:name
 					WHERE id=:id

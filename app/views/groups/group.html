@@ -70,7 +70,7 @@
 			                  <tbody>
 			                  		{% for user in usergroup_users %}
 			                          <tr>
-			                            <td><p class="h4"><a href="{{base_path}}/users/user/{{user.id}}" data-filter="target">{{user.first_name}} {{user.last_name}}</a></p></td>
+			                            <td><p class="h5"><a href="{{base_path}}/users/user/{{user.id}}" data-filter="target">{{user.first_name}} {{user.last_name}}</a></p></td>
 			                            <td align="center">
 			                            	{% if not user.is_my_id %}
 			                              		<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/usergroupusers/remove/{{group.id}}/{{user.users_id}}"><em class="fa fa-trash"></em></button>

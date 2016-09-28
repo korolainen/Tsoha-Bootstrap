@@ -1,7 +1,7 @@
 <?php
 class ShopProduct extends BaseModel{
 	public $product_id, $shop_id, $price, $created_by, $updated, $product, $is_cheapest,
-			$name;
+			$name, $shop_name;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 	}	
@@ -33,6 +33,7 @@ class ShopProduct extends BaseModel{
 		}
 		return $items;
 	}
+	/*
 	public static function get($id){
 		$statement = 'SELECT product_id,shop_id,price,created_by,updated
 				FROM shop_product
@@ -48,7 +49,7 @@ class ShopProduct extends BaseModel{
 			return new ShopProduct($row);
 		}
 		return null;
-	}
+	}*/
 	public function update(){
 		$statement = 'UPDATE shop_product
 						SET price=:price, updated=now()
@@ -76,6 +77,81 @@ class ShopProduct extends BaseModel{
 						ORDER BY p.name ASC;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':shop_id', $shop_id);
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$items[] = new ShopProduct($row);
+			
+		}
+		return $items;
+	}
+
+
+	public static function get($shop_id, $product_id){
+		$statement = 'SELECT sp.product_id, sp.shop_id, sp.created_by, sp.price,
+							p.id, p.name, p.created_by AS product_created_by, 
+							(sp.price IN(SELECT spp.price 
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+								ORDER BY spp.price ASC
+								LIMIT 1
+							)) AS is_cheapest
+						FROM shop_product sp
+						JOIN product p ON p.id = sp.product_id
+						WHERE sp.shop_id=:shop_id AND p.id=:product_id
+						ORDER BY p.name ASC;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shop_id', $shop_id);
+		$query->bindParam(':product_id', $product_id);
+		$query->execute();
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			return new ShopProduct($row);
+			
+		}
+		return null;
+	}
+
+
+	public static function product_in_shops($product_id){
+		$statement = 'SELECT sp.product_id, sp.shop_id, sp.created_by, sp.price,
+							p.id, p.name, p.created_by AS product_created_by, 
+							(sp.price IN(SELECT spp.price 
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+								ORDER BY spp.price ASC
+								LIMIT 1
+							)) AS is_cheapest,
+							s.name AS shop_name
+						FROM shop_product sp
+						JOIN product p ON p.id = sp.product_id
+						JOIN shop s ON s.id = sp.shop_id
+						WHERE p.id=:product_id
+						ORDER BY p.name ASC;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':product_id', $product_id);
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$items[] = new ShopProduct($row);
+			
+		}
+		return $items;
+	}
+
+
+	public static function product_not_in_shops($product_id){
+		$statement = 'SELECT s.name, s.id AS shop_id
+						FROM shop s
+						WHERE s.id NOT IN (SELECT pp.shop_id FROM shop_product pp WHERE product_id=:product_id)
+							AND (s.id IN (SELECT ppp.shop_id 
+											FROM shop_users ppp
+											WHERE ppp.users_id=:users_id
+											)
+								)
+						ORDER BY s.name ASC;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':product_id', $product_id);
+		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){

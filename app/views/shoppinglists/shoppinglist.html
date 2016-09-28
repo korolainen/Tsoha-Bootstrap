@@ -50,7 +50,7 @@
 	                            	<div class="card-header">
 										<div class=".col-xs-9 .col-md-7">
 									    	<div class="card-title">
-									        	<div class="title">Lisää kauppaan tuote</div>
+									        	<div class="title">Lisää ostoslistalle tuote</div>
 											</div>
 									    </div>   
 									</div>
@@ -81,7 +81,7 @@
 				                  <tbody>
 				                  		{% for shoppinglist_product in shoppinglist_products %}
 				                          <tr>
-				                            <td><p class="h4"><a href="{{base_path}}/products/product/{{shoppinglist_product.product_id}}" data-filter="target">{{shoppinglist_product.name}}</a></p></td>
+				                            <td><p class="h5"><a href="{{base_path}}/products/product/{{shoppinglist_product.product_id}}" data-filter="target">{{shoppinglist_product.name}}</a></p></td>
 				                            <td>
 												<ul class="additional-list-info">
 													<li><a href="{{base_path}}/shops/shop/{{shoppinglist_product.cheapest_shop.id}}">{{shoppinglist_product.cheapest_shop.name}}</a> {{shoppinglist_product.cheapest_shop_price}}</li>

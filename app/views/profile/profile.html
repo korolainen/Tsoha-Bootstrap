@@ -11,21 +11,26 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
-                                	<form action="#" method="post">
+                                	<form action="{{base_path}}/profile/edit" method="post">
 	                                	<div class="form-group">
 		                                    <div class="sub-title">Etunimi</div>
 		                                    <div>
-		                                        <input type="text" class="form-control" value="{{user_logged_in.first_name}}" />
+		                                        <input type="text" class="form-control" name="first_name" value="{{user_logged_in.first_name}}" />
 		                                    </div>
 		                                
 		                                    <div class="sub-title">Sukunimi</div>
 		                                    <div>
-		                                        <input type="text" class="form-control" value="{{user_logged_in.last_name}}" />
+		                                        <input type="text" class="form-control" name="last_name" value="{{user_logged_in.last_name}}" />
 		                                    </div>
 		                                
 		                                    <div class="sub-title">Puhelin</div>
 		                                    <div>
-		                                        <input type="text" class="form-control" value="{{user_logged_in.phone}}" />
+		                                        <input type="text" class="form-control" name="phone" value="{{user_logged_in.phone}}" />
+		                                    </div>
+		                                
+		                                    <div class="sub-title">Salasana (tyhjä: ei muuteta)</div>
+		                                    <div>
+		                                        <input type="password" class="form-control" name="password" value="" />
 		                                    </div>
 	                                    </div>
 	                                    {{forms.save_cancel_buttons()}}

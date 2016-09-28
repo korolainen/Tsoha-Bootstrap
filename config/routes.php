@@ -33,6 +33,9 @@
 	$routes->get('/profile', 'check_logged_in', function() {
 		ProfileController::profile();
 	});
+	$routes->post('/profile/edit', 'check_logged_in', function() {
+		ProfileController::edit();
+	});
 	$routes->get('/users/user/:id', 'check_logged_in', function($id) {
 		UserController::get($id);
 	});
@@ -115,6 +118,16 @@
 	});
 	
 
+	
+	
+	
+	
+	$routes->post('/productshop/new/:product_id', 'check_logged_in', function($product_id) {
+		ProductShopController::add($product_id);
+	});
+	
+
+	
 	
 	
 	

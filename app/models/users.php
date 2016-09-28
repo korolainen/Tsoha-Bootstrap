@@ -73,6 +73,35 @@ class User extends UserModel{
 		}
 		return $item;
 	}
+	public function get_user_i_know($id){
+		$statement = 'SELECT p.id, p.account, p.first_name, p.last_name, p.phone
+						FROM users p
+						WHERE (p.id IN(SELECT slp.users_id
+										FROM shoppinglist_users slp
+										WHERE slp.shoppinglist_id IN(SELECT slu.shoppinglist_id
+																FROM shoppinglist_users slu
+																WHERE slu.users_id=:shoppinglist_users_id
+																)
+										)
+								 OR p.id IN(SELECT shp.users_id
+												FROM shop_users shp
+												WHERE shp.shop_id IN(SELECT su.shop_id
+																		FROM shop_users su
+																		WHERE su.users_id=:shop_users_id
+																		)
+												)
+						) AND id=:id;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shoppinglist_users_id', LoggedUser::id());
+		$query->bindParam(':shop_users_id', LoggedUser::id());
+		$query->bindParam(':id', $id);
+		$query->execute();
+		$item = array();
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			return new User($row);
+		}
+		return null;
+	}
 	/**
 	 * https://crackstation.net/hashing-security.htm
 	 * Salasanan tallentaminen salt:n avulla
@@ -98,20 +127,26 @@ class Me extends UserModel{
 		return User::get(LoggedUser::id());
 	}
 	public function update(){
-		$hash = LoggedUser::hash();
-		if(!empty($this->hash)){
-			$hash = $this->hash;
-		}
 		$statement = 'UPDATE users
-					SET last_name=:last_name, first_name=:first_name, phone=:phone, hash=:hash 
+					SET last_name=:last_name, first_name=:first_name, phone=:phone 
 					WHERE id=:id;';
+		if(!empty($this->hash)){
+			$statement = 'UPDATE users
+					SET last_name=:last_name, first_name=:first_name, phone=:phone, hash=:hash
+					WHERE id=:id;';
+		}
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':last_name', $this->last_name);
 		$query->bindParam(':first_name', $this->first_name);
 		$query->bindParam(':phone', $this->phone);
-		$query->bindParam(':hash', $this->hash);
+		if(!empty($this->hash)){
+			$query->bindParam(':hash', $this->hash);
+		}
 		$query->bindParam(':id', LoggedUser::id());
 		$query->execute();
+		if(!empty($this->hash)){
+			LoggedUser::set_user_data(array('id' => LoggedUser::id(), 'hash' => $this->hash));
+		}
 	}
 	public static function remove(){
 		$statement = 'DELETE FROM users WHERE id=:id;';

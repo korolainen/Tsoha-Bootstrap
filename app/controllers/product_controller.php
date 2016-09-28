@@ -8,7 +8,12 @@ class ProductController extends BaseController{
 	
 	public static function product($id){
 		$product = Product::get($id);
-		View::make('products/product.html', array('product' => $product, 'visibility' => CssClass::visibility()));
+		$product_shops = ShopProduct::product_in_shops($id);
+		$product_not_shops = ShopProduct::product_not_in_shops($id);
+		View::make('products/product.html', array('product' => $product, 
+													'visibility' => CssClass::visibility(), 
+													'product_shops' => $product_shops, 
+													'product_not_shops' => $product_not_shops));
 	}
 	
 	public static function create_new_form(){
