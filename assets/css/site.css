@@ -42,6 +42,8 @@
     font-size: 23px;
 }
 
+
+
 .close-ext-menu{
     padding: 20px;
     background-color: transparent;
@@ -180,4 +182,45 @@ td.editor-column button.save-inline-button:focus{
 }
 div.main-search-content .panel-table .panel-body .table-bordered > tbody > tr > td{
 	line-height: normal;
+}
+
+
+@media (max-width: 767px){
+	div.card.summary-inline .card-body {
+	    padding: 5px;
+	}
+	div.card.summary-inline .card-body .content .title {
+	    font-size: 1.5em;
+	}
+	table.table>tbody>tr>td, 
+	table.table>tbody>tr>th, 
+	table.table>tfoot>tr>td, 
+	table.table>tfoot>tr>th, 
+	table.table>thead>tr>td, 
+	table.table>thead>tr>th {
+	    padding: 8px 2px 8px 2px;
+	}
+	div.panel-table .panel-body .table-bordered > thead > tr > th:last-of-type {
+	    text-align:center;
+	    width: auto;
+	    max-width: 80px;
+	}
+	div.panel-table .panel-body .table-bordered > thead > tr > td.editor-column,
+	div.panel-table .panel-body .table-bordered > thead > tr > th.editor-column {
+	    text-align: center;
+	    width: auto;
+	    max-width: 80px;
+	}
+	div.panel-table .panel-body .table-bordered > thead > tr > td.narrow-column,
+	div.panel-table .panel-body .table-bordered > thead > tr > th.narrow-column {
+	    text-align: center;
+	    width: auto;
+	    max-width: 80px;
+	}
+	input.input-lg {
+	    height: 36px;
+	    padding: 5px 2px;
+	    font-size: 12px;
+	    line-height: 1;
+	}
 }

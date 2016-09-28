@@ -36,7 +36,7 @@
                     </div>
                     <div class="row {{visibility.list_products}}">
                         <div class="col-xs-12">
-                        	<div class="{{visibility.add}}">
+                        	<div class="{{visibility.add}}" id="productfilter">
 		                    	{{forms.filter_contents("new-product-name")}}
 		                    </div>
 		                    <div class="{{visibility.add_product}}">
@@ -54,7 +54,7 @@
 		                                
 			                                    <div class="sub-title">Kauppa</div>
 			                                    <div>
-													  <select class="selectpicker" data-style="btn-info" name="shop_id">
+													  <select id="shoppriceselect" class="selectpicker" data-style="btn-info" name="shop_id">
 				                  						  {% for notshop in product_not_shops %}
 													      	<option value="{{notshop.shop_id}}">{{notshop.name}}</option>
 													      {% endfor %}
@@ -77,7 +77,7 @@
 				                    <tr>
 				                        <th></th>
 				                        <th>Kauppa</th>
-				                        <th class="narrow-column">Halvin</th>
+				                        <th class="narrow-column"><i class="fa fa-thumbs-o-up"></i></th>
 				                        <th>Hinta</th>
 				                        <th></th>
 				                    </tr> 

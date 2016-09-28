@@ -4,14 +4,14 @@
 				                  <thead>
 				                    <tr>
 				                        <th>Kauppa</th>
-				                        <th></th>
+				                        <th class="hidden-xs"></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
 				                  		{% for shop in shops %}
 				                          <tr>
 				                            <td><p class="h5"><a href="{{base_path}}/shops/shop/{{shop.id}}" data-filter="target">{{shop.name}}</a></p></td>
-				                        	<td></td>
+				                        	<td class="hidden-xs"></td>
 				                          </tr>
 										{% endfor %}
 				                	</tbody>

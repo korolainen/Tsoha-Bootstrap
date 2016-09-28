@@ -212,7 +212,7 @@ $(document).ready(function(){
     	var loader = elem.attr('data-loader');
     	var action = elem.attr('data-action');
     	if(mainsearchmode){
-    		$('.main-result-blocks .card').animate({ fontSize: "0.4em" }, 300 );
+    		$('.main-result-blocks .card').animate({ fontSize: "0.6em" }, 300 );
     		$('.main-result-blocks .card .card-body').animate({ padding: "10px" }, 300 );
     		$('.main-result-blocks .card').parent().parent().animate({ marginBottom: "10px" }, 300 );
     		mainsearchmode = false;
@@ -286,4 +286,15 @@ $(document).ready(function(){
 	    	$('#related-products').html('');
 	    }
 	});
+    
+    $('#productfilter #add-item-button').mouseup(function(){
+    	var starts = $('#productfilter #item-search').val().toLowerCase();
+    	$('#shoppriceselect option').each(function(){
+    		var option = $(this).text().toLowerCase();
+    		if(option.startsWith(starts)){
+    			$(this).prop('selected', true);
+    		}
+    	});
+    });
+    
 });

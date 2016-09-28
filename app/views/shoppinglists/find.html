@@ -5,7 +5,7 @@
 				                    <tr>
 				                        <th>Nimi</th>
 				                        <th>Voimassa</th>
-				                        <th></th>
+				                        <th class="hidden-xs"></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
@@ -13,7 +13,7 @@
 				                          <tr class="{{shoppinglist.current}}">
 				                            <td><p class="h5"><a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}" data-filter="target">{{shoppinglist.name}}</a></p></td>
 				                            <td>{{shoppinglist.active_date}}</td>
-				                        	<td></td>
+				                        	<td class="hidden-xs"></td>
 				                          </tr>
 										{% endfor %}
 				                	</tbody>

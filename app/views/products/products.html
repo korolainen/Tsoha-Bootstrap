@@ -16,7 +16,7 @@
 				                        <th>Tuote</th>
 				                        <th>Halvin kauppa</th>
 				                        <th>Löytyy kaupoista</th>
-				                        <th><em class="fa fa-cog"></em></th>
+				                        <th class="hidden-xs"><em class="fa fa-cog"></em></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
@@ -31,7 +31,7 @@
 													{% endfor %}
 												</ul>
 											</td>
-				                            <td align="center">
+				                            <td class="hidden-xs" align="center">
 				                              <a href="{{base_path}}/products/product/{{product.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
 				                              {% if product.allow_remove %}
 				                              {{forms.remove("#{base_path}/products/remove/#{product.id}")}}
