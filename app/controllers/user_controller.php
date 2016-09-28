@@ -2,15 +2,15 @@
 class UserController extends BaseController{
 
 	public function create_new(){
-		if(isset($_POST['account']) && isset($_POST['password']) && isset($_POST['phone'])){
-			$hash = Security::hash_with_salt($_POST['password']);
-			$user = new User(array('account' => $_POST['account'],'hash' => $hash,'phone' => $_POST['phone']));
-			$user->save();
-			if(LoggedUser::login($_POST['account'], $_POST['password'])){
-				self::return_back('/search');
-			}
+		CheckPost::required_redirect(array('account','password','phone'), '/shops');
+		$hash = Security::hash_with_salt($_POST['password']);
+		$user = new User(array('account' => $_POST['account'],'hash' => $hash,'phone' => $_POST['phone']));
+		$user->check_errors_and_redirect();
+		$user->save();
+		if(LoggedUser::login($_POST['account'], $_POST['password'])){
+			Redirect::back('/search');
 		}
-		Redirect::to('/signup');
+		Redirect::back('/signup');
 	}
 	
 	public static function get($id){

@@ -109,22 +109,24 @@ $(document).ready(function(){
     });
 	
 	$('.remove-inline-button').click(function(){
-		
 		var elem = $(this);
 		elem.focusout();
         var loader_src = elem.attr('data-loader');
         elem.css({'background':'url("'+loader_src+'") 0 0 no-repeat','border':'0'});
         var action = elem.attr('data-action');
+        window.location.href = action;
+        /*
         $.ajax({url: action,
             success: function(data) {
             	flash_success(elem);
             	elem.parent().parent().remove();
+            	window.location.reload(); //tämä voidaan poistaa kun on tehty muutamia lisätarkastuksia ajaxilla
             },
             error: function(data) {
             	flash_error(elem);
             	console.log('Epäonnistui!');
             }
-        });
+        });*/
     });
 	
     $('input.inline-edit').on('input', function(){

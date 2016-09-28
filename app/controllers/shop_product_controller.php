@@ -3,37 +3,37 @@ class ShopProductController extends BaseController{
 
 
 	public static function edit($shop_id, $product_id){
-		if(isset($_POST['price'])){
-			$data = array('price' => CheckData::text_to_float($_POST['price']),
-							'shop_id' => $shop_id,
-							'product_id' => $product_id
-			);
-			$shop_product = new ShopProduct($data);
-			$shop_product->update();
-			$sp = ShopProduct::get($shop_id, $product_id);
-			if($sp->is_cheapest=='1') echo 'fa fa-check-square-o';
-			else echo 'fa fa-check-square';
-		}
-		exit();
+		CheckPost::required_exit(array('price'));
+		$data = array('price' => CheckData::text_to_float($_POST['price']),
+				'shop_id' => $shop_id,
+				'product_id' => $product_id
+		);
+		$shop_product = new ShopProduct($data);
+		$shop_product->check_errors_and_redirect();
+		$shop_product->update();
+		$sp = ShopProduct::get($shop_id, $product_id);
+		if($sp->is_cheapest=='1') echo 'fa fa-check-square-o';
+		else echo 'fa fa-check-square';		exit();
 	}
 	
 	public static function add($shop_id){
-		//if(empty($_POST['name'])) error
-		$name = $_POST['name'];
+		CheckPost::required_redirect(array('name'), '/shops/shop/'.$shop_id);
 		$price = CheckData::text_to_float($_POST['price']);
 		$product_id = CheckData::post_by_key('product_id');
 		$product = Product::get($product_id);
 		if(empty($product)){
-			$product = new Product(array('name' => $name));
+			$product = new Product(array('name' => $_POST['name']));
+			$product->check_errors_and_redirect();
 			$product_id = $product->save();
 		}
 		$shopproduct = new ShopProduct(array('product_id' => $product_id, 'shop_id' => $shop_id, 'price' =>$price));
+		$shopproduct->check_errors_and_redirect('/shops/shop/'.$shop_id.'?add=true');
 		$shopproduct->save();
-		self::return_back('/shops/shop/'.$shop_id);
+		Redirect::back('/shops/shop/'.$shop_id);
 	}
 	
 	public static function remove($shop_id, $product_id){
 		ShopProduct::remove($shop_id, $product_id);
-		self::return_back('/shops/shop/'.$shop_id);
+		Redirect::back('/shops/shop/'.$shop_id);
 	}
 }

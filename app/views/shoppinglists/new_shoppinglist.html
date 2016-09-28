@@ -2,6 +2,9 @@
 {% block content %}
 {% import "macros/forms.html" as forms %}
 	{{forms.new_begin("#{base_path}/shoppinglists","th-list","Uusi ostoslista", "#{base_path}/shoppinglists/new")}}
+		{% for error_message in errors %}
+			{{messages.error("#{error_message}")}}
+		{% endfor %}
 		{{forms.new_name()}}
 	  	<div class="form-group">
 	      	<div class="sub-title">Voimassa</div>

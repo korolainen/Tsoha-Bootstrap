@@ -20,44 +20,44 @@ class ShoppinglistController extends BaseController{
 		$shopppinglist_products = ShoppinglistProduct::products_in_shoppinglist($id);
 		View::make('shoppinglists/shoppinglist.html', array('shoppinglist' => $shoppinglist, 
 															'visibility' => CssClass::visibility(), 
-															'shoppinglist_products' => $shopppinglist_products));
+															'shoppinglist_products' => $shopppinglist_products,
+												'errors' => Messages::errors()));
 	}
 	
 	public static function create_new_form(){
 		$usergroups = Usergroup::all();
-		View::make('shoppinglists/new_shoppinglist.html', array('usergroups' => $usergroups));
+		View::make('shoppinglists/new_shoppinglist.html', array('usergroups' => $usergroups, array('errors' => Messages::errors())));
 	}
 	
 	public static function create_new(){
-		if(isset($_POST['name']) && isset($_POST['active'])){
-			$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active']));//TODO active
-			$shoppinglist_id = $shoppinglist->save();
-			if(array_key_exists('group', $_POST)){
-				$usergroups = array();
-				foreach($_POST['group'] as $usergroup_id){
-					if(isset($usergroups[$usergroup_id])) continue;
-					$usergroups[$usergroup_id] = $usergroup_id;
-					$usergroup = Usergroup::get($usergroup_id);
-					if(empty($usergroup)) continue;
-					ShoppinglistUsergroup::insert($shoppinglist_id, $usergroup->id);
-				}
+		CheckPost::required_redirect(array('name','active'), '/shoppinglists');
+		$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active']));
+		$shoppinglist->check_errors_and_redirect('/shoppinglists/new');
+		$shoppinglist_id = $shoppinglist->save();
+		if(isset($_POST['group'])){
+			$usergroups = array();
+			foreach($_POST['group'] as $usergroup_id){
+				if(isset($usergroups[$usergroup_id])) continue;
+				$usergroups[$usergroup_id] = $usergroup_id;
+				$usergroup = Usergroup::get($usergroup_id);
+				if(empty($usergroup)) continue;
+				ShoppinglistUsergroup::insert($shoppinglist_id, $usergroup->id);
 			}
-			self::return_back('/shoppinglists/shoppinglist/'.$shoppinglist->id);
 		}
-		self::return_back('/shoppinglists');
+		Redirect::back('/shoppinglists/shoppinglist/'.$shoppinglist->id);
 	}
 	
 	public static function edit($id){
-		if(isset($_POST['name']) && isset($_POST['active'])){
-			$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active'], 'id' => $id));
-			$shoppinglist->update();
-		}
-		self::return_back('/shoppinglists/shoppinglist/'.$id);
+		CheckPost::required_redirect(array('name','active'), '/shoppinglists/shoppinglist/'.$id);
+		$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active'], 'id' => $id));
+		$shoppinglist->check_errors_and_redirect('/shoppinglists/shoppinglist/'.$id.'?edit=true');
+		$shoppinglist->update();
+		Redirect::back('/shoppinglists/shoppinglist/'.$id);
 	}
 	
 	public static function remove($id){
 		Shoppinglist::remove($id);
-		self::return_back('/shoppinglists');
+		Redirect::back('/shoppinglists');
 	}
 	
 }

@@ -1,6 +1,7 @@
 {% extends "private.html" %}
 {% block content %}
 {% import "macros/forms.html" as forms %}
+{% import "macros/messages.html" as messages %}
             	<div class="side-body padding-top">
                     <div class="row">
                         <div class="col-xs-12">
@@ -11,6 +12,9 @@
                                     </div>
                                 </div>
                                 <div class="card-body">
+									{% for error_message in errors %}
+										{{messages.error("#{error_message}")}}
+									{% endfor %}
                                 	<form action="{{base_path}}/profile/edit" method="post">
 	                                	<div class="form-group">
 		                                    <div class="sub-title">Etunimi</div>

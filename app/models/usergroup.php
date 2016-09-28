@@ -7,6 +7,11 @@ class Usergroup extends BaseModel{
 		parent::__construct($attributes);
 		$this->validators = array('validate_name');
 	}
+	/*
+	public function build_html(){
+		$this->name = CheckData::character_escape($this->name);
+	}
+	*/
 	
 	public static function all(){
 		$users = User::get_users_i_know();
@@ -32,7 +37,9 @@ class Usergroup extends BaseModel{
 				}
 			}
 			$row['users'] = $group_users;
-			$items[$row['id']] = new Usergroup($row);
+			$usergroup = new Usergroup($row);
+			//$usergroup->build_html();
+			$items[$row['id']] = $usergroup; 
 		}
 		return $items;
 	}
@@ -63,7 +70,9 @@ class Usergroup extends BaseModel{
 				}
 			}
 			$row['users'] = $group_users;
-			$items[$row['id']] = new Usergroup($row);
+			$usergroup = new Usergroup($row);
+			//$usergroup->build_html();
+			$items[$row['id']] = $usergroup;
 		}
 		return $items;
 	}

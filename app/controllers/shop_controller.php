@@ -28,7 +28,8 @@ class ShopController extends BaseController{
 		View::make('shops/shop.html', 
 					array('shop' => $shop, 
 						'shop_products' => $products, 
-						'visibility' => CssClass::visibility()
+						'visibility' => CssClass::visibility(),
+						'errors' => Messages::errors()
 					)
 		);
 	}
@@ -39,34 +40,33 @@ class ShopController extends BaseController{
 	}
 	
 	public static function create_new(){
-		if(isset($_POST['name'])){
-			$shop = new Shop(array('name' => $_POST['name']));
-			$shop_id = $shop->save();
-			if(isset($_POST['group'])){
-				$usergroups = array();
-				foreach($_POST['group'] as $usergroup_id){
-					if(isset($usergroups[$usergroup_id])) continue;
-					$usergroups[$usergroup_id] = $usergroup_id;
-					$usergroup = Usergroup::get($usergroup_id);
-					if(empty($usergroup)) continue;
-					ShopUsergroup::insert($shop_id, $usergroup->id);
-				}
+		CheckPost::required_redirect(array('name'), '/shops');
+		$shop = new Shop(array('name' => $_POST['name']));
+		$shop->check_errors_and_redirect('/shops/new');
+		$shop_id = $shop->save();
+		if(isset($_POST['group'])){
+			$usergroups = array();
+			foreach($_POST['group'] as $usergroup_id){
+				if(isset($usergroups[$usergroup_id])) continue;
+				$usergroups[$usergroup_id] = $usergroup_id;
+				$usergroup = Usergroup::get($usergroup_id);
+				if(empty($usergroup)) continue;
+				ShopUsergroup::insert($shop_id, $usergroup->id);
 			}
-			self::return_back('/shops/shop/'.$shop->id);
 		}
-		self::return_back('/shops');
+		Redirect::back('/shops/shop/'.$shop->id);
 	}
 	
 	public static function edit($id){
-		if(isset($_POST['name'])){
-			$shop = new Shop(array('name' => $_POST['name'], 'id' => $id));
-			$shop->update();
-		}
-		self::return_back('/shops/shop/'.$id);
+		CheckPost::required_redirect(array('name'), '/shops/shop/'.$id);
+		$shop = new Shop(array('name' => $_POST['name'], 'id' => $id));
+		$shop->check_errors_and_redirect('/shops/shop/'.$id.'?edit=true');
+		$shop->update();
+		Redirect::back('/shops/shop/'.$id);
 	}
 	
 	public static function remove($id){
 		Shop::remove($id);
-		self::return_back('/shops');
+		Redirect::back('/shops');
 	}
 }

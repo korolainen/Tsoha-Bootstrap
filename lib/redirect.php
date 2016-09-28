@@ -2,17 +2,23 @@
 
   class Redirect{
 
+  	public static function direct($path){
+  		header('Location: ' . $path);
+  		exit();
+  	}
+
     public static function to($path, $message = null){
-      // Katsotaan onko $message parametri asetettu
       if(!is_null($message)){
-        // Jos on, lisätään se sessioksi JSON-muodossa
         $_SESSION['flash_message'] = json_encode($message);
       }
-
-      // Ohjataan käyttäjä annettuun polkuun
-      header('Location: ' . BASE_PATH . $path);
-
-      exit();
+      self::direct(BASE_PATH . $path);
     }
-
+    public static function back($back = null){
+    	if(isset($_POST['return'])) self::direct($_POST['return']);
+    	if(!is_null($back)) Redirect::to($back);
+    	if(isset($_SERVER['HTTP_REFERER'])) {
+    		self::direct($_SERVER['HTTP_REFERER']);
+    	}
+    	Redirect::to('../');
+    }
   }

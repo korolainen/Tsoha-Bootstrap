@@ -11,7 +11,8 @@ class UsergroupController extends BaseController{
 		$usergroup_users = UsergroupUsers::users($id);
 		View::make('groups/group.html', array('group' => $group, 
 												'visibility' => CssClass::visibility(), 
-												'usergroup_users' => $usergroup_users));
+												'usergroup_users' => $usergroup_users,
+												'errors' => Messages::errors()));
 	}
 	
 	public static function find(){
@@ -21,40 +22,39 @@ class UsergroupController extends BaseController{
 	}
 	
 	public static function create_new_form(){
-		View::make('groups/new_group.html');
+		View::make('groups/new_group.html', array('errors' => Messages::errors()));
 	}
 	
 	public static function create_new(){
-		if(isset($_POST['name'])){
-			$usergroup = new Usergroup(array('name' => $_POST['name']));
-			$usergroup_id = $usergroup->save();
-			if(isset($_POST['account_name'])){
-				$account_names = array();
-				foreach($_POST['account_name'] as $account_name){
-					if(isset($account_names[$account_name])) continue;
-					$account_names[$account_name] = $account_name;
-					$user = User::check_account($account_name);
-					if(empty($user)) continue;
-					UsergroupUsers::insert($usergroup_id, $user['id']);
-				}
+		CheckPost::required_redirect(array('name'), '/groups');
+		$usergroup = new Usergroup(array('name' => $_POST['name']));
+		$usergroup->check_errors_and_redirect('/groups/new');
+		$usergroup_id = $usergroup->save();
+		if(isset($_POST['account_name'])){
+			$account_names = array();
+			foreach($_POST['account_name'] as $account_name){
+				if(isset($account_names[$account_name])) continue;
+				$account_names[$account_name] = $account_name;
+				$user = User::check_account($account_name);
+				if(empty($user)) continue;
+				UsergroupUsers::insert($usergroup_id, $user['id']);
 			}
-			self::return_back('/groups/group/'.$usergroup_id);
 		}
-		self::return_back('/groups');
+		Redirect::back('/groups/group/'.$usergroup_id);
 	}
 	
 	
 	public static function edit($id){
-		if(isset($_POST['name'])){
-			$usergroup = new Usergroup(array('name' => $_POST['name'], 'id' => $id));
-			$usergroup->update();
-		}
-		self::return_back('/groups/group/'.$id);
+		CheckPost::required_redirect(array('name'), '/groups/group/'.$id);
+		$usergroup = new Usergroup(array('name' => $_POST['name'], 'id' => $id));
+		$usergroup->check_errors_and_redirect('/groups/group/'.$id.'?edit=true');
+		$usergroup->update();
+		Redirect::back('/groups/group/'.$id);
 	}
 	
 	public static function remove($id){
 		Usergroup::remove($id);
-		self::return_back('/groups');
+		Redirect::back('/groups');
 	}
 
 }

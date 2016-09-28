@@ -17,32 +17,32 @@ class ProductController extends BaseController{
 		View::make('products/product.html', array('product' => $product, 
 													'visibility' => CssClass::visibility(), 
 													'product_shops' => $product_shops, 
-													'product_not_shops' => $product_not_shops));
+													'product_not_shops' => $product_not_shops,
+													'errors' => Messages::errors()));
 	}
 	
 	public static function create_new_form(){
-		View::make('products/new_product.html');
+		View::make('products/new_product.html', array('errors' => Messages::errors()));
 	}
 	
 	public static function create_new(){
-		if(!empty($_POST['name'])){
-			$product = new Product(array('name' => $_POST['name']));
-			$product_id = $product->save();
-			self::return_back('/products/product/'.$product_id);
-		}
-		self::return_back('/products');
+		CheckPost::required_redirect(array('name'), '/products');
+		$product = new Product(array('name' => $_POST['name']));
+		$product->check_errors_and_redirect('/products/new');
+		$product_id = $product->save();
+		Redirect::back('/products/product/'.$product_id);
 	}
 	
 	public static function edit($id){
-		if(isset($_POST['name'])){
-			$product = new Product(array('name' => $_POST['name'], 'id' => $id));
-			$product->update();
-		}
-		self::return_back('/products/product/'.$id);
+		CheckPost::required_redirect(array('name'), '/products/product/'.$id);
+		$product = new Product(array('name' => $_POST['name'], 'id' => $id));
+		$product->check_errors_and_redirect('/products/product/'.$id.'?edit=true');
+		$product->update();
+		Redirect::back('/products/product/'.$id);
 	}
 	
 	public static function remove($id){
 		Product::remove($id);
-		self::return_back('/products');
+		Redirect::back('/products');
 	}
 }

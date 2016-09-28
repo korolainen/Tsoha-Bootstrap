@@ -5,6 +5,14 @@ class UserModel extends BaseModel{
 		parent::__construct($attributes);
 		$this->validators = array('validate_first_name');
 	}
+	/*
+	public function build_html(){
+		$this->name = CheckData::character_escape($this->name);
+		$this->first_name = CheckData::character_escape($this->first_name);
+		$this->last_name = CheckData::character_escape($this->last_name);
+		$this->phone = CheckData::character_escape($this->phone);
+	}
+	*/
 }
 class User extends UserModel{
 	public function __construct($attributes = null){
@@ -70,7 +78,9 @@ class User extends UserModel{
 		$query->execute();
 		$item = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$item[$row['id']] = new User($row);
+			$user = new User($row);
+			//$user->build_html();
+			$item[$row['id']] = $user;
 		}
 		return $item;
 	}
@@ -99,7 +109,9 @@ class User extends UserModel{
 		$query->execute();
 		$item = array();
 		if($row = $query->fetch(PDO::FETCH_ASSOC)){
-			return new User($row);
+			$item = new User($row);
+			//$item->build_html();
+			return $item;
 		}
 		return null;
 	}
@@ -121,12 +133,15 @@ class User extends UserModel{
 	}
 }
 class Me extends UserModel{
+	
 	public function __construct($attributes){
 		parent::__construct($attributes);
 	}
+	
 	public static function get(){
 		return User::get(LoggedUser::id());
 	}
+	
 	public function update(){
 		$statement = 'UPDATE users
 					SET last_name=:last_name, first_name=:first_name, phone=:phone 
@@ -149,12 +164,14 @@ class Me extends UserModel{
 			LoggedUser::set_user_data(array('id' => LoggedUser::id(), 'hash' => $this->hash));
 		}
 	}
+	
 	public static function remove(){
 		$statement = 'DELETE FROM users WHERE id=:id;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':id', LoggedUser::id());
 		$query->execute();
 	}
+	
 	public static function get_by_secure_key($key){
 		$statement = 'SELECT id, account, first_name, last_name, phone, hash
 						FROM users

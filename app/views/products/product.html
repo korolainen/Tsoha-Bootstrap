@@ -2,7 +2,11 @@
 {% block content %}
 {% import "macros/forms.html" as forms %}
 {% import "macros/headers.html" as headers %}
+{% import "macros/messages.html" as messages %}
             	<div class="side-body padding-top">
+					{% for error_message in errors %}
+						{{messages.error("#{error_message}")}}
+					{% endfor %}
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
@@ -10,7 +14,7 @@
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
-								        	<div class="title"><a href="{{base_path}}/products"><span class="icon fa fa-barcode"></span></a> {{product.name}}</div>
+								        	<div class="title"><a href="{{base_path}}/products"><span class="icon fa fa-barcode"></span></a> : <a href="{{here_no_params}}">{{product.name}}</a></div>
 										</div>
 								    </div>
 								    {% if visibility.editbutton %}
@@ -64,8 +68,9 @@
 			                                    <div>
 			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />
 			                                    </div>
+			                                    <input type="hidden" name="return" value="{{here_no_params}}?add=true" />
 		                                    </div>
-		                                    {{forms.save_reload_buttons()}}
+		                                    {{forms.save_cancel_buttons()}}
 	                                	</form>
 	                                </div>
 	                            </div>

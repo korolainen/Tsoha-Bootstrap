@@ -24,16 +24,26 @@
       return $errors;
     }
 
-    public function validate_date($string){
+    public function check_errors_and_redirect($url = null){
+    	$errors = $this->errors();
+    	if(!empty($errors)){
+    		Session::set('errors', json_encode($errors));
+    		Redirect::back($url);
+    	}	
+    }
+
+    public function validate_date($string, $field = ''){
     	$timestamp = CheckData::date_to_ts($string);
     	$errors = array();
     	if(!strtotime($timestamp)){
-    		$errors[] = 'Syötä päivämäärä!';
+    		$message_start = '';
+    		if(!empty($field)) $message_start = ''.$field.'-kentän muotoa ei tunnistettu. ';
+    		$errors[] = $message_start.'Valitse päivämäärä kalenterista!';
     	}
     	return $errors;
     }
 
-    public function validate_float($string){
+    public function validate_float($string, $field = ''){
         $errors = array();
         if(empty($string)) return $errors;
     	$string = $string."";
@@ -42,34 +52,37 @@
         $float = (float)$string;
         $float_string = $float.""; 
         if(strlen($string)!=strlen($float_string)){
-        	$errors[] = 'Anna numeerinen arvo!';
+        	if(!empty($field)) $message_start = ''.$field.'-kentän tieto on virheellinen. ';
+        	$errors[] = $message_start.'Anna numeerinen arvo!';
         }
         return $errors;        
     }
     
-    private function validate_string($string, $length){
+    private function validate_string($string, $length, $field = ''){
     	$errors = array();
     	if($string == null || strlen($string) < 3){
-    		$errors[] = '"'.$string.'" on liian lyhyt. 
-    					Pituuden tulee olla vähintään '.$length.' merkki'.($length==1 ? '' : 'ä').'!';
+    		$message_start = '';
+    		if(!empty($field)) $message_start = ''.$field.' on liian lyhyt. ';
+    		$errors[] = $message_start.'Pituuden tulee olla vähintään '.$length.' merkki'.($length==1 ? '' : 'ä').'!';
     	}
     	return $errors;
     }
     
     public function validate_name(){
-    	return $this->validate_string($this->name, 1);
+    	return $this->validate_string($this->name, 1, 'Nimi');
     }
     
     public function validate_price(){
-    	return $this->validate_float($this->price);
+    	if(empty($this->price)) return array('Hintatieto on pakollinen!');
+    	return $this->validate_float($this->price, 'Hinta');
     }
     
     public function validate_first_name(){
-    	return $this->validate_float($this->first_name);
+    	return $this->validate_string($this->first_name, 1, 'Etunimi');
     }
     
     public function validate_active(){
-    	return $this->validate_date($this->active);
+    	return $this->validate_date($this->active, 'Päivämäärä');
     }
 
   }

@@ -13,23 +13,21 @@ class ProfileController extends BaseController{
 	}
 	
 	public static function edit(){
-		if(isset($_POST['first_name']) && isset($_POST['last_name']) && isset($_POST['phone'])){
-			$hash = '';
-			if(!empty($_POST['password'])){
-				$hash = Security::hash_with_salt($_POST['password']);
-			}
-			$me = new Me(array('first_name' => $_POST['first_name'], 
-								'last_name' => $_POST['last_name'],
-								'phone' => $_POST['phone'],
-								'hash' => $hash,
-								'id' => LoggedUser::id()));
-			$me->update();
-		}
-		self::return_back('/search');
+		CheckPost::required_redirect(array('first_name','last_name','phone'), '/search');
+		$hash = '';
+		if(!empty($_POST['password'])) $hash = Security::hash_with_salt($_POST['password']);
+		$me = new Me(array('first_name' => $_POST['first_name'], 
+							'last_name' => $_POST['last_name'],
+							'phone' => $_POST['phone'],
+							'hash' => $hash,
+							'id' => LoggedUser::id()));
+		$me->check_errors_and_redirect();
+		$me->update();
+		Redirect::back('/search');
 	}
 	
 	public static function login(){
-		if(!isset($_POST['account']) || !isset($_POST['password'])) Redirect::to('');
+		CheckPost::required_redirect(array('account','password'), '');
 		$remember_me = false;
 		if(isset($_POST['remember'])) $remember_me = true; 
 		if(LoggedUser::login($_POST['account'], $_POST['password'], $remember_me)){

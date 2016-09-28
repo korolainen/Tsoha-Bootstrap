@@ -12,6 +12,9 @@
 
         // Asetetaan näkymään base_path-muuttuja index.php:ssa määritellyllä BASE_PATH vakiolla
         $content['base_path'] = BASE_PATH;
+        $content['here'] = $_SERVER['REQUEST_URI'];
+        $content['here_no_params'] = $_SERVER["REDIRECT_URL"];
+        $content['today'] = date('d.m.Y');
 
         // Asetetaan näkymään kirjautunut käyttäjä, jos get_user_logged_in-metodi on toteutettu
         if(method_exists('BaseController', 'get_user_logged_in')){

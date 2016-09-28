@@ -2,14 +2,18 @@
 {% block content %}
 {% import "macros/forms.html" as forms %}
 {% import "macros/headers.html" as headers %}
+{% import "macros/messages.html" as messages %}
             	<div class="side-body padding-top">
+					{% for error_message in errors %}
+						{{messages.error("#{error_message}")}}
+					{% endfor %}
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
-								        	<div class="title"><a href="{{base_path}}/groups"><span class="icon fa fa-users"></span></a> {{group.name}}</div>
+								        	<div class="title"><a href="{{base_path}}/groups"><span class="icon fa fa-users"></span></a> : <a href="{{here_no_params}}">{{group.name}}</a></div>
 										</div>
 								    </div>
 								    {% if visibility.editbutton %}
