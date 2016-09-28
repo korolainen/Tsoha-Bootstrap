@@ -4,6 +4,7 @@ class ShopProduct extends BaseModel{
 			$name, $shop_name;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_price');
 	}	
 	private static function execute_all(){
 		$statement = 'SELECT product_id,shop_id,price,created_by,updated

@@ -5,6 +5,7 @@ class Product extends BaseModel{
 			$allow_remove;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_name');
 	}
 	
 	
@@ -51,6 +52,72 @@ class Product extends BaseModel{
 		$query->bindParam(':created_by', LoggedUser::id());
 		$query->bindParam(':shoppinglist_users_id', LoggedUser::id());
 		$query->bindParam(':shop_users_id', LoggedUser::id());
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			if(array_key_exists($row['cheapest_shop_id'], $shops)){
+				$row['cheapest_shop'] = $shops[$row['cheapest_shop_id']];
+			}
+			$shop_ids = explode(',', $row['shop_ids']);
+			$product_shops = array();
+			foreach ($shop_ids as $shop_id){
+				if(isset($shops[$shop_id])){
+					$product_shops[] = $shops[$shop_id];
+				}
+			}
+			$row['shops'] = $product_shops;
+			//$row['name_html'] = CheckData::character_escape($row['name']);
+			$items[$row['id']] = new Product($row);
+		}
+		return $items;
+	}
+	
+	
+	public static function find($name){
+		$shops = Shop::all();//ORDER BY pp.name ASC
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT spp.shop_id 
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+								ORDER BY spp.price ASC
+								LIMIT 1
+							) cheapest_shop_id,
+							(SELECT spp.price 
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+								ORDER BY spp.price ASC
+								LIMIT 1
+							) cheapest_price,
+							(SELECT array_to_string(array_agg(sp.shop_id),\',\')
+								FROM shop_product sp
+								JOIN product pp ON pp.id = sp.product_id
+								WHERE sp.product_id = p.id
+								GROUP BY sp.product_id
+							) AS shop_ids,
+							(created_by=:me) AS allow_remove
+				FROM product p
+				WHERE (p.created_by=:created_by 
+					OR p.id IN(SELECT slp.product_id
+								FROM shoppinglist_product slp
+								WHERE slp.shoppinglist_id IN(SELECT slu.shoppinglist_id
+														FROM shoppinglist_users slu
+														WHERE slu.users_id=:shoppinglist_users_id
+														)
+								) 
+				 OR p.id IN(SELECT shp.product_id
+								FROM shop_product shp
+								WHERE shp.shop_id IN(SELECT su.shop_id
+														FROM shop_users su
+														WHERE su.users_id=:shop_users_id
+														)
+								)) AND LOWER(p.name) LIKE :name;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->bindParam(':shoppinglist_users_id', LoggedUser::id());
+		$query->bindParam(':shop_users_id', LoggedUser::id());
+		$name = strtolower($name).'%';
+		$query->bindParam(':name', $name);
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){

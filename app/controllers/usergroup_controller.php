@@ -14,6 +14,12 @@ class UsergroupController extends BaseController{
 												'usergroup_users' => $usergroup_users));
 	}
 	
+	public static function find(){
+		if(!isset($_GET['q'])) exit();
+		$usergroups = Usergroup::find($_GET['q']);
+		View::make('groups/find.html', array('groups' => $usergroups));
+	}
+	
 	public static function create_new_form(){
 		View::make('groups/new_group.html');
 	}

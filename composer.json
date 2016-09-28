@@ -4,7 +4,8 @@
 			"config/database.php",
 			"lib",
 			"app/controllers",
-			"app/models"
+			"app/models",
+			"app/lib"
 		]
 	},
 	"require": {

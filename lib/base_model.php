@@ -16,14 +16,60 @@
     }
 
     public function errors(){
-      // Lisätään $errors muuttujaan kaikki virheilmoitukset taulukkona
       $errors = array();
-
       foreach($this->validators as $validator){
-        // Kutsu validointimetodia tässä ja lisää sen palauttamat virheet errors-taulukkoon
+		$error = $this->{$validator}();
+		$errors = array_merge($errors, $error);
       }
-
       return $errors;
+    }
+
+    public function validate_date($string){
+    	$timestamp = CheckData::date_to_ts($string);
+    	$errors = array();
+    	if(!strtotime($timestamp)){
+    		$errors[] = 'Syötä päivämäärä!';
+    	}
+    	return $errors;
+    }
+
+    public function validate_float($string){
+        $errors = array();
+        if(empty($string)) return $errors;
+    	$string = $string."";
+        $string = str_replace(" ", "", $string);
+        $string = str_replace(",", ".", $string);
+        $float = (float)$string;
+        $float_string = $float.""; 
+        if(strlen($string)!=strlen($float_string)){
+        	$errors[] = 'Anna numeerinen arvo!';
+        }
+        return $errors;        
+    }
+    
+    private function validate_string($string, $length){
+    	$errors = array();
+    	if($string == null || strlen($string) < 3){
+    		$errors[] = '"'.$string.'" on liian lyhyt. 
+    					Pituuden tulee olla vähintään '.$length.' merkki'.($length==1 ? '' : 'ä').'!';
+    	}
+    	return $errors;
+    }
+    
+    public function validate_name(){
+    	return $this->validate_string($this->name, 1);
+    }
+    
+    public function validate_price(){
+    	return $this->validate_float($this->price);
+    }
+    
+    public function validate_first_name(){
+    	return $this->validate_float($this->first_name);
+    }
+    
+    public function validate_active(){
+    	return $this->validate_date($this->active);
     }
 
   }

@@ -5,6 +5,7 @@ class Usergroup extends BaseModel{
 			$allow_remove;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_name');
 	}
 	
 	public static function all(){
@@ -20,6 +21,37 @@ class Usergroup extends BaseModel{
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':me', LoggedUser::id());
 		$query->bindParam(':created_by', LoggedUser::id());
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$user_ids = explode(',', $row['user_ids']);
+			$group_users = array();
+			foreach ($user_ids as $user_id){
+				if(isset($users[$user_id])){
+					$group_users[] = $users[$user_id];
+				}
+			}
+			$row['users'] = $group_users;
+			$items[$row['id']] = new Usergroup($row);
+		}
+		return $items;
+	}
+	
+	public static function find($name){
+		$users = User::get_users_i_know();
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT array_to_string(array_agg(sp.users_id),\',\')
+								FROM all_usergroup_users sp
+								WHERE sp.usergroup_id = p.id
+							) AS user_ids,
+							(created_by=:me) AS allow_remove
+				FROM usergroup p
+				WHERE p.created_by=:created_by AND LOWER(p.name) LIKE :name;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':created_by', LoggedUser::id());
+		$name = strtolower($name).'%';
+		$query->bindParam(':name', $name);
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){

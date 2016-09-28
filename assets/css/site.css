@@ -174,3 +174,10 @@ td.editor-column button.save-inline-button:focus{
 .price-input{
 	max-width: 180px;
 }
+.main-search-content p.h5{
+	margin-top: 0;
+	margin-bottom: 0;
+}
+div.main-search-content .panel-table .panel-body .table-bordered > tbody > tr > td{
+	line-height: normal;
+}

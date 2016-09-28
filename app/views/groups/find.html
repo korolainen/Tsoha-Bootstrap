@@ -1,0 +1,28 @@
+            				<div class="panel panel-default panel-table">
+				              <div class="panel-body">
+				                <table class="table table-striped table-bordered table-list">
+				                  <thead>
+				                    <tr>
+				                        <th>Nimi</th>
+				                        <th>Jäsenet</th>
+				                        <th></th>
+				                    </tr> 
+				                  </thead>
+				                  <tbody>
+				                  		{% for group in groups %}
+				                          <tr>
+				                            <td><p class="h5"><a href="{{base_path}}/groups/group/{{group.id}}" data-filter="target">{{group.name}}</a></p></td>
+				                            <td>
+												<ul class="additional-list-info">
+				                  					{% for user in group.users %}
+													<li><a href="{{base_path}}/users/user/{{user.id}}">{{user.first_name}}</a></li>
+													{% endfor %}
+												</ul>
+											</td>
+				                        	<td></td>
+				                          </tr>
+										{% endfor %}
+				                	</tbody>
+				                </table>
+				              </div>
+				            </div>

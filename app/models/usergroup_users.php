@@ -3,6 +3,7 @@ class UsergroupUsers extends BaseModel{
 	public $usergroup_id, $users_id, $last_name, $first_name, $is_my_id;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_first_name');
 	}
 	
 	public static function all(){

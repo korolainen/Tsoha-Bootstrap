@@ -3,6 +3,7 @@ class UserModel extends BaseModel{
 	public $id, $account, $first_name, $last_name, $phone, $hash;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_first_name');
 	}
 }
 class User extends UserModel{

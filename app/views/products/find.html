@@ -1,0 +1,30 @@
+            				<div class="panel panel-default panel-table">
+				              <div class="panel-body">
+				                <table class="table table-striped table-bordered table-list">
+				                  <thead>
+				                    <tr>
+				                        <th>Tuote</th>
+				                        <th>Halvin kauppa</th>
+				                        <th>Löytyy kaupoista</th>
+				                        <th></th>
+				                    </tr> 
+				                  </thead>
+				                  <tbody>
+				                  		{% for product in products %}
+				                          <tr>
+				                            <td><p class="h5"><a href="{{base_path}}/products/product/{{product.id}}" data-filter="target">{{product.name}}</a></p></td>
+				                            <td><a href="{{base_path}}/shops/shop/{{product.cheapest_shop.id}}">{{product.cheapest_shop.name}}</a> {{product.cheapest_price}}</td>
+				                            <td>
+												<ul class="additional-list-info">
+				                  					{% for shop in product.shops %}
+													<li><a href="{{base_path}}/shops/shop/{{shop.id}}">{{shop.name}}</a></li>
+													{% endfor %}
+												</ul>
+											</td>
+				                        	<td></td>
+				                          </tr>
+										{% endfor %}
+				                	</tbody>
+				                </table>
+				              </div>
+				            </div>

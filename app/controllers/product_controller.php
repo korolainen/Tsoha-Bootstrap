@@ -5,7 +5,11 @@ class ProductController extends BaseController{
 		$products = Product::all();
 		View::make('products/products.html', array('products' => $products, 'user'=>Me::get()));
 	}
-	
+	public static function find(){
+		if(!isset($_GET['q'])) exit();
+		$products = Product::find($_GET['q']);
+		View::make('products/find.html', array('products' => $products));
+	}
 	public static function product($id){
 		$product = Product::get($id);
 		$product_shops = ShopProduct::product_in_shops($id);

@@ -34,6 +34,18 @@ class CheckData{
         $string = str_replace(",", ".", $string);
         return (float)$string;
     }
+    public static function date_to_ts($date, $time = '00:00'){
+        $parts = explode('.', $date);
+        if(count($parts)>=2){
+            $day = $parts[0];
+            $month = $parts[1];
+            $year = $parts[2];
+            if(strlen($day)==1) $day = '0'.$day;
+            if(strlen($month)==1) $month = '0'.$month; 
+	        return $year.'-'.$month.'-'.$day.' '.$time.':00';
+        }
+        return '';
+    }
 	public static function float_to_currency($value){
         $decimals = 2;
 		$parts = explode('.', ((float)$value).'');

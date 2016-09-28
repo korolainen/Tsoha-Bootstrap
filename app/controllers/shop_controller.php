@@ -12,7 +12,11 @@ class ShopController extends BaseController{
 		$shops = Shop::all();
 		View::make('shops/shops.html', array('shops' => $shops));
 	}
-	
+	public static function find(){
+		if(!isset($_GET['q'])) exit();
+		$shops = Shop::find($_GET['q']);
+		View::make('shops/find.html', array('shops' => $shops));
+	}
 	public static function shop($id){
 		$shop = Shop::get($id);
 		$products = ShopProduct::products_in_shop($id);

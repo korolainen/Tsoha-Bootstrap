@@ -7,7 +7,7 @@
 				        <div class="col-md-12">
 				            <div id="custom-search-input">
 				                <div class="input-group col-md-12">
-				                    <input type="text" class="form-control input-lg" placeholder="Hae..." />
+				                    <input type="text" id="main-search" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/search" class="form-control input-lg" placeholder="Hae..." />
 				                    <span class="input-group-btn">
 				                        <button class="btn btn-info btn-lg" type="button">
 				                            <i class="glyphicon glyphicon-search"></i>
@@ -17,9 +17,15 @@
 				            </div>
 				        </div>
 					</div>
-					{{headers.category_title("Tuotteet", "red", "#{base_path}/products", "barcode")}}
-					{{headers.category_title("Ostoslistat", "yellow", "#{base_path}/shoppinglists", "th-list")}}
-					{{headers.category_title("Kaupat", "green", "#{base_path}/shops", "shopping-cart")}}
-					{{headers.category_title("Ryhmät", "blue", "#{base_path}/groups", "users")}}
+					<div class="main-result-blocks">
+						{{headers.category_title("Tuotteet", "red", "#{base_path}/products", "barcode")}}
+						<div class="row main-search-content"><div class="col-sm-12" id="product-results"></div></div>
+						{{headers.category_title("Ostoslistat", "yellow", "#{base_path}/shoppinglists", "th-list")}}
+						<div class="row main-search-content"><div class="col-sm-12" id="list-results"></div></div>
+						{{headers.category_title("Kaupat", "green", "#{base_path}/shops", "shopping-cart")}}
+						<div class="row main-search-content"><div class="col-sm-12" id="shop-results"></div></div>
+						{{headers.category_title("Ryhmät", "blue", "#{base_path}/groups", "users")}}
+						<div class="row main-search-content"><div class="col-sm-12" id="group-results"></div></div>
+					</div>
                 </div>
 {% endblock %}

@@ -6,6 +6,7 @@ class Shop extends BaseModel{
 			$allow_remove;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_name');
 	}
 	
 	public static function all(){
@@ -25,6 +26,37 @@ class Shop extends BaseModel{
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':me', LoggedUser::id());
 		$query->bindParam(':users_id', LoggedUser::id());
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			if(array_key_exists($row['usergroup_id'], $usergroups)){
+				$row['usergroup'] = $usergroups[$row['usergroup_id']];
+			}
+			$items[$row['id']] = new Shop($row);
+		}
+		return $items;
+	}
+	
+	public static function find($name){
+		$usergroups = Usergroup::all();
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT b.usergroup_id 
+								FROM shop_usergroup b
+								WHERE b.shop_id = p.id
+								LIMIT 1
+							) AS usergroup_id,
+							(p.created_by=:me) AS allow_remove
+				FROM shop p
+				WHERE p.id IN(SELECT su.shop_id
+								FROM shop_users su
+								WHERE su.users_id=:users_id)
+					AND LOWER(p.name) LIKE :name
+				ORDER BY p.name ASC;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':users_id', LoggedUser::id());
+		$name = strtolower($name).'%';
+		$query->bindParam(':name', $name);
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){

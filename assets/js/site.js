@@ -189,6 +189,60 @@ $(document).ready(function(){
     	$('#accounts').append('<div class="add-account"><input type="text" class="form-control" name="account_name[]" value="" /></div>');
     	accounts_check();
     });
-    
+    find = function(val, loader, action, app, resultblock){
+    	var address = action + '/'+app+'?q='+encodeURIComponent(val);
+    	if(val.length>0){
+    		//console.log(address);
+    		//$(resultblock).html('<img src="'+loader+'" alt="Haetaan..." />');
+    		$.ajax({url: address,
+                success: function(data) {
+                	$(resultblock).html(data);
+                },
+                error: function(data) {
+                	console.log('Epäonnistui!');
+                }
+            });
+    	}else{
+    		$(resultblock).html('');
+    	}
+    };
+    var mainsearchmode = true;
+    run_main_search = function(elem){
+    	var val = elem.val();
+    	var loader = elem.attr('data-loader');
+    	var action = elem.attr('data-action');
+    	if(mainsearchmode){
+    		$('.main-result-blocks .card').animate({ fontSize: "0.4em" }, 300 );
+    		$('.main-result-blocks .card .card-body').animate({ padding: "10px" }, 300 );
+    		$('.main-result-blocks .card').parent().parent().animate({ marginBottom: "10px" }, 300 );
+    		mainsearchmode = false;
+    	}
+    	find(val, loader, action, 'products', '#product-results');
+    	find(val, loader, action, 'shoppinglists', '#list-results');
+    	find(val, loader, action, 'shops', '#shop-results');
+    	find(val, loader, action, 'groups', '#group-results');
+    };
+    var timer;
+    $('#main-search').on('input', function(e){
+		if(($(this).attr('data-lastval') != $(this).val())&&($(this).val().length>0)){
+			$(this).attr('data-lastval',$(this).val());
+	    	var elem = $(this);
+			if($(this).val().length<3){
+				run_main_search(elem);
+			}else{
+		        if (timer){
+		                clearTimeout(timer);
+		        }
+		        timer = setTimeout(function(){
+		        	run_main_search(elem);
+		        }, 300);
+			}
+	    }else if($(this).val().length<=0){
+	    	$('#product-results').html('');
+	    	$('#list-results').html('');
+	    	$('#shop-results').html('');
+	    	$('#group-results').html('');
+	    }
+	});
     
 });

@@ -24,9 +24,21 @@
 	function check_logged_in(){
 		BaseController::check_logged_in();
 	}
-	
+
 	$routes->get('/search', 'check_logged_in', function() {
 		SearchController::search();
+	});
+	$routes->get('/search/products', 'check_logged_in', function() {
+		ProductController::find();
+	});
+	$routes->get('/search/shoppinglists', 'check_logged_in', function() {
+		ShoppinglistController::find();
+	});
+	$routes->get('/search/shops', 'check_logged_in', function() {
+		ShopController::find();
+	});
+	$routes->get('/search/groups', 'check_logged_in', function() {
+		UsergroupController::find();
 	});
 	
 
