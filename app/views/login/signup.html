@@ -1,15 +1,27 @@
 {% extends "public.html" %}
 {% block content %}
-	<div class="logo">my shopping list<br />register</div>
+{% import "macros/messages.html" as messages %}
+	<div class="logo">Kauppavertailu<br />luo tunnus</div>
 	<!-- Main Form -->
 	<div class="login-form-1">
+		{% for error_message in errors %}
+			{{messages.error("#{error_message}")}}
+		{% endfor %}
 		<form id="register-form" class="text-left" action="{{base_path}}/signup/new" method="post">
 			<div class="login-form-main-message"></div>
 			<div class="main-login-form">
 				<div class="login-group">
 					<div class="form-group">
+						<label for="reg_username" class="sr-only">Etunimi</label>
+						<input type="text" class="form-control" id="reg_first_name" name="first_name" value="{{attributes.first_name}}" placeholder="etunimi" />
+					</div>
+					<div class="form-group">
+						<label for="reg_username" class="sr-only">Sukunimi</label>
+						<input type="text" class="form-control" id="reg_last_name" name="last_name" value="{{attributes.last_name}}" placeholder="sähköpostiosoite" />
+					</div>
+					<div class="form-group">
 						<label for="reg_username" class="sr-only">Sähköpostiosoite</label>
-						<input type="text" class="form-control" id="reg_username" name="account" placeholder="sähköpostiosoite" />
+						<input type="text" class="form-control" id="reg_username" name="account" value="{{attributes.account}}" placeholder="sähköpostiosoite" />
 					</div>
 					<div class="form-group">
 						<label for="reg_password" class="sr-only">Salasana</label>
@@ -22,7 +34,7 @@
 					
 					<div class="form-group">
 						<label for="reg_email" class="sr-only">Puhelin</label>
-						<input type="text" class="form-control" id="reg_phone" name="phone" placeholder="puhelin" />
+						<input type="text" class="form-control" id="reg_phone" name="phone" value="{{attributes.phone}}" placeholder="puhelin" />
 					</div>
 					<!-- 
 					<div class="form-group login-group-checkbox">
@@ -34,7 +46,7 @@
 				<button type="submit" class="login-button"><i class="fa fa-chevron-right"></i></button>
 			</div>
 			<div class="etc-login-form">
-				<p>onko tunnus jo olemassa? <a href="{{base_path}}">kirjaudu täällä</a></p>
+				<p>onko tunnus jo olemassa? <a href="{{base_path}}">kirjaudu</a></p>
 			</div>
 		</form>
 	</div>

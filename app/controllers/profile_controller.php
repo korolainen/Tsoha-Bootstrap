@@ -32,6 +32,8 @@ class ProfileController extends BaseController{
 		if(isset($_POST['remember'])) $remember_me = true; 
 		if(LoggedUser::login($_POST['account'], $_POST['password'], $remember_me)){
 			Redirect::to('/search');
+		}else{
+			Messages::redirect_errors(array('Käyttäjätunnus tai salasana on väärin!'), '');
 		}
 		Redirect::to('');
 	}

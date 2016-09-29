@@ -1,13 +1,15 @@
 <?php
 class CheckPost{
+	
+	/*
+	 * Tämä ei ole kovin tarpeellinen PDO:n kanssa
+	 * */
     public static function injection($user_input) {
         $user_input = preg_replace('/(SELECT)/i','_SELECT_', $user_input);//nämä pitää tietokannan ehjänä
         $user_input = preg_replace('/(DELETE)/i','_DELETE_', $user_input);
         $user_input = preg_replace('/(INSERT)/i','_INSERT_', $user_input);
         $user_input = preg_replace('/(UPDATE)/i','_UPDATE_', $user_input);
         $user_input = preg_replace('/(TRUNCATE)/i','_TRUNCATE_', $user_input);
-        $user_input = str_replace('<','&lt;',$user_input);//nämä pitää html:n ehjänä
-        $user_input = str_replace('>','&gt;',$user_input);//toisaalta saman asian voisi toteuttaa tulostettaessa
         return $user_input;
     }
     

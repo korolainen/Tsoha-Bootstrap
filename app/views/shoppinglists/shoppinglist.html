@@ -67,7 +67,7 @@
 			                                    </div>
 			                                    <div id="related-products" data-action="{{base_path}}/shoppinglists/link/{{shoppinglist.id}}"></div>
 		                                    </div>
-		                                    {{forms.save_reload_buttons()}}
+		                                    {{forms.save_cancel_target("#{here_no_params}")}}
 	                                    
 	                                	</form>
 	                                </div>
@@ -89,7 +89,7 @@
 				                            <td><p class="h5"><a href="{{base_path}}/products/product/{{shoppinglist_product.product_id}}" data-filter="target">{{shoppinglist_product.name}}</a></p></td>
 				                            <td>
 												<ul class="additional-list-info">
-													<li><a href="{{base_path}}/shops/shop/{{shoppinglist_product.cheapest_shop.id}}">{{shoppinglist_product.cheapest_shop.name}}</a> {{shoppinglist_product.cheapest_shop_price}}</li>
+													<li><a href="{{base_path}}/shops/shop/{{shoppinglist_product.cheapest_shop.id}}">{{shoppinglist_product.cheapest_shop.name}}</a> {{shoppinglist_product.cheapest_shop_price_html}}</li>
 												</ul>
 											</td>
 				                            <td align="center">

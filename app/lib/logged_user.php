@@ -54,8 +54,6 @@ class LoggedUser{
 			    Cookies::set(self::SESSION_KEY, $secure_key);
 			}
             return true;
-        }else{
-            self::logout();
         }
         return false;
     }

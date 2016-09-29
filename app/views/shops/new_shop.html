@@ -6,12 +6,12 @@
 		{% for error_message in errors %}
 			{{messages.error("#{error_message}")}}
 		{% endfor %}
-		{{forms.new_name()}}
+		{{forms.new_name("#{attributes.name}")}}
 	  	<div class="form-group">
 	      	<div class="sub-title">Käyttöoikeudet</div>
 	      	{% for group in usergroups %}
 		   	<div>
-		    	<input type="checkbox" name="group[]" value="{{group.id}}" /> {{group.name}}
+		    	<input type="checkbox" name="group[]"{% if group.id in attributes.group %} checked="checked"{% endif %} value="{{group.id}}" /> {{group.name}}
 		    </div>
 		    {% endfor %}
 	    </div>

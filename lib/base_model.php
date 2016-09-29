@@ -23,13 +23,9 @@
       }
       return $errors;
     }
-
+    
     public function check_errors_and_redirect($url = null){
-    	$errors = $this->errors();
-    	if(!empty($errors)){
-    		Session::set('errors', json_encode($errors));
-    		Redirect::back($url);
-    	}	
+    	Messages::redirect_errors($this->errors(), $url);	
     }
 
     public function validate_date($string, $field = ''){
@@ -58,7 +54,7 @@
         return $errors;        
     }
     
-    private function validate_string($string, $length, $field = ''){
+    public function validate_string($string, $length, $field = ''){
     	$errors = array();
     	if($string == null || strlen($string) < 3){
     		$message_start = '';
@@ -69,7 +65,9 @@
     }
     
     public function validate_name(){
-    	return $this->validate_string($this->name, 1, 'Nimi');
+    	//rajoitus voisi olla myös 1-merkki.
+    	//2-merkkiä rajoitteena helpottaa virheilmoitustestausta
+    	return $this->validate_string($this->name, 2, 'Nimi');
     }
     
     public function validate_price(){

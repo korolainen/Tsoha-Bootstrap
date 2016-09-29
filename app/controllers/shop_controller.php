@@ -29,14 +29,17 @@ class ShopController extends BaseController{
 					array('shop' => $shop, 
 						'shop_products' => $products, 
 						'visibility' => CssClass::visibility(),
-						'errors' => Messages::errors()
+						'errors' => Messages::errors(),
+						'attributes' => Session::pop('attributes')
 					)
 		);
 	}
 	
 	public static function create_new_form(){
 		$usergroups = Usergroup::all();
-		View::make('shops/new_shop.html', array('usergroups' => $usergroups));
+		View::make('shops/new_shop.html', array('usergroups' => $usergroups, 
+												'errors' => Messages::errors(),
+												'attributes' => Session::pop('attributes')));
 	}
 	
 	public static function create_new(){

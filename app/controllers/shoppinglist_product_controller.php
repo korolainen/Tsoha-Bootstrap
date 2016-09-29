@@ -13,11 +13,11 @@ class ShoppinglistProductController extends BaseController{
 		$shopproduct = new ShoppinglistProduct(array('product_id' => $product_id, 'shoppinglist_id' => $shoppinglist_id));
 		$shopproduct->check_errors_and_redirect('/shoppinglists/shoppinglist/'.$shoppinglist_id.'?add=true');
 		$shopproduct->save();
-		Redirect::return_back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
+		Redirect::back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
 	}
 	
 	public static function remove($shoppinglist_id, $product_id){
 		ShoppinglistProduct::remove($shoppinglist_id, $product_id);
-		Redirect::return_back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
+		Redirect::back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
 	}
 }

@@ -6,6 +6,6 @@
 		{% for error_message in errors %}
 			{{messages.error("#{error_message}")}}
 		{% endfor %}
-		{{forms.new_name()}}
+		{{forms.new_name("#{attributes.name}")}}
 	{{forms.new_end()}}
 {% endblock %}

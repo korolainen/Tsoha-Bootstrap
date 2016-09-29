@@ -6,9 +6,11 @@
   	$routes->post('/login', function() {
     	ProfileController::login();
   	});
+  	/*
   	$routes->get('/forgotpass', function() {
     	FrontController::forgotpass();
   	});
+  	*/
   	$routes->get('/signup', function() {
     	FrontController::register();
   	});

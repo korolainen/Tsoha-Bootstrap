@@ -31,7 +31,7 @@
 		                                        <input type="text" class="form-control" name="name" value="{{product.name}}" />
 		                                    </div>
 	                                    </div>
-	                                    {{forms.save_cancel_buttons()}}
+	                                    {{forms.save_cancel_target("#{here_no_params}")}}
 	                                    
                                 	</form>
                                 </div>
@@ -70,7 +70,7 @@
 			                                    </div>
 			                                    <input type="hidden" name="return" value="{{here_no_params}}?add=true" />
 		                                    </div>
-		                                    {{forms.save_cancel_buttons()}}
+		                                    {{forms.save_cancel_target("#{here_no_params}")}}
 	                                	</form>
 	                                </div>
 	                            </div>
@@ -101,7 +101,7 @@
 									                <p class="col-xs-12"><i class="fa fa-square-o" aria-hidden="true"></i></p>
 									            {% endif %}
 											</td>
-				                            <td><input type="text" class="price-input form-control input-lg inline-edit serialize-value" name="price" value="{{shop_product.price}}" /></td>
+				                            <td><input type="text" class="price-input form-control input-lg inline-edit serialize-value" name="price" value="{{shop_product.price_html}}" /></td>
 				                            <td align="center">
 				                              	<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/remove/{{shop_product.shop_id}}/{{shop_product.product_id}}"><em class="fa fa-trash"></em></button>
 				                            </td>

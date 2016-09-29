@@ -12,7 +12,7 @@ class ShoppinglistController extends BaseController{
 	}
 	public static function link($shoppinglist_id){
 		if(!isset($_GET['q'])) exit();
-		$products = Product::find_not_in_shopinglist($_GET['q'], $shoppinglist_id);
+		$products = Product::find_not_in_shoppinglist($_GET['q'], $shoppinglist_id);
 		View::make('products/linkproduct.html', array('products' => $products));
 	}
 	public static function shoppinglist($id){
@@ -21,12 +21,15 @@ class ShoppinglistController extends BaseController{
 		View::make('shoppinglists/shoppinglist.html', array('shoppinglist' => $shoppinglist, 
 															'visibility' => CssClass::visibility(), 
 															'shoppinglist_products' => $shopppinglist_products,
-												'errors' => Messages::errors()));
+															'errors' => Messages::errors(),
+															'attributes' => Session::pop('attributes')));
 	}
 	
 	public static function create_new_form(){
 		$usergroups = Usergroup::all();
-		View::make('shoppinglists/new_shoppinglist.html', array('usergroups' => $usergroups, array('errors' => Messages::errors())));
+		View::make('shoppinglists/new_shoppinglist.html', array('usergroups' => $usergroups, 
+																'errors' => Messages::errors(),
+																'attributes' => Session::pop('attributes')));
 	}
 	
 	public static function create_new(){

@@ -8,11 +8,6 @@ class Shop extends BaseModel{
 		parent::__construct($attributes);
 		$this->validators = array('validate_name');
 	}
-	/*
-	public function build_html(){
-		$this->name = CheckData::character_escape($this->name);
-	}
-	*/
 	public static function all(){
 		$usergroups = Usergroup::all();
 		$statement = 'SELECT p.id, p.name, p.created_by,

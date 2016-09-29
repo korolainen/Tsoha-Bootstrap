@@ -7,4 +7,13 @@ class Messages{
 		}
 		return array();
 	}
+
+	public static function redirect_errors($errors, $url = null){
+		if(!empty($errors)){
+			Session::set('errors', json_encode($errors));
+			Session::set('attributes', $_POST);
+			Redirect::back($url);
+		}
+	}
+	
 }

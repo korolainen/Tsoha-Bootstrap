@@ -1,11 +1,37 @@
 <?php
 class ShoppinglistProduct extends BaseModel{
 	public $product_id, $shoppinglist_id, $created_by, $updated, $product, 
-			$cheapest_shop, $cheapest_shop_id, $cheapest_shop_price,
+			$cheapest_shop, $cheapest_shop_id, $cheapest_shop_price, $cheapest_shop_price_html,
 			$name;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
-	}	
+		$this->validators = array('product_exists','shoppinglist_exists','shoppinglist_product_not_exists');
+		if(isset($attributes['cheapest_shop_price'])){
+			$this->cheapest_shop_price_html = CheckData::float_to_currency($this->cheapest_shop_price);
+		}
+	}
+	public function product_exists(){
+		$errors = array();
+		if(intval($this->product_id)>0){
+			$product = Product::get($this->product_id);
+			if(empty($product)) $errors[] = 'Tuote ei löydy!';
+		} 
+		return $errors;
+	}
+	public function shoppinglist_exists(){
+		$errors = array();
+		if(intval($this->shoppinglist_id)>0){
+			$shoppinglist = Shoppinglist::get($this->shoppinglist_id);
+			if(empty($shoppinglist)) $errors[] = 'Ostoslista ei löydy!';
+		} 
+		return $errors;
+	}
+	public function shoppinglist_product_not_exists(){
+		$errors = array();
+		$shoppinglist_product = ShoppinglistProduct::get($this->product_id,$this->shoppinglist_id);
+		if(!empty($shoppinglist_product)) $errors[] = 'Ostoslistalla on jo valittu tuote!';
+		return $errors;
+	}
 	public static function all(){
 		$statement = 'SELECT product_id,shop_id,price,created_by,updated
 				FROM shoppinglist_product
@@ -22,19 +48,19 @@ class ShoppinglistProduct extends BaseModel{
 		}
 		return $items;
 	}
-	public static function get($id){
-		$statement = 'SELECT product_id,shoppinglist_id,created_by,updated
+	public static function get($product_id,$shoppinglist_id){
+		$statement = 'SELECT product_id,shoppinglist_id,created_by
 				FROM shoppinglist_product
 				WHERE shoppinglist_id IN(SELECT shoppinglist_id
 								FROM shoppinglist_users
 								WHERE users_id=:users_id
-								) AND id=:id;';
+								) AND product_id=:product_id AND shoppinglist_id=:shoppinglist_id;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':users_id', LoggedUser::id());
-		$query->bindParam(':id', $id);
+		$query->bindParam(':product_id', $product_id);
+		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
 		$query->execute();
-		$row = $query->fetch(PDO::FETCH_ASSOC);
-		return new ShoppinglistProduct($row);
+		return $query->fetch(PDO::FETCH_ASSOC);
 	}
 
 

@@ -1,15 +1,19 @@
 {% extends "public.html" %}
 {% block content %}	
+{% import "macros/messages.html" as messages %}
 	<div class="logo">Kauppavertailu<br />kirjaudu</div>
 	<!-- Main Form -->
 	<div class="login-form-1">
+		{% for error_message in errors %}
+			{{messages.error("#{error_message}")}}
+		{% endfor %}
 		<form id="login-form" class="text-left" method="post" action="{{base_path}}/login">
 			<div class="login-form-main-message"></div>
 			<div class="main-login-form">
 				<div class="login-group">
 					<div class="form-group">
 						<label for="lg_username" class="sr-only">Käyttäjänimi</label>
-						<input type="text" class="form-control" id="lg_username" name="account" placeholder="sähköpostiosoite">
+						<input type="text" class="form-control" id="lg_username" name="account" value="{{attributes.account}}" placeholder="sähköpostiosoite">
 					</div>
 					<div class="form-group">
 						<label for="lg_password" class="sr-only">Salasana</label>

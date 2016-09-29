@@ -7,11 +7,6 @@ class Usergroup extends BaseModel{
 		parent::__construct($attributes);
 		$this->validators = array('validate_name');
 	}
-	/*
-	public function build_html(){
-		$this->name = CheckData::character_escape($this->name);
-	}
-	*/
 	
 	public static function all(){
 		$users = User::get_users_i_know();

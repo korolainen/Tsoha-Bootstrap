@@ -13,7 +13,7 @@ class ShoppinglistUsergroup extends BaseModel{
 								LIMIT 1
 							) AS usergroup_id,
 							(p.created_by=:me) AS allow_remove
-				FROM shop p
+				FROM shoppinglist p
 				WHERE p.id IN(SELECT su.shop_id
 								FROM shop_users su
 								WHERE su.users_id=:users_id);';

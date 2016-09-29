@@ -1,17 +1,15 @@
 <?php
 class Product extends BaseModel{
 	public $id, $name, $created_by, 
-			$cheapest_shop_id, $cheapest_shop, $cheapest_price, $shop_ids, $shops,
+			$cheapest_shop_id, $cheapest_shop, $cheapest_price, $cheapest_price_html, $shop_ids, $shops,
 			$allow_remove;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		if(isset($attributes['cheapest_price'])){
+			$this->cheapest_price_html = CheckData::float_to_currency($this->cheapest_price);
+		}
 		$this->validators = array('validate_name','check_similar');
 	}
-	/*
-	public function build_html(){
-		$this->name = CheckData::character_escape($this->name);
-	}
-	*/
 	public function check_similar(){
 		$errors = array();
 		$similar = $this->find_exact($this->name);

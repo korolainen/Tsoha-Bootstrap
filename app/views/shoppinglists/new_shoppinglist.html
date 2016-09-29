@@ -1,17 +1,18 @@
 {% extends "private.html" %}
 {% block content %}
 {% import "macros/forms.html" as forms %}
+{% import "macros/messages.html" as messages %}
 	{{forms.new_begin("#{base_path}/shoppinglists","th-list","Uusi ostoslista", "#{base_path}/shoppinglists/new")}}
 		{% for error_message in errors %}
 			{{messages.error("#{error_message}")}}
 		{% endfor %}
-		{{forms.new_name()}}
+		{{forms.new_name("#{attributes.name}")}}
 	  	<div class="form-group">
 	      	<div class="sub-title">Voimassa</div>
 		   	<div>
               <!-- Source: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
               <div class='input-group date' id='datetimepicker1'>
-                  	<input type='text' name="active" class="pickdatehere form-control" value="{{today}}" />
+                  	<input type='text' name="active" class="pickdatehere form-control" value="{{attributes.active}}" />
                   	<span class="input-group-addon">
                     	<span class="glyphicon glyphicon-calendar"></span>
                 	</span>
@@ -22,7 +23,7 @@
 	      	<div class="sub-title">Käyttöoikeudet</div>
 	      	{% for group in usergroups %}
 		   	<div>
-		    	<input type="checkbox" name="group[]" value="{{group.id}}" /> {{group.name}}
+		    	<input type="checkbox" name="group[]"{% if group.id in attributes.group %} checked="checked"{% endif %} value="{{group.id}}" /> {{group.name}}
 		    </div>
 		    {% endfor %}
 	    </div>

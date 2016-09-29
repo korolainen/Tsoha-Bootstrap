@@ -1,22 +1,43 @@
 <?php
 class UserModel extends BaseModel{
-	public $id, $account, $first_name, $last_name, $phone, $hash;
+	public $id, $account, $first_name, $last_name, $phone, $hash, $password, $password_check;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 		$this->validators = array('validate_first_name');
 	}
-	/*
-	public function build_html(){
-		$this->name = CheckData::character_escape($this->name);
-		$this->first_name = CheckData::character_escape($this->first_name);
-		$this->last_name = CheckData::character_escape($this->last_name);
-		$this->phone = CheckData::character_escape($this->phone);
-	}
-	*/
 }
 class User extends UserModel{
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators[] = 'check_similar';
+		$this->validators[] = 'check_email';
+		$this->validators[] = 'check_password_length';
+		$this->validators[] = 'check_password2';
+	}
+	public function check_similar(){
+		$errors = array();
+		$existing_user = User::check_account($this->account);
+		if(!empty($existing_user)){
+			$errors[] = 'Tunnus "'.CheckData::character_escape($this->account).'" on olemassa!';
+		} 
+		return $errors;
+	}
+	public function check_email(){
+		$errors = array();
+		if(!filter_var($this->account, FILTER_VALIDATE_EMAIL)) {
+			$errors[] = 'Anna sähköpostimuotoinen käyttäjätunnus!';
+	    }
+		return $errors;
+	}
+	public function check_password_length(){
+		return $this->validate_string($this->password, 5, 'Salasana');
+	}
+	public function check_password2(){
+		$errors = array();
+		if($this->password!=$this->password_check) {
+			$errors[] = 'Salasanankentät eivät vastaa toisiaan!';
+	    }
+		return $errors;
 	}
 	/*
 	public static function all(){
