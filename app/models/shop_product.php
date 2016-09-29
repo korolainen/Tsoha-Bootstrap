@@ -4,11 +4,18 @@ class ShopProduct extends BaseModel{
 			$name, $shop_name;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
+		$this->validators = array('validate_price','product_exists','shop_exists','shop_product_not_exists');
 		if(isset($attributes['price'])){
 			$this->price_html = CheckData::float_to_currency($this->price);
 		}
-		$this->validators = array('validate_price','product_exists','shop_exists','shop_product_not_exists');
 	}	
+	public function check_price(){
+		$errors = $this->validate_price();
+		if(!empty($errors)){
+			echo 'error';
+			exit();
+		}
+	}
 	public function product_exists(){
 		$errors = array();
 		if(intval($this->product_id)>0){
@@ -102,16 +109,25 @@ class ShopProduct extends BaseModel{
 							(sp.price IN(SELECT spp.price 
 								FROM shop_product spp
 								WHERE spp.product_id = p.id
+									AND spp.shop_id IN(SELECT pppp.shop_id 
+											FROM shop_users pppp
+											WHERE pppp.users_id=:shop_users_id)
 								ORDER BY spp.price ASC
 								LIMIT 1
 							)) AS is_cheapest
 						FROM shop_product sp
 						JOIN product p ON p.id = sp.product_id
-						WHERE sp.shop_id=:shop_id AND p.id=:product_id
+						WHERE sp.shop_id=:shop_id 
+							AND p.id=:product_id
+							AND sp.shop_id IN(SELECT ppp.shop_id 
+											FROM shop_users ppp
+											WHERE ppp.users_id=:users_id)
 						ORDER BY p.name ASC;';
 		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shop_users_id', LoggedUser::id());
 		$query->bindParam(':shop_id', $shop_id);
 		$query->bindParam(':product_id', $product_id);
+		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 		if($row = $query->fetch(PDO::FETCH_ASSOC)){
 			return new ShopProduct($row);
@@ -135,9 +151,15 @@ class ShopProduct extends BaseModel{
 						JOIN product p ON p.id = sp.product_id
 						JOIN shop s ON s.id = sp.shop_id
 						WHERE p.id=:product_id
+							AND (s.id IN (SELECT ppp.shop_id 
+											FROM shop_users ppp
+											WHERE ppp.users_id=:users_id
+											)
+								)
 						ORDER BY p.name ASC;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':product_id', $product_id);
+		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){

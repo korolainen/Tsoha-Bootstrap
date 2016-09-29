@@ -91,7 +91,7 @@
 				                  		{% for shop_product in product_shops %}
 				                          <tr>
 				                            <td class="editor-column" align="center">
-				                              	<button type="button" class="btn btn-success save-inline-button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/edit/{{shop_product.shop_id}}/{{shop_product.product_id}}" data-id="{{shop_product.product_id}}"><em class="fa fa-save"></em></button>
+				                              	<button type="button" data-cheapest="{% if shop_product.is_cheapest %}1{% else %}0{% endif %}" class="btn btn-success save-inline-button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/edit/{{shop_product.shop_id}}/{{shop_product.product_id}}" data-id="{{shop_product.product_id}}"><em class="fa fa-save"></em></button>
 				                            </td>
 				                            <td><p class="h5"><a href="{{base_path}}/shops/shop/{{shop_product.shop_id}}" data-filter="target">{{shop_product.shop_name}}</a></p></td>
 				                            <td class="narrow-column">
@@ -112,11 +112,13 @@
 				              </div>
 				            </div>
                         </div>
-                        <div class="col-xs-12 {{visibility.add}}">
-	                        <div class="pull-right">
-	                        	{{forms.remove("#{base_path}/products/remove/#{product.id}")}}
-	                        </div>
-                        </div>
+                        	{% if shop.allow_remove %}
+		                        <div class="col-xs-12 {{visibility.add}}">
+			                        <div class="pull-right">
+			                        	{{forms.remove("#{base_path}/products/remove/#{product.id}")}}
+			                        </div>
+		                        </div>
+				            {% endif %}
                     </div>
                 </div>
 {% endblock %}

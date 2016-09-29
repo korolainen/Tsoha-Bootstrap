@@ -87,13 +87,13 @@
 			              </div>
 			            </div>
                         </div>
-                        
-                        
-                        <div class="col-xs-12 {{visibility.add}}">
-	                        <div class="pull-right">
-	                        	{{forms.remove("#{base_path}/groups/remove/#{group.id}")}}
-	                        </div>
-                        </div>
+                        	{% if group.allow_remove %}
+		                        <div class="col-xs-12 {{visibility.add}}">
+			                        <div class="pull-right">
+			                        	{{forms.remove("#{base_path}/groups/remove/#{group.id}")}}
+			                        </div>
+		                        </div>
+				            {% endif %}
                     </div>
                 </div>
                     

@@ -93,7 +93,7 @@
 												</ul>
 											</td>
 				                            <td align="center">
-				                              	<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/remove/{{shoppinglist.id}}/{{shop_product.product_id}}"><em class="fa fa-trash"></em></button>
+				                              	<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shoppinglistproducts/remove/{{shoppinglist.id}}/{{shoppinglist_product.product_id}}"><em class="fa fa-trash"></em></button>
 				                            </td>
 				                          </tr>
 										{% endfor %}
@@ -101,12 +101,19 @@
 				                </table>
 				              </div>
 				            </div>
+				            <ul class="user-list-info">
+                 				{% for user in users %}
+									<li><a href="tel:{{user.phone}}">{{user.first_name}} {{user.phone}}</a></li>
+								{% endfor %}
+							</ul>
                         </div>
-	                        <div class="col-xs-12 {{visibility.add}}">
-		                        <div class="pull-right">
-		                        	{{forms.remove("#{base_path}/shops/remove/#{shoppinglist.id}")}}
+                        	{% if shoppinglist.allow_remove %}
+		                        <div class="col-xs-12 {{visibility.add}}">
+			                        <div class="pull-right">
+			                        	{{forms.remove("#{base_path}/shops/remove/#{shoppinglist.id}")}}
+			                        </div>
 		                        </div>
-	                        </div>
+				            {% endif %}
 	                    </div>
 	                    
 	                    

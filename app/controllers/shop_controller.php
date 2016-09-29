@@ -25,11 +25,15 @@ class ShopController extends BaseController{
 	public static function shop($id){
 		$shop = Shop::get($id);
 		$products = ShopProduct::products_in_shop($id);
+		$usergroups = Usergroup::all_in_shop($id);
+		$users = Shop::users($id);
 		View::make('shops/shop.html', 
 					array('shop' => $shop, 
 						'shop_products' => $products, 
+						'usergroups' => $usergroups, 
 						'visibility' => CssClass::visibility(),
 						'errors' => Messages::errors(),
+						'users' => $users,
 						'attributes' => Session::pop('attributes')
 					)
 		);
@@ -65,6 +69,21 @@ class ShopController extends BaseController{
 		$shop = new Shop(array('name' => $_POST['name'], 'id' => $id));
 		$shop->check_errors_and_redirect('/shops/shop/'.$id.'?edit=true');
 		$shop->update();
+		
+		$shop = Shop::get($id);
+		if($shop->allow_remove=='1'){
+			if(!isset($_POST['group'])) $_POST['group'] = array();
+			if(!is_array($_POST['group'])) $_POST['group'] = array();
+			$usergroups = Usergroup::all_in_shop($id);
+			foreach ($usergroups as $usergroup){
+				ShopUsergroup::remove($id, $usergroup->id);		
+				if(isset($_POST['group'][$usergroup->id])){
+					ShopUsergroup::insert($id, $usergroup->id);
+				}
+			}
+		}
+		
+		
 		Redirect::back('/shops/shop/'.$id);
 	}
 	

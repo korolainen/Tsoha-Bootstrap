@@ -27,6 +27,16 @@
 		                                        <input type="text" class="form-control" name="name" value="{{shop.name}}" />
 		                                    </div>
 	                                    </div>
+                        				{% if shop.allow_remove %}
+										  	<div class="form-group">
+										      	<div class="sub-title">Käyttöoikeudet</div>
+										      	{% for group in usergroups %}
+											   	<div>
+											    	<input type="checkbox" name="group[{{group.id}}]"{% if group.is_in_shop %} checked="checked"{% endif %} value="{{group.id}}" /> {{group.name}}
+											    </div>
+											    {% endfor %}
+										    </div>
+									    {% endif %}
 	                                    {{forms.save_cancel_target("#{here_no_params}")}}
                                 	</form>
                                 </div>
@@ -104,12 +114,19 @@
 				                </table>
 				              </div>
 				            </div>
+				            <ul class="user-list-info">
+                 				{% for user in users %}
+									<li><a href="tel:{{user.phone}}">{{user.first_name}} {{user.phone}}</a></li>
+								{% endfor %}
+							</ul>
                         </div>
-                        <div class="col-xs-12 {{visibility.add}}">
-	                        <div class="pull-right">
-	                        	{{forms.remove("#{base_path}/shops/remove/#{shop.id}")}}
-	                        </div>
-                        </div>
+                        	{% if shop.allow_remove %}
+		                        <div class="col-xs-12 {{visibility.add}}">
+			                        <div class="pull-right">
+			                        	{{forms.remove("#{base_path}/shops/remove/#{shop.id}")}}
+			                        </div>
+		                        </div>
+				            {% endif %}
                     </div>
                     
                     

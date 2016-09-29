@@ -78,9 +78,13 @@ class ShoppinglistProduct extends BaseModel{
 						FROM shoppinglist_product sp
 						JOIN product p ON p.id = sp.product_id
 						WHERE sp.shoppinglist_id=:shoppinglist_id
+							AND sp.shoppinglist_id IN(SELECT sss.shoppinglist_id
+													FROM shoppinglist_users sss
+													WHERE sss.users_id=:users_id)
 						ORDER BY p.name ASC;';
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
+		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){

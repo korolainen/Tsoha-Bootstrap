@@ -2,7 +2,8 @@
 class Usergroup extends BaseModel{
 	public $id, $name, $created_by,
 			$users,
-			$allow_remove;
+			$allow_remove,
+			$is_in_shop;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 		$this->validators = array('validate_name');
@@ -39,6 +40,40 @@ class Usergroup extends BaseModel{
 		return $items;
 	}
 	
+	public static function all_in_shop($id){
+		$users = User::get_users_i_know();
+		$statement = 'SELECT p.id, p.name, p.created_by,
+							(SELECT array_to_string(array_agg(sp.users_id),\',\')
+								FROM all_usergroup_users sp
+								WHERE sp.usergroup_id = p.id
+							) AS user_ids,
+							(su.shop_id IS NOT NULL) AS is_in_shop,
+							(p.created_by=:me) AS allow_remove
+				FROM usergroup p
+				LEFT JOIN shop_usergroup su ON p.id = su.usergroup_id AND su.shop_id=:shop_id
+				WHERE p.created_by=:created_by;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->bindParam(':created_by', LoggedUser::id());
+		$query->bindParam(':shop_id', $id);
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$user_ids = explode(',', $row['user_ids']);
+			$group_users = array();
+			foreach ($user_ids as $user_id){
+				if(isset($users[$user_id])){
+					$group_users[] = $users[$user_id];
+				}
+			}
+			$row['users'] = $group_users;
+			$usergroup = new Usergroup($row);
+			//$usergroup->build_html();
+			$items[$row['id']] = $usergroup; 
+		}
+		return $items;
+	}
+	
 	public static function find($name){
 		$users = User::get_users_i_know();
 		$statement = 'SELECT p.id, p.name, p.created_by,
@@ -46,7 +81,7 @@ class Usergroup extends BaseModel{
 								FROM all_usergroup_users sp
 								WHERE sp.usergroup_id = p.id
 							) AS user_ids,
-							(created_by=:me) AS allow_remove
+							(p.created_by=:me) AS allow_remove
 				FROM usergroup p
 				WHERE p.created_by=:created_by AND LOWER(p.name) LIKE :name;';
 		$query = DB::connection()->prepare($statement);
@@ -79,7 +114,7 @@ class Usergroup extends BaseModel{
 								FROM all_usergroup_users sp
 								WHERE sp.usergroup_id = p.id
 							) AS user_ids,
-							(created_by=:me) AS allow_remove
+							(p.created_by=:me) AS allow_remove
 				FROM usergroup p
 				WHERE p.created_by=:created_by AND p.id=:id;';
 		$query = DB::connection()->prepare($statement);

@@ -122,7 +122,7 @@ class Product extends BaseModel{
 								WHERE sp.product_id = p.id
 								GROUP BY sp.product_id
 							) AS shop_ids,
-							(created_by=:me) AS allow_remove
+							(p.created_by=:me) AS allow_remove
 				FROM product p
 				WHERE (p.created_by=:created_by
 					OR p.id IN(SELECT slp.product_id

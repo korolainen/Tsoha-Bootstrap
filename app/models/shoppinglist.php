@@ -40,6 +40,24 @@ class Shoppinglist extends BaseModel{
 		}
 		return $items;
 	}
+
+	public static function users($shoppinglist_id){
+		$statement = 'SELECT u.id, u.account, u.first_name, u.last_name, u.phone, u.hash
+						FROM users u
+						JOIN shoppinglist_users su ON su.users_id=u.id AND su.shoppinglist_id=:shoppinglist_id
+				WHERE su.users_id!=:me;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->execute();
+		$item = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$user = new User($row);
+			//$user->build_html();
+			$item[$row['id']] = $user;
+		}
+		return $item;
+	}
 	
 	public static function find($name){
 		$usergroups = Usergroup::all();

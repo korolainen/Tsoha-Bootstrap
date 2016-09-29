@@ -4,16 +4,20 @@ class ShopProductController extends BaseController{
 
 	public static function edit($shop_id, $product_id){
 		CheckPost::required_exit(array('price'));
-		$data = array('price' => CheckData::text_to_float($_POST['price']),
+		$shop = Shop::get($shop_id);
+		$prouct = Product::get($product_id);
+		if(empty($shop)) exit();
+		if(empty($prouct)) exit();
+		$shop_product = new ShopProduct(array('price' => CheckData::text_to_float($_POST['price']),
 				'shop_id' => $shop_id,
 				'product_id' => $product_id
-		);
-		$shop_product = new ShopProduct($data);
-		$shop_product->check_errors_and_redirect();
+		));
+		$shop_product->check_price();
 		$shop_product->update();
 		$sp = ShopProduct::get($shop_id, $product_id);
-		if($sp->is_cheapest=='1') echo 'fa fa-check-square-o';
-		else echo 'fa fa-check-square';		exit();
+		if($sp->is_cheapest=='1') echo '1';
+		else echo '0';		
+		exit();
 	}
 	
 	public static function add($shop_id){

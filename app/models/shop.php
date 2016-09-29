@@ -35,6 +35,24 @@ class Shop extends BaseModel{
 		}
 		return $items;
 	}
+
+	public static function users($shop_id){
+		$statement = 'SELECT u.id, u.account, u.first_name, u.last_name, u.phone, u.hash
+						FROM users u
+						JOIN shop_users su ON su.users_id=u.id AND su.shop_id=:shop_id
+				WHERE su.users_id!=:me;';
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shop_id', $shop_id);
+		$query->bindParam(':me', LoggedUser::id());
+		$query->execute();
+		$item = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$user = new User($row);
+			//$user->build_html();
+			$item[$row['id']] = $user;
+		}
+		return $item;
+	}
 	
 	public static function find($name){
 		$usergroups = Usergroup::all();
@@ -85,8 +103,10 @@ class Shop extends BaseModel{
 		$query->bindParam(':users_id', LoggedUser::id());
 		$query->bindParam(':id', $id);
 		$query->execute();
-		$row = $query->fetch(PDO::FETCH_ASSOC);
-		return new Shop($row);
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			return new Shop($row);
+		}
+		return null;
 	}
 	
 	public function update(){

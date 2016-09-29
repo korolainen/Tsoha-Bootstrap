@@ -94,16 +94,23 @@ $(document).ready(function(){
             url: action,
             data: values,
             success: function(data) {
-            	//console.log(data);
-            	flash_success(elem);
-            	var target = elem.parent().parent().find('i[aria-hidden=true]').first();
-            	if(data!=target.attr('class')){
-            		window.location.reload();
+            	if(data!='error'){
+	            	//console.log(data);
+	            	flash_success(elem);
+	            	if(data!=elem.attr('data-cheapest')){
+	            		//console.log(data);
+	            		window.location.reload();
+	            	}else{
+	            		//console.log("samat");
+	            	}
+            	}else{
+            		flash_error(elem);
             	}
             },
             error: function(data) {
             	flash_error(elem);
             	console.log('Epäonnistui!');
+            	console.log(data);
             }
         });
     });
@@ -178,6 +185,7 @@ $(document).ready(function(){
     	            },
     	            error: function(data) {
     	            	console.log('Epäonnistui!');
+    	            	console.log(data);
     	            }
     	        });
     	    }else{
@@ -202,6 +210,7 @@ $(document).ready(function(){
                 },
                 error: function(data) {
                 	console.log('Epäonnistui!');
+                	console.log(data);
                 }
             });
     	}else{
@@ -259,6 +268,7 @@ $(document).ready(function(){
                 },
                 error: function(data) {
                 	console.log('Epäonnistui!');
+                	console.log(data);
                 }
             });
     	}else{

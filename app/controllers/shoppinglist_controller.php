@@ -18,10 +18,12 @@ class ShoppinglistController extends BaseController{
 	public static function shoppinglist($id){
 		$shoppinglist = Shoppinglist::get($id);
 		$shopppinglist_products = ShoppinglistProduct::products_in_shoppinglist($id);
+		$users = Shoppinglist::users($id);
 		View::make('shoppinglists/shoppinglist.html', array('shoppinglist' => $shoppinglist, 
 															'visibility' => CssClass::visibility(), 
 															'shoppinglist_products' => $shopppinglist_products,
 															'errors' => Messages::errors(),
+															'users' => $users,
 															'attributes' => Session::pop('attributes')));
 	}
 	
