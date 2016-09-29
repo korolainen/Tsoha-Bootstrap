@@ -21,6 +21,7 @@ class UserController extends BaseController{
 	
 	public static function get($id){
 		$user = User::get_user_i_know($id);
+		if(empty($user)) Redirect::to('/search/');
 		View::make('profile/user.html', array('user' => $user));
 	}
 	

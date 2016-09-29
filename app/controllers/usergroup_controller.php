@@ -8,6 +8,7 @@ class UsergroupController extends BaseController{
 	
 	public static function group($id){
 		$group = Usergroup::get($id);
+		if(empty($group)) Redirect::to('/groups');
 		$usergroup_users = UsergroupUsers::users($id);
 		View::make('groups/group.html', array('group' => $group, 
 												'visibility' => CssClass::visibility(), 
@@ -57,6 +58,8 @@ class UsergroupController extends BaseController{
 	
 	
 	public static function edit($id){
+		$group = Usergroup::get($id);
+		if(empty($group)) Redirect::to('/groups');
 		CheckPost::required_redirect(array('name'), '/groups/group/'.$id);
 		$usergroup = new Usergroup(array('name' => $_POST['name'], 'id' => $id));
 		$usergroup->check_errors_and_redirect('/groups/group/'.$id.'?edit=true');
@@ -65,6 +68,8 @@ class UsergroupController extends BaseController{
 	}
 	
 	public static function remove($id){
+		$group = Usergroup::get($id);
+		if(empty($group)) Redirect::to('/groups');
 		Usergroup::remove($id);
 		Redirect::back('/groups');
 	}

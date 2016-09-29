@@ -24,6 +24,7 @@ class ShopController extends BaseController{
 	}
 	public static function shop($id){
 		$shop = Shop::get($id);
+		if(empty($shop)) Redirect::to('/shops');
 		$products = ShopProduct::products_in_shop($id);
 		$usergroups = Usergroup::all_in_shop($id);
 		$users = Shop::users($id);
@@ -65,6 +66,8 @@ class ShopController extends BaseController{
 	}
 	
 	public static function edit($id){
+		$shop = Shop::get($id);
+		if(empty($shop)) Redirect::to('/shops');
 		CheckPost::required_redirect(array('name'), '/shops/shop/'.$id);
 		$shop = new Shop(array('name' => $_POST['name'], 'id' => $id));
 		$shop->check_errors_and_redirect('/shops/shop/'.$id.'?edit=true');
@@ -88,6 +91,8 @@ class ShopController extends BaseController{
 	}
 	
 	public static function remove($id){
+		$shop = Shop::get($id);
+		if(empty($shop)) Redirect::to('/shops');
 		Shop::remove($id);
 		Redirect::back('/shops');
 	}
