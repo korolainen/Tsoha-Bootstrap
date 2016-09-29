@@ -1,7 +1,16 @@
 # Tietokantasovelluksen esittelysivu
 
-Käyttäjätunnus: tsoha
-Salasana: tsoha
+Käyttäjä 1:
+* Käyttäjätunnus: tsoha
+* Salasana: tsoha
+
+Käyttäjä 2:
+* Käyttäjätunnus: valtteri.korolainen@helsinki.fi
+* Salasana: tsoha
+
+Käyttäjä 3:
+* Käyttäjätunnus: otheruser@korolainen.fi
+* Salasana: tsoha
 
 
 Yleisiä linkkejä:
@@ -48,3 +57,4 @@ Toimintoja:
 * Ostoslistojen näkyvyyden salliminen muille saman ruokakunnan jäsenille
 
 
+<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons -lisenssi" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Kauppavertailu</span>, jonka tekijä on <a xmlns:cc="http://creativecommons.org/ns#" href="http://valkorol.users.cs.helsinki.fi/tsoha/" property="cc:attributionName" rel="cc:attributionURL">Valtteri Korolainen</a>, on lisensoitu <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">Creative Commons Nimeä-EiKaupallinen 4.0 Kansainvälinen -lisenssillä</a>.<br />Perustuu teokseen osoitteessa <a xmlns:dct="http://purl.org/dc/terms/" href="http://valkorol.users.cs.helsinki.fi/tsoha/" rel="dct:source">http://valkorol.users.cs.helsinki.fi/tsoha/</a>.

@@ -28,14 +28,16 @@
 		                                    </div>
 	                                    </div>
                         				{% if shop.allow_remove %}
-										  	<div class="form-group">
-										      	<div class="sub-title">Käyttöoikeudet</div>
-										      	{% for group in usergroups %}
-											   	<div>
-											    	<input type="checkbox" name="group[{{group.id}}]"{% if group.is_in_shop %} checked="checked"{% endif %} value="{{group.id}}" /> {{group.name}}
+		    								{% if usergroups is not empty %}
+											  	<div class="form-group">
+											      	<div class="sub-title">Käyttöoikeudet</div>
+											      	{% for group in usergroups %}
+												   	<div>
+												    	<input type="checkbox" name="group[{{group.id}}]"{% if group.is_in_shop %} checked="checked"{% endif %} value="{{group.id}}" /> {{group.name}}
+												    </div>
+												    {% endfor %}
 											    </div>
-											    {% endfor %}
-										    </div>
+										    {% endif %}
 									    {% endif %}
 	                                    {{forms.save_cancel_target("#{here_no_params}")}}
                                 	</form>
