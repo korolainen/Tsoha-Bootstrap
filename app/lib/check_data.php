@@ -24,6 +24,7 @@ class CheckData{
 		$new_value = str_replace('\\', '&#92;', $new_value);
 		return $new_value;
 	}
+	
 	public static function post_by_key($key){
         if(!empty($_POST[$key])) return $_POST[$key];
         return '';

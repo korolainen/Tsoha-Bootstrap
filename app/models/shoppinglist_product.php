@@ -3,6 +3,7 @@ class ShoppinglistProduct extends BaseModel{
 	public $product_id, $shoppinglist_id, $created_by, $updated, $product, 
 			$cheapest_shop, $cheapest_shop_id, $cheapest_shop_price, $cheapest_shop_price_html,
 			$name;
+	
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 		$this->validators = array('product_exists','shoppinglist_exists','shoppinglist_product_not_exists');
@@ -10,6 +11,7 @@ class ShoppinglistProduct extends BaseModel{
 			$this->cheapest_shop_price_html = CheckData::float_to_currency($this->cheapest_shop_price);
 		}
 	}
+	
 	public function product_exists(){
 		$errors = array();
 		if(intval($this->product_id)>0){
@@ -18,6 +20,7 @@ class ShoppinglistProduct extends BaseModel{
 		} 
 		return $errors;
 	}
+	
 	public function shoppinglist_exists(){
 		$errors = array();
 		if(intval($this->shoppinglist_id)>0){
@@ -26,43 +29,33 @@ class ShoppinglistProduct extends BaseModel{
 		} 
 		return $errors;
 	}
+	
 	public function shoppinglist_product_not_exists(){
 		$errors = array();
 		$shoppinglist_product = ShoppinglistProduct::get($this->product_id,$this->shoppinglist_id);
 		if(!empty($shoppinglist_product)) $errors[] = 'Ostoslistalla on jo valittu tuote!';
 		return $errors;
 	}
+	
 	public static function all(){
-		$statement = 'SELECT product_id,shop_id,price,created_by,updated
-				FROM shoppinglist_product
-				WHERE shoppinglist_id IN(SELECT shoppinglist_id
-								FROM shoppinglist_users
-								WHERE users_id=:users_id
-								);';
+		$statement = self::statement();
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':users_id', LoggedUser::id());
-		$query->execute();
+		$query->execute(array(':users_id' => LoggedUser::id()));
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
 			$items[] = new ShoppinglistProduct($row);
 		}
 		return $items;
 	}
+	
 	public static function get($product_id,$shoppinglist_id){
-		$statement = 'SELECT product_id,shoppinglist_id,created_by
-				FROM shoppinglist_product
-				WHERE shoppinglist_id IN(SELECT shoppinglist_id
-								FROM shoppinglist_users
-								WHERE users_id=:users_id
-								) AND product_id=:product_id AND shoppinglist_id=:shoppinglist_id;';
+		$statement = self::statement('AND product_id=:product_id AND shoppinglist_id=:shoppinglist_id');
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':users_id', LoggedUser::id());
-		$query->bindParam(':product_id', $product_id);
-		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
-		$query->execute();
+		$query->execute(array(':users_id' => LoggedUser::id(), 
+							':product_id' => $product_id, 
+							':shoppinglist_id' => $shoppinglist_id));
 		return $query->fetch(PDO::FETCH_ASSOC);
 	}
-
 
 	public static function products_in_shoppinglist($shoppinglist_id){
 		$shops = Shop::all();
@@ -111,10 +104,26 @@ class ShoppinglistProduct extends BaseModel{
 
 	
 	public static function remove($shoppinglist_id, $product_id){
-		$statement = 'DELETE FROM shoppinglist_product WHERE shoppinglist_id=:shoppinglist_id AND product_id=:product_id;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
-		$query->bindParam(':product_id', $product_id);
-		$query->execute();
+		$query = DB::connection()->prepare('DELETE FROM shoppinglist_product 
+										WHERE shoppinglist_id=:shoppinglist_id 
+											AND product_id=:product_id;');
+		$query->execute(array(':shoppinglist_id' => $shoppinglist_id, ':product_id' => $product_id));
+	}
+	
+	
+	
+	
+	
+	
+	
+
+	private static function statement($extra = ''){
+		return 'SELECT product_id,shop_id,price,created_by,updated
+				FROM shoppinglist_product
+				WHERE shoppinglist_id IN(SELECT shoppinglist_id
+								FROM shoppinglist_users
+								WHERE users_id=:users_id
+								)
+					'.$extra.';';
 	}
 }

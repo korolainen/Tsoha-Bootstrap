@@ -8,7 +8,8 @@ class ShopProduct extends BaseModel{
 		if(isset($attributes['price'])){
 			$this->price_html = CheckData::float_to_currency($this->price);
 		}
-	}	
+	}
+		
 	public function check_price(){
 		$errors = $this->validate_price();
 		if(!empty($errors)){
@@ -16,48 +17,26 @@ class ShopProduct extends BaseModel{
 			exit();
 		}
 	}
+	
 	public function product_exists(){
-		$errors = array();
-		if(intval($this->product_id)>0){
-			$product = Product::get($this->product_id);
-			if(empty($product)) $errors[] = 'Tuote ei löydy!';
-		} 
-		return $errors;
+		$product = Product::get(intval($this->product_id));
+		return $this->validation_pattern(empty($product), 'Tuote ei löydy!');
 	}
+	
 	public function shop_exists(){
-		$errors = array();
-		if(intval($this->shop_id)>0){
-			$shop = Shop::get($this->shop_id);
-			if(empty($shop)) $errors[] = 'Kauppa ei löydy!';
-		} 
-		return $errors;
+		$shop = Shop::get(intval($this->shop_id));
+		return $this->validation_pattern(empty($shop), 'Kauppa ei löydy!');
 	}
+	
 	public function shop_product_not_exists(){
-		$errors = array();
 		$shop_product = ShopProduct::get($this->product_id,$this->shop_id);
-		if(!empty($shop_product)) $errors[] = 'Kaupassa on jo valittu tuote!';
-		return $errors;
+		return $this->validation_pattern((!empty($shop_product)), 'Kaupassa on jo valittu tuote!');
 	}
-	private static function execute_all(){
-		$statement = 'SELECT product_id,shop_id,price,created_by,updated
-				FROM shop_product
-				WHERE shop_id IN(SELECT shop_id
-								FROM shop_users
-								WHERE users_id=:users_id
-								);';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':users_id', LoggedUser::id());
-		$query->execute();
-		return $query;
-	}
+	
 	public static function all(){
-		$query = self::execute_all();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$items[] = new ShopProduct($row);
-		}
-		return $items;
+		return self::execute(self::execute_all());
 	}
+	
 	public static function all_sorted(){
 		$query = self::execute_all();
 		$items = array();
@@ -66,109 +45,39 @@ class ShopProduct extends BaseModel{
 		}
 		return $items;
 	}
+	
 	public function update(){
-		$statement = 'UPDATE shop_product
-						SET price=:price, updated=now()
-						WHERE product_id=:product_id AND shop_id=:shop_id;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':price', $this->price);
-		$query->bindParam(':product_id', $this->product_id);
-		$query->bindParam(':shop_id', $this->shop_id);
-		$query->execute();
+		$query = DB::connection()->prepare('UPDATE shop_product
+											SET price=:price, updated=now()
+											WHERE product_id=:product_id AND shop_id=:shop_id;');
+		$query->execute(array(':price'=>$this->price, ':product_id'=>$this->product_id, ':shop_id'=>$this->shop_id));
 	}
 
-
 	public static function products_in_shop($shop_id){
-		$statement = 'SELECT sp.product_id, sp.shop_id, sp.created_by, sp.price,
-							p.id, p.name, p.created_by AS product_created_by, 
-							(sp.price IN(SELECT spp.price 
-								FROM shop_product spp
-								WHERE spp.product_id = p.id
-								ORDER BY spp.price ASC
-								LIMIT 1
-							)) AS is_cheapest
-						FROM shop_product sp
-						JOIN product p ON p.id = sp.product_id
-						WHERE sp.shop_id=:shop_id
-						ORDER BY p.name ASC;';
-		$query = DB::connection()->prepare($statement);
+		$statement=self::statement('AND sp.shop_id=:shop_id');
+		$query = self::query($statement);
 		$query->bindParam(':shop_id', $shop_id);
-		$query->execute();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$items[] = new ShopProduct($row);
-			
-		}
-		return $items;
+		return self::execute($query);
 	}
 
 
 	public static function get($shop_id, $product_id){
-		$statement = 'SELECT sp.product_id, sp.shop_id, sp.created_by, sp.price,
-							p.id, p.name, p.created_by AS product_created_by, 
-							(sp.price IN(SELECT spp.price 
-								FROM shop_product spp
-								WHERE spp.product_id = p.id
-									AND spp.shop_id IN(SELECT pppp.shop_id 
-											FROM shop_users pppp
-											WHERE pppp.users_id=:shop_users_id)
-								ORDER BY spp.price ASC
-								LIMIT 1
-							)) AS is_cheapest
-						FROM shop_product sp
-						JOIN product p ON p.id = sp.product_id
-						WHERE sp.shop_id=:shop_id 
-							AND p.id=:product_id
-							AND sp.shop_id IN(SELECT ppp.shop_id 
-											FROM shop_users ppp
-											WHERE ppp.users_id=:users_id)
-						ORDER BY p.name ASC;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':shop_users_id', LoggedUser::id());
+		$statement=self::statement('AND p.id=:product_id AND sp.shop_id=:shop_id');
+		$query = self::query($statement);
 		$query->bindParam(':shop_id', $shop_id);
 		$query->bindParam(':product_id', $product_id);
-		$query->bindParam(':users_id', LoggedUser::id());
-		$query->execute();
-		if($row = $query->fetch(PDO::FETCH_ASSOC)){
-			return new ShopProduct($row);
-			
-		}
-		return null;
-	}
+		$items = self::execute($query);
+		if(count($items)<=0) return null;
+		return current($items);
 
+	}
 
 	public static function product_in_shops($product_id){
-		$statement = 'SELECT sp.product_id, sp.shop_id, sp.created_by, sp.price,
-							p.id, p.name, p.created_by AS product_created_by, 
-							(sp.price IN(SELECT spp.price 
-								FROM shop_product spp
-								WHERE spp.product_id = p.id
-								ORDER BY spp.price ASC
-								LIMIT 1
-							)) AS is_cheapest,
-							s.name AS shop_name
-						FROM shop_product sp
-						JOIN product p ON p.id = sp.product_id
-						JOIN shop s ON s.id = sp.shop_id
-						WHERE p.id=:product_id
-							AND (s.id IN (SELECT ppp.shop_id 
-											FROM shop_users ppp
-											WHERE ppp.users_id=:users_id
-											)
-								)
-						ORDER BY p.name ASC;';
-		$query = DB::connection()->prepare($statement);
+		$statement=self::statement('AND p.id=:product_id');
+		$query = self::query($statement);
 		$query->bindParam(':product_id', $product_id);
-		$query->bindParam(':users_id', LoggedUser::id());
-		$query->execute();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$items[] = new ShopProduct($row);
-			
-		}
-		return $items;
+		return self::execute($query);
 	}
-
 
 	public static function product_not_in_shops($product_id){
 		$statement = 'SELECT s.name, s.id AS shop_id
@@ -183,13 +92,7 @@ class ShopProduct extends BaseModel{
 		$query = DB::connection()->prepare($statement);
 		$query->bindParam(':product_id', $product_id);
 		$query->bindParam(':users_id', LoggedUser::id());
-		$query->execute();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$items[] = new ShopProduct($row);
-			
-		}
-		return $items;
+		return self::execute($query);
 	}
 	
 	public function save(){
@@ -197,17 +100,75 @@ class ShopProduct extends BaseModel{
 						VALUES(:product_id, :shop_id, :price, :created_by);';
 		$query = DB::connection()->prepare($statement);
 		$query->execute(array('product_id'=>$this->product_id, 
-				'shop_id'=>$this->shop_id, 
-				'price'=>$this->price, 
-				'created_by'=>LoggedUser::id()));
+							'shop_id'=>$this->shop_id, 
+							'price'=>$this->price, 
+							'created_by'=>LoggedUser::id()));
 	}
-
 	
 	public static function remove($shop_id, $product_id){
-		$statement = 'DELETE FROM shop_product WHERE shop_id=:shop_id AND product_id=:product_id;';
+		$query = DB::connection()->prepare('DELETE FROM shop_product 
+											WHERE shop_id=:shop_id 
+												AND product_id=:product_id;');
+		$query->execute(array('shop_id'=>$shop_id, 'product_id'=>$product_id));
+	}
+	
+	
+	
+	
+	
+	
+	
+
+
+	private static function execute_all(){
+		$statement = 'SELECT product_id,shop_id,price,created_by,updated
+				FROM shop_product
+				WHERE shop_id IN(SELECT shop_id
+								FROM shop_users
+								WHERE users_id=:users_id
+								);';
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':shop_id', $shop_id);
-		$query->bindParam(':product_id', $product_id);
+		$query->bindParam(':users_id', LoggedUser::id());
 		$query->execute();
+		return $query;
+	}
+	
+	private static function statement($extra = ''){
+		return 'SELECT sp.product_id, sp.shop_id, sp.created_by, sp.price,
+							p.id, p.name, p.created_by AS product_created_by,
+							(sp.price IN(SELECT spp.price
+								FROM shop_product spp
+								WHERE spp.product_id = p.id
+									AND spp.shop_id IN(SELECT pppp.shop_id
+											FROM shop_users pppp
+											WHERE pppp.users_id=:shop_users_id)
+								ORDER BY spp.price ASC
+								LIMIT 1
+							)) AS is_cheapest,
+							s.name AS shop_name
+						FROM shop_product sp
+						JOIN product p ON p.id = sp.product_id
+						JOIN shop s ON s.id = sp.shop_id
+						WHERE sp.shop_id IN(SELECT ppp.shop_id
+											FROM shop_users ppp
+											WHERE ppp.users_id=:users_id)
+						'.$extra.'
+						ORDER BY p.name ASC, s.name ASC;';
+	}
+	
+	private static function query($statement){
+		$query = DB::connection()->prepare($statement);
+		$query->bindParam(':shop_users_id', LoggedUser::id());
+		$query->bindParam(':users_id', LoggedUser::id());
+		return $query;
+	}
+	
+	private static function execute($query){
+		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$items[] = new ShopProduct($row);
+		}
+		return $items;
 	}
 }

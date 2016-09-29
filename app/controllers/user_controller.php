@@ -21,14 +21,13 @@ class UserController extends BaseController{
 	
 	public static function get($id){
 		$user = User::get_user_i_know($id);
-		if(empty($user)) Redirect::to('/search/');
+		if(!$user->exists) Redirect::to('/search');
 		View::make('profile/user.html', array('user' => $user));
 	}
 	
 	public static function check_account(){
 		if(!isset($_GET['account'])) exit();
-		$account = User::check_account($_GET['account']);
-		if(!empty($account)) echo 'ok';
+		if(User::account_exists($_GET['account'])) echo 'ok';
 		exit();
 	}
 	

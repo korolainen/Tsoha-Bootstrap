@@ -15,6 +15,7 @@
     }
     public static function back($back = null){
     	if(isset($_POST['return'])) self::direct($_POST['return']);
+    	if(isset($_GET['return'])) self::direct($_GET['return']);    	
     	if(!is_null($back)) Redirect::to($back);
     	if(isset($_SERVER['HTTP_REFERER'])) {
     		self::direct($_SERVER['HTTP_REFERER']);

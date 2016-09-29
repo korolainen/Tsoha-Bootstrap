@@ -2,7 +2,7 @@
 class Product extends BaseModel{
 	public $id, $name, $created_by, 
 			$cheapest_shop_id, $cheapest_shop, $cheapest_price, $cheapest_price_html, $shop_ids, $shops,
-			$allow_remove;
+			$created_by_me;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 		if(isset($attributes['cheapest_price'])){
@@ -122,7 +122,7 @@ class Product extends BaseModel{
 								WHERE sp.product_id = p.id
 								GROUP BY sp.product_id
 							) AS shop_ids,
-							(p.created_by=:me) AS allow_remove
+							(p.created_by=:me) AS created_by_me
 				FROM product p
 				WHERE (p.created_by=:created_by
 					OR p.id IN(SELECT slp.product_id

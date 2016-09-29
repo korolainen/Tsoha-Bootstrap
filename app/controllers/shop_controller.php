@@ -24,10 +24,10 @@ class ShopController extends BaseController{
 	}
 	public static function shop($id){
 		$shop = Shop::get($id);
-		if(empty($shop)) Redirect::to('/shops');
+		CheckPermission::shop_object($shop);
 		$products = ShopProduct::products_in_shop($id);
 		$usergroups = Usergroup::all_in_shop($id);
-		$users = Shop::users($id);
+		$users = ShopUsers::users($id);
 		View::make('shops/shop.html', 
 					array('shop' => $shop, 
 						'shop_products' => $products, 
@@ -66,15 +66,14 @@ class ShopController extends BaseController{
 	}
 	
 	public static function edit($id){
-		$shop = Shop::get($id);
-		if(empty($shop)) Redirect::to('/shops');
+		$shop_edit = Shop::get($id);
+		CheckPermission::shop_object($shop_edit);
 		CheckPost::required_redirect(array('name'), '/shops/shop/'.$id);
 		$shop = new Shop(array('name' => $_POST['name'], 'id' => $id));
 		$shop->check_errors_and_redirect('/shops/shop/'.$id.'?edit=true');
 		$shop->update();
-		
-		$shop = Shop::get($id);
-		if($shop->allow_remove=='1'){
+		$shop_edit = Shop::get($id);
+		if($shop_edit->created_by_me=='1'){
 			if(!isset($_POST['group'])) $_POST['group'] = array();
 			if(!is_array($_POST['group'])) $_POST['group'] = array();
 			$usergroups = Usergroup::all_in_shop($id);
@@ -85,14 +84,11 @@ class ShopController extends BaseController{
 				}
 			}
 		}
-		
-		
 		Redirect::back('/shops/shop/'.$id);
 	}
 	
 	public static function remove($id){
-		$shop = Shop::get($id);
-		if(empty($shop)) Redirect::to('/shops');
+		CheckPermission::shop($id);
 		Shop::remove($id);
 		Redirect::back('/shops');
 	}

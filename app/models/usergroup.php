@@ -2,7 +2,7 @@
 class Usergroup extends BaseModel{
 	public $id, $name, $created_by,
 			$users,
-			$allow_remove,
+			$created_by_me,
 			$is_in_shop;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
@@ -10,38 +10,14 @@ class Usergroup extends BaseModel{
 	}
 	
 	public static function all(){
-		$users = User::get_users_i_know();
-		$statement = 'SELECT p.id, p.name, p.created_by,
-							(SELECT array_to_string(array_agg(sp.users_id),\',\')
-								FROM all_usergroup_users sp
-								WHERE sp.usergroup_id = p.id
-							) AS user_ids,
-							(created_by=:me) AS allow_remove
-				FROM usergroup p
-				WHERE p.created_by=:created_by;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':me', LoggedUser::id());
-		$query->bindParam(':created_by', LoggedUser::id());
-		$query->execute();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$user_ids = explode(',', $row['user_ids']);
-			$group_users = array();
-			foreach ($user_ids as $user_id){
-				if(isset($users[$user_id])){
-					$group_users[] = $users[$user_id];
-				}
-			}
-			$row['users'] = $group_users;
-			$usergroup = new Usergroup($row);
-			//$usergroup->build_html();
-			$items[$row['id']] = $usergroup; 
-		}
-		return $items;
+		$statement = self::statement();
+		$query = self::query($statement);
+		return self::execute($query);
 	}
 	
+	
+	
 	public static function all_in_shop($id){
-		$users = User::get_users_i_know();
 		$statement = 'SELECT p.id, p.name, p.created_by,
 							(SELECT array_to_string(array_agg(sp.users_id),\',\')
 								FROM all_usergroup_users sp
@@ -52,108 +28,44 @@ class Usergroup extends BaseModel{
 				FROM usergroup p
 				LEFT JOIN shop_usergroup su ON p.id = su.usergroup_id AND su.shop_id=:shop_id
 				WHERE p.created_by=:created_by;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':me', LoggedUser::id());
-		$query->bindParam(':created_by', LoggedUser::id());
+		$query = self::query($statement);
 		$query->bindParam(':shop_id', $id);
-		$query->execute();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$user_ids = explode(',', $row['user_ids']);
-			$group_users = array();
-			foreach ($user_ids as $user_id){
-				if(isset($users[$user_id])){
-					$group_users[] = $users[$user_id];
-				}
-			}
-			$row['users'] = $group_users;
-			$usergroup = new Usergroup($row);
-			//$usergroup->build_html();
-			$items[$row['id']] = $usergroup; 
-		}
-		return $items;
+		return self::execute($query);
 	}
 	
 	public static function find($name){
 		$users = User::get_users_i_know();
-		$statement = 'SELECT p.id, p.name, p.created_by,
-							(SELECT array_to_string(array_agg(sp.users_id),\',\')
-								FROM all_usergroup_users sp
-								WHERE sp.usergroup_id = p.id
-							) AS user_ids,
-							(p.created_by=:me) AS allow_remove
-				FROM usergroup p
-				WHERE p.created_by=:created_by AND LOWER(p.name) LIKE :name;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':me', LoggedUser::id());
-		$query->bindParam(':created_by', LoggedUser::id());
+		$statement = self::statement('AND LOWER(p.name) LIKE :name');
+		$query = self::query($statement);
 		$name = strtolower($name).'%';
 		$query->bindParam(':name', $name);
-		$query->execute();
-		$items = array();
-		while($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$user_ids = explode(',', $row['user_ids']);
-			$group_users = array();
-			foreach ($user_ids as $user_id){
-				if(isset($users[$user_id])){
-					$group_users[] = $users[$user_id];
-				}
-			}
-			$row['users'] = $group_users;
-			$usergroup = new Usergroup($row);
-			//$usergroup->build_html();
-			$items[$row['id']] = $usergroup;
-		}
-		return $items;
+		return self::execute($query);
 	}
 	
 	public static function get($id){
 		$users = User::get_users_i_know();
-		$statement = 'SELECT p.id, p.name, p.created_by,
-							(SELECT array_to_string(array_agg(sp.users_id),\',\')
-								FROM all_usergroup_users sp
-								WHERE sp.usergroup_id = p.id
-							) AS user_ids,
-							(p.created_by=:me) AS allow_remove
-				FROM usergroup p
-				WHERE p.created_by=:created_by AND p.id=:id;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':me', LoggedUser::id());
-		$query->bindParam(':created_by', LoggedUser::id());
+		$statement = self::statement('AND p.id=:id LIMIT 1');
+		$query = self::query($statement);
 		$query->bindParam(':id', $id);
-		$query->execute();
-		$items = array();
-		if($row = $query->fetch(PDO::FETCH_ASSOC)){
-			$user_ids = explode(',', $row['user_ids']);
-			$group_users = array();
-			foreach ($user_ids as $user){
-				if(array_key_exists($user, $users)){
-					$group_users[] = $users[$user];
-				}
-			}
-			$row['users'] = $group_users;
-			return new Usergroup($row);
-		}
+		$items = self::execute($query);
+		if(count($items)>0) return current($items); 
 		return null;
 	}
 	
 	public function update(){
-		$statement = 'UPDATE usergroup
-					SET name=:name
-					WHERE id=:id
-						AND id IN(SELECT usergroup_id
-							FROM all_usergroup_users
-							WHERE users_id=:users_id);';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':name', $this->name);
-		$query->bindParam(':id', $this->id);
-		$query->bindParam(':users_id', LoggedUser::id());
-		$query->execute();
+		$query = DB::connection()->prepare('UPDATE usergroup
+											SET name=:name
+											WHERE id=:id
+												AND id IN(SELECT usergroup_id
+													FROM all_usergroup_users
+													WHERE users_id=:users_id);');
+		$query->execute(array('name'=>$this->name, 'id'=>$this->id, 'users_id' => LoggedUser::id()));
 	}
 	
 	public function save(){
-		$statement = 'INSERT INTO usergroup(name,created_by) VALUES(:name,:created_by) RETURNING id;';
-		$query = DB::connection()->prepare($statement);
+		$query = DB::connection()->prepare('INSERT INTO usergroup(name,created_by) 
+											VALUES(:name,:created_by) 
+											RETURNING id;');
 		$query->execute(array('name'=>$this->name, 'created_by'=>LoggedUser::id()));
 		$row = $query->fetch();
 		$this->id = $row['id'];
@@ -162,10 +74,51 @@ class Usergroup extends BaseModel{
 	
 	public static function remove($id){
 		$statement = 'DELETE FROM usergroup WHERE id=:id AND created_by=:created_by;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':id', $id);
-		$query->bindParam(':created_by', LoggedUser::id());
+		$query = self::_query($statement);
+		$query->execute(array('id'=>$id,'created_by'=>LoggedUser::id()));
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+
+	private static function statement($where_extra = '', $join = '', $extra_key = ''){
+		return 'SELECT p.id, p.name, p.created_by,
+							(SELECT array_to_string(array_agg(sp.users_id),\',\')
+								FROM all_usergroup_users sp
+								WHERE sp.usergroup_id = p.id
+							) AS user_ids,
+							'.$extra_key.'
+							(p.created_by=:me) AS created_by_me
+				FROM usergroup p
+				'.$join.'
+				WHERE p.created_by=:created_by
+						'.$where_extra.';';
+	}
+	
+	private static function query($statement){
+		return parent::_query($statement, array('me' => LoggedUser::id(), 'created_by' => LoggedUser::id()));
+	}
+	private static function execute($query){
+		$users = User::get_users_i_know();
 		$query->execute();
+		$items = array();
+		while($row = $query->fetch(PDO::FETCH_ASSOC)){
+			$user_ids = explode(',', $row['user_ids']);
+			$group_users = array();
+			foreach ($user_ids as $user_id){
+				if(isset($users[$user_id])){
+					$group_users[] = $users[$user_id];
+				}
+			}
+			$row['users'] = $group_users;
+			$items[$row['id']] = new Usergroup($row);
+		}
+		return $items;
 	}
 	
 }

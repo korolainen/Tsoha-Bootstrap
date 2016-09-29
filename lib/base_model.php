@@ -5,6 +5,8 @@
     protected $validators;
 
     public function __construct($attributes = null){
+    	//Mahdollistaa sen että konstruktoreihin voi syöttää suoraan fetch lauseen
+      if(is_bool($attributes)) $attributes = array();
       // Käydään assosiaatiolistan avaimet läpi
       foreach($attributes as $attribute => $value){
         // Jos avaimen niminen attribuutti on olemassa...
@@ -14,6 +16,16 @@
         }
       }
     }
+	/**
+	 * Tämä jättää mahdollisuuden sille, että muuttujia voi lisätä vielä ennen lauseen suorittamista
+	 * */
+	protected static function _query($statement, $params){
+		$query = DB::connection()->prepare($statement);
+		foreach($params as $k => $param){	
+			$query->bindParam(':'.$k, LoggedUser::id());
+		}
+		return $query;
+	}
 
     public function errors(){
       $errors = array();
@@ -56,7 +68,7 @@
     
     public function validate_string($string, $length, $field = ''){
     	$errors = array();
-    	if($string == null || strlen($string) < 3){
+    	if($string == null || strlen($string) < $length){
     		$message_start = '';
     		if(!empty($field)) $message_start = ''.$field.' on liian lyhyt. ';
     		$errors[] = $message_start.'Pituuden tulee olla vähintään '.$length.' merkki'.($length==1 ? '' : 'ä').'!';
@@ -64,9 +76,16 @@
     	return $errors;
     }
     
+    public function validation_pattern($condition, $message){
+    	$errors = array();
+    	if($condition) $errors[] = $message;
+    	return $errors;
+    }
+    /**
+     * rajoitus voisi olla myös 1-merkki.
+     * 2-merkkiä rajoitteena helpottaa virheilmoitustestausta
+     */
     public function validate_name(){
-    	//rajoitus voisi olla myös 1-merkki.
-    	//2-merkkiä rajoitteena helpottaa virheilmoitustestausta
     	return $this->validate_string($this->name, 2, 'Nimi');
     }
     

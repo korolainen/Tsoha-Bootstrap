@@ -5,13 +5,6 @@ class ProfileController extends BaseController{
 		View::make('profile/profile.html');
 	}
 	
-	public static function check_account(){
-		if(!isset($_GET['account'])) exit();
-		$account = User::check_account($_GET['account']);
-		if(!empty($account)) echo 'ok';
-		exit();
-	}
-	
 	public static function edit(){
 		CheckPost::required_redirect(array('first_name','last_name','phone'), '/search');
 		$hash = '';

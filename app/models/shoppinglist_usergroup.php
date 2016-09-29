@@ -12,17 +12,14 @@ class ShoppinglistUsergroup extends BaseModel{
 								WHERE b.shop_id = p.id
 								LIMIT 1
 							) AS usergroup_id,
-							(p.created_by=:me) AS allow_remove
+							(p.created_by=:me) AS created_by_me
 				FROM shoppinglist p
 				WHERE p.id IN(SELECT su.shop_id
 								FROM shop_users su
 								WHERE su.users_id=:users_id);';
 		$query = DB::connection()->prepare($statement);
-		$query->bindParam('my_id', LoggedUser::id());
-		$query->bindParam('my_id_c', LoggedUser::id());
-		$query->bindParam('my_id_d', LoggedUser::id());
-		$query->bindParam('usergroup_id', $usergroup_id);
-		$query->execute();
+		$query->execute(array('my_id' => LoggedUser::id(), 'my_id_c' => LoggedUser::id(), 
+							'my_id_d' => LoggedUser::id(), 'usergroup_id' => $usergroup_id));
 		$items = array();
 		while($row = $query->fetch(PDO::FETCH_ASSOC)){
 			$items[$row['id']] = new Shoppinglist($row);

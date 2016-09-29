@@ -17,6 +17,7 @@ class ShoppinglistProductController extends BaseController{
 	}
 	
 	public static function remove($shoppinglist_id, $product_id){
+		CheckPermission::shoppinglist($shoppinglist_id);
 		ShoppinglistProduct::remove($shoppinglist_id, $product_id);
 		Redirect::back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
 	}

@@ -73,7 +73,8 @@
 	                                </div>
 	                            </div>
 		                    </div>
-                        	<div class="panel panel-default panel-table {{visibility.add}}">
+                        	<div class="{{visibility.add}}">
+                        	<div class="panel panel-default panel-table">
 				              <div class="panel-body">
 				                <table class="table table-striped table-bordered table-list" id="dev-table">
 				                  <thead>
@@ -106,8 +107,9 @@
 									<li><a href="tel:{{user.phone}}">{{user.first_name}} {{user.phone}}</a></li>
 								{% endfor %}
 							</ul>
+							</div>
                         </div>
-                        	{% if shoppinglist.allow_remove %}
+                        	{% if shoppinglist.created_by_me %}
 		                        <div class="col-xs-12 {{visibility.add}}">
 			                        <div class="pull-right">
 			                        	{{forms.remove("#{base_path}/shops/remove/#{shoppinglist.id}")}}

@@ -12,6 +12,7 @@ class ProductController extends BaseController{
 	}
 	public static function product($id){
 		$product = Product::get($id);
+		CheckPermission::product_object($product);
 		$product_shops = ShopProduct::product_in_shops($id);
 		$product_not_shops = ShopProduct::product_not_in_shops($id);
 		View::make('products/product.html', array('product' => $product, 
@@ -34,6 +35,7 @@ class ProductController extends BaseController{
 	}
 	
 	public static function edit($id){
+		CheckPermission::product($id);
 		CheckPost::required_redirect(array('name'), '/products/product/'.$id);
 		$product = new Product(array('name' => $_POST['name'], 'id' => $id));
 		$product->check_errors_and_redirect('/products/product/'.$id.'?edit=true');
@@ -42,6 +44,7 @@ class ProductController extends BaseController{
 	}
 	
 	public static function remove($id){
+		CheckPermission::product($id);
 		Product::remove($id);
 		Redirect::back('/products');
 	}

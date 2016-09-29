@@ -17,7 +17,7 @@ class ShoppinglistController extends BaseController{
 	}
 	public static function shoppinglist($id){
 		$shoppinglist = Shoppinglist::get($id);
-		if(empty($shoppinglist)) Redirect::to('/shoppinglists');
+		CheckPermission::shoppinglist_object($shoppinglist);
 		$shopppinglist_products = ShoppinglistProduct::products_in_shoppinglist($id);
 		$users = Shoppinglist::users($id);
 		View::make('shoppinglists/shoppinglist.html', array('shoppinglist' => $shoppinglist, 
@@ -54,8 +54,7 @@ class ShoppinglistController extends BaseController{
 	}
 	
 	public static function edit($id){
-		$shoppinglist = Shoppinglist::get($id);
-		if(empty($shoppinglist)) Redirect::to('/shoppinglists');
+		CheckPermission::shoppinglist($id);
 		CheckPost::required_redirect(array('name','active'), '/shoppinglists/shoppinglist/'.$id);
 		$shoppinglist = new Shoppinglist(array('name' => $_POST['name'], 'active' => $_POST['active'], 'id' => $id));
 		$shoppinglist->check_errors_and_redirect('/shoppinglists/shoppinglist/'.$id.'?edit=true');
@@ -64,8 +63,7 @@ class ShoppinglistController extends BaseController{
 	}
 	
 	public static function remove($id){
-		$shoppinglist = Shoppinglist::get($id);
-		if(empty($shoppinglist)) Redirect::to('/shoppinglists');
+		CheckPermission::shoppinglist($id);
 		Shoppinglist::remove($id);
 		Redirect::back('/shoppinglists');
 	}
