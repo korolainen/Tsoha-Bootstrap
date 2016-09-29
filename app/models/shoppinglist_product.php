@@ -51,9 +51,9 @@ class ShoppinglistProduct extends BaseModel{
 	public static function get($product_id,$shoppinglist_id){
 		$statement = self::statement('AND product_id=:product_id AND shoppinglist_id=:shoppinglist_id');
 		$query = DB::connection()->prepare($statement);
-		$query->execute(array(':users_id' => LoggedUser::id(), 
-							':product_id' => $product_id, 
-							':shoppinglist_id' => $shoppinglist_id));
+		$query->execute(array('users_id' => LoggedUser::id(), 
+							'product_id' => $product_id, 
+							'shoppinglist_id' => $shoppinglist_id));
 		return $query->fetch(PDO::FETCH_ASSOC);
 	}
 
@@ -118,7 +118,7 @@ class ShoppinglistProduct extends BaseModel{
 	
 
 	private static function statement($extra = ''){
-		return 'SELECT product_id,shop_id,price,created_by,updated
+		return 'SELECT product_id,shoppinglist_id,created_by
 				FROM shoppinglist_product
 				WHERE shoppinglist_id IN(SELECT shoppinglist_id
 								FROM shoppinglist_users
