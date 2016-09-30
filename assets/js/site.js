@@ -263,10 +263,19 @@ $(document).ready(function(){
     	if(val.length>0){
     		$.ajax({url: address,
                 success: function(data) {
-                	$('#related-products').html(data);
-                	$('#related-products input.linkitem').first().prop("checked", true);
+                	if(elem.val().length){
+	                	$('#related-products').html(data);
+	                	if($('#related-products input.linkitem').length){                		
+	                		$('#related-products input.linkitem').first().prop("checked", true);
+	                	}else{
+	                		$('#nolinkitem').prop("checked", true);
+	                	}
+                	}else{
+                		$('#related-products').html('');
+                	}
                 },
                 error: function(data) {
+                	$('#related-products').html('');
                 	console.log('Epäonnistui!');
                 	console.log(data);
                 }

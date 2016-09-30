@@ -1,9 +1,9 @@
 <p class="h6">Linkitä vertailutuotteeseen:</p>
 <ul>
-  	<li><input type="radio" name="product_id" value=""> <label class="checkbox-inline">Ei linkitystä</label></li>
+  	<li><input type="radio" id="nolinkitem" name="product_id" value=""> <label class="checkbox-inline">Ei linkitystä</label></li>
 	{% for product in products %}
 		<li>
-		  <input type="radio" class="linkitem" name="product_id" value="{{product.id}}"> <label class="checkbox-inline">{{product.name}}</label>
+		  <input type="radio" class="{% if product.linkitem %}linkitem{% else %}basicitem{% endif %}" name="product_id" value="{{product.id}}"> <label class="checkbox-inline">{{product.name}}</label>
 		</li>
 	{% endfor %}
 </ul>

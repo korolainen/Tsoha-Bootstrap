@@ -2,7 +2,7 @@
 class Product extends BaseModel{
 	public $id, $name, $created_by, 
 			$cheapest_shop_id, $cheapest_shop, $cheapest_price, $cheapest_price_html, $shop_ids, $shops,
-			$created_by_me;
+			$created_by_me, $linkitem;
 	public function __construct($attributes = null){
 		parent::__construct($attributes);
 		if(isset($attributes['cheapest_price'])){
@@ -33,24 +33,40 @@ class Product extends BaseModel{
 		return self::execute_select_list(self::build_query_name(self::list_statement_name(), $name));
 	}
 	
-	public static function find_not_in_shop($name, $shop_id){
-		$query = self::build_query_name(self::list_statement_name(' AND p.id NOT IN(SELECT sss.product_id 
+	private static function find_not_pattern($statement_difference, $id, $id_key, $name){
+		//haetaan täysi vastaavuus
+		$query = self::build_query_name(self::list_statement_name($statement_difference, 'TRUE AS linkitem,'), $name);
+		$query->bindParam(':'.$id_key, $id);
+		$items = self::execute_select_list($query);
+		if(empty($items)){
+			//haetaan tuotteita jotka alkaa $name
+			$query = self::build_query_name(self::list_statement_name($statement_difference, 'TRUE AS linkitem,'), $name.'%');
+			$query->bindParam(':'.$id_key, $id);
+			$items = self::execute_select_list($query);
+			if(empty($items) && strlen($name)>1){
+				//haetaan tuotteita jotka sisältää $name
+				$query = self::build_query_name(self::list_statement_name($statement_difference, 'FALSE AS linkitem,'), '%'.$name.'%');
+				$query->bindParam(':'.$id_key, $id);
+				$items = self::execute_select_list($query);
+			}
+		}
+		return $items;
+	}
+	public static function find_not_in_shop($name, $id){
+		$statement_difference = ' AND p.id NOT IN(SELECT sss.product_id 
 												FROM shop_product sss
-												WHERE sss.shop_id=:shop_id)'), $name.'%');
-		$query->bindParam(':shop_id', $shop_id);
-		return self::execute_select_list($query);
+												WHERE sss.shop_id=:shop_id)';
+		return self::find_not_pattern($statement_difference, $id, 'shop_id', $name);
 	}
 	
 
 
 
 	public static function find_not_in_shoppinglist($name, $shoppinglist_id){
-		$query = self::build_query_name(
-							self::list_statement_name('AND p.id NOT IN(SELECT sss.product_id
+		$statement_difference = 'AND p.id NOT IN(SELECT sss.product_id
 												FROM shoppinglist_product sss
-												WHERE sss.shoppinglist_id=:shoppinglist_id)'), $name.'%');
-		$query->bindParam(':shoppinglist_id', $shoppinglist_id);
-		return self::execute_select_list($query);
+												WHERE sss.shoppinglist_id=:shoppinglist_id)';
+		return self::find_not_pattern($statement_difference, $id, 'shoppinglist_id', $name);
 	}
 
 
@@ -102,7 +118,7 @@ class Product extends BaseModel{
 	
 	
 	
-	private static function list_statement($extra = ''){
+	private static function list_statement($extra = '', $extra_param = ''){
 		return 'SELECT p.id, p.name, p.created_by,
 							(SELECT spp.shop_id
 								FROM shop_product spp
@@ -122,6 +138,7 @@ class Product extends BaseModel{
 								WHERE sp.product_id = p.id
 								GROUP BY sp.product_id
 							) AS shop_ids,
+							'.$extra_param.'
 							(p.created_by=:me) AS created_by_me
 				FROM product p
 				WHERE (p.created_by=:created_by
@@ -141,8 +158,8 @@ class Product extends BaseModel{
 								)) '.$extra.'
 				ORDER BY p.name ASC;';
 	}
-	private static function list_statement_name($extra = ''){
-		return self::list_statement(' AND LOWER(p.name) LIKE :name '.$extra);
+	private static function list_statement_name($extra = '', $extra_param = ''){
+		return self::list_statement(' AND LOWER(p.name) LIKE :name '.$extra, $extra_param);
 	}
 
 	private static function build_query($statement){

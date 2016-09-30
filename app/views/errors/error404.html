@@ -1,0 +1,16 @@
+{% extends "public.html" %}
+{% block content %}	
+{% import "macros/messages.html" as messages %}
+	<div class="logo">Hups!<br /></div>
+	<!-- Main Form -->
+	<div class="login-form-1">
+		{% for error_message in errors %}
+			{{messages.error("#{error_message}")}}
+		{% endfor %}
+		
+			{{messages.error("Sivu ei löydy!")}}
+			<div class="etc-login-form">
+				<p><a href="javascript:window.history.back();">Palaa takaisin</a></p>
+			</div>
+	</div>
+{% endblock %}

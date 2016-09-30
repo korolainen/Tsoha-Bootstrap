@@ -21,7 +21,9 @@
   		FrontController::logout();
   	});
 
-
+	$routes->notFound(function () {
+		FrontController::error404();
+	});
 	
 	function check_logged_in(){
 		BaseController::check_logged_in();
@@ -203,3 +205,51 @@
 	$routes->get('/license', function() {
   		InfoController::license();
   	});
+	
+	
+	
+	
+	
+	/**
+	 * Nämä on sitä varten, että yhteys on katkennut post-vaiheessa, 
+	 * ja käyttäjä yrittää sivulle menemistä uudelleen
+	 * */
+	$routes->get('/login', function() {
+		ProfileController::login();
+	});
+	$routes->get('/signup/new', function() {
+		Redirect::back('/signup');
+	});
+	$routes->get('/profile/edit', 'check_logged_in', function() {
+		Redirect::back('/profile');
+	});
+	$routes->get('/groups/edit/:id', 'check_logged_in', function($id) {
+		Redirect::back('/groups/group/'.$id);
+	});
+	$routes->get('/shops/edit/:id', 'check_logged_in', function($id) {
+		Redirect::back('/shops/shop/'.$id);
+	});
+	$routes->get('/shoppinglists/edit/:id', 'check_logged_in', function($id) {
+		Redirect::back('/shoppinglists/shoppinglist/'.$id);
+	});
+	$routes->get('/shopproducts/edit/:shop_id/:product_id', 'check_logged_in', function($shop_id, $product_id) {
+		Redirect::back('/shops/shop/'.$shop_id);
+	});
+	$routes->get('/shopproducts/new/:shop_id', 'check_logged_in', function($shop_id) {
+		Redirect::back('/shops/shop/'.$shop_id);
+	});
+	$routes->get('/productshop/new/:product_id', 'check_logged_in', function($product_id) {
+		Redirect::back('/products/product/'.$product_id);
+	});
+	$routes->get('/shoppinglistproducts/edit/:shop_id/:product_id', 'check_logged_in', function($shoppinglist_id, $product_id) {
+		Redirect::back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
+	});
+	$routes->get('/shoppinglistproducts/new/:shop_id', 'check_logged_in', function($shoppinglist_id) {
+		Redirect::back('/shoppinglists/shoppinglist/'.$shoppinglist_id);
+	});
+	$routes->get('/usergroupusers/new/:group_id', 'check_logged_in', function($group_id) {
+		Redirect::back('/groups/group/'.$group_id);
+	});
+	$routes->get('/products/edit/:id', 'check_logged_in', function($id) {
+		Redirect::back('/products/product/'.$id);
+	});

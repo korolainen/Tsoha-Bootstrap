@@ -20,6 +20,12 @@ class FrontController extends BaseController{
 		View::make('login/signup.html', array('errors' => Messages::errors(),
 												'attributes' => Session::pop('attributes')));
 	}
+	
+
+	public static function error404(){
+		//errors attribuutti mahdollista jakokehitystä varten
+		View::make('errors/error404.html', array('errors' => Messages::errors()));
+	}
     
 
 }
