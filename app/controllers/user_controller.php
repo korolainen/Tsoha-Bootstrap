@@ -1,7 +1,7 @@
 <?php
 class UserController extends BaseController{
 
-	public function create_new(){
+	public static function create_new(){
 		CheckPost::required_redirect(array('first_name','last_name','account','password','password_check','phone'), '/signup');
 		$hash = Security::hash_with_salt($_POST['password']); 
 		$user = new User(array('account' => $_POST['account'],
