@@ -19,6 +19,7 @@ sql/create_tables.sql
 
 ##Huomiotavaa
 PHP:n tulee tukea postgre tietokantaa PDO:n kanssa
+Jos ohjelma asennetaan palvelimen juureen, niin index.php tiedostossa oleva BASE_PATH tulee määritellä: define('BASE_PATH', '');
 
 
 # Käyttäjät
