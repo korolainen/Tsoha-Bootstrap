@@ -1,4 +1,3 @@
 RewriteEngine On
-RewriteRule ^(shoppinglists|groups|shops)/(.*)$ index\.php?no=$2 [QSA,L]
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^ index.php [QSA,L]
