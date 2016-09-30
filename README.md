@@ -1,5 +1,24 @@
 # Tietokantasovelluksen esittelysivu
 
+## Asennusohje
+# Lataa composer (https://getcomposer.org/download/)
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php -r "if (hash_file('SHA384', 'composer-setup.php') === 'e115a8dc7871f15d853148a7fbac7da27d6c0030b848d9b3dc09e2a0388afed865e6a3d6b3c0fad45c48e2b5fc1196ae') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+
+#Asenna Composer
+php composer.phar install
+
+#Konfiguroi tietokanta
+nano config/database.php
+
+#Luo tietokantataulut
+sql/create_tables.sql
+
+
+## Käyttäjät
+
 Käyttäjä 1:
 * Käyttäjätunnus: tsoha
 * Salasana: tsoha
@@ -13,7 +32,7 @@ Käyttäjä 3:
 * Salasana: tsoha
 
 
-Yleisiä linkkejä:
+## Yleisiä linkkejä:
 
 * http://valkorol.users.cs.helsinki.fi/tsoha/
 * http://valkorol.users.cs.helsinki.fi/tsoha/signup
@@ -39,7 +58,6 @@ Yleisiä linkkejä:
 * http://valkorol.users.cs.helsinki.fi/tsoha/shoppinglists/shoppinglist/1?add=true
 * http://valkorol.users.cs.helsinki.fi/tsoha/shops/shop/1?add=true
 * http://valkorol.users.cs.helsinki.fi/tsoha/groups/group/1?add=true
-
 * http://valkorol.users.cs.helsinki.fi/tsoha/profile
 * https://github.com/korolainen/Tsoha-Bootstrap/blob/master/doc/dokumentaatio.pdf
 * https://github.com/korolainen/Tsoha-Bootstrap
