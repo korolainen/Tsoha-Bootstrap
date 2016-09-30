@@ -62,7 +62,7 @@ class Product extends BaseModel{
 
 
 
-	public static function find_not_in_shoppinglist($name, $shoppinglist_id){
+	public static function find_not_in_shoppinglist($name, $id){
 		$statement_difference = 'AND p.id NOT IN(SELECT sss.product_id
 												FROM shoppinglist_product sss
 												WHERE sss.shoppinglist_id=:shoppinglist_id)';

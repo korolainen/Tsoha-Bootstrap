@@ -154,11 +154,14 @@ $(document).ready(function(){
     
     $('button#add-item-button').click(function(){
     	var id = $(this).attr('data-focus');
-        $(".add-toggle-hidden").slideToggle("fast", "swing", function(){
+    	$(".add-toggle-hidden").show();
+    	$(".add-toggle-block").hide();
+    	$(id).focus();
+        /*$(".add-toggle-hidden").slideToggle("fast", "swing", function(){
         	$(".add-toggle-block").slideToggle("fast", "swing", function(){
         		$(id).focus();
         	});
-        });
+        });*/
     });
     
     $('input.new-item-focus').focus();
@@ -317,5 +320,12 @@ $(document).ready(function(){
     		}
     	});
     });
-    
+
+    // http://stackoverflow.com/questions/3432656/scroll-to-a-div-using-jquery
+
+    $('#item-search').focus(function(e){ 
+    	$('html, body').animate({
+            scrollTop: $("#"+$('#item-search').attr('id')).offset().top - 80
+        }, 400);
+    });
 });
