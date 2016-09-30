@@ -1,8 +1,8 @@
 
 
-INSERT INTO users(account, first_name, last_name, phone, hash) VALUES('tsoha', 'Tsoha', 'Käyttäjä', '0445651000', 'd8df40b23bce40c31cdff73f4fd694b33h589l4ik6ho9689rtx78vdi4r497tnls8ti22sma958yqd9o7hyufa66nk940e1a33fa8b09ef49cdbac3a8c6f908');
-INSERT INTO users(account, first_name, last_name, phone, hash) VALUES('valtteri.korolainen@helsinki.fi', 'Valtteri', 'Korolainen', '', 'd8df40b23bce40c31cdff73f4fd694b33h589l4ik6ho9689rtx78vdi4r497tnls8ti22sma958yqd9o7hyufa66nk940e1a33fa8b09ef49cdbac3a8c6f908');
-INSERT INTO users(account, first_name, last_name, phone, hash) VALUES('otheruser@korolainen.fi', 'Other', 'User', '', 'd8df40b23bce40c31cdff73f4fd694b33h589l4ik6ho9689rtx78vdi4r497tnls8ti22sma958yqd9o7hyufa66nk940e1a33fa8b09ef49cdbac3a8c6f908');
+INSERT INTO users(account, first_name, last_name, phone, hash) VALUES('tsoha', 'Tsoha', 'Käyttäjä', '040XXXXXXX', 'd8df40b23bce40c31cdff73f4fd694b33h589l4ik6ho9689rtx78vdi4r497tnls8ti22sma958yqd9o7hyufa66nk940e1a33fa8b09ef49cdbac3a8c6f908');
+INSERT INTO users(account, first_name, last_name, phone, hash) VALUES('tsoha_kaveri', 'Valtteri', 'Korolainen', '0444YYYYYYY', 'd8df40b23bce40c31cdff73f4fd694b33h589l4ik6ho9689rtx78vdi4r497tnls8ti22sma958yqd9o7hyufa66nk940e1a33fa8b09ef49cdbac3a8c6f908');
+INSERT INTO users(account, first_name, last_name, phone, hash) VALUES('tsoha_tuntematon', 'Other', 'User', '', 'd8df40b23bce40c31cdff73f4fd694b33h589l4ik6ho9689rtx78vdi4r497tnls8ti22sma958yqd9o7hyufa66nk940e1a33fa8b09ef49cdbac3a8c6f908');
 
 INSERT INTO usergroup(name, created_by) VALUES('Perhe', 1);
 

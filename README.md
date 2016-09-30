@@ -17,6 +17,10 @@ nano config/database.php
 sql/create_tables.sql
 
 
+##Huomiotavaa
+PHP:n tulee tukea postgre tietokantaa PDO:n kanssa
+
+
 # Käyttäjät
 
 Käyttäjä 1:
@@ -24,11 +28,11 @@ Käyttäjä 1:
 * Salasana: tsoha
 
 Käyttäjä 2:
-* Käyttäjätunnus: valtteri.korolainen@helsinki.fi
+* Käyttäjätunnus: tsoha_kaveri
 * Salasana: tsoha
 
 Käyttäjä 3:
-* Käyttäjätunnus: otheruser@korolainen.fi
+* Käyttäjätunnus: tsoha_tuntematon
 * Salasana: tsoha
 
 
