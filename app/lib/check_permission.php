@@ -18,16 +18,16 @@ class CheckPermission{
 	
 
 	public static function product_object($object){
-		self::redirect($object, '/groups');
+		self::redirect($object, '/products');
 	}
 	public static function group_object($object){
 		self::redirect($object, '/groups');
 	}
 	public static function shop_object($object){
-		self::redirect($object, '/groups');
+		self::redirect($object, '/shops');
 	}
 	public static function shoppinglist_object($object){
-		self::redirect($object, '/groups');
+		self::redirect($object, '/shoppinglists');
 	}
 	
 }
