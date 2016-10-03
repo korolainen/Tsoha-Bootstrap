@@ -13,9 +13,10 @@
   }else{
     $base_folder = $explode[1];
   }
-
+	$base = '/' . $base_folder;
+	if(empty($base_folder)) $base = '';
   // Määritetään sovelluksen juuripolulle vakio BASE_PATH
-  define('BASE_PATH', '/' . $base_folder);
+  define('BASE_PATH', $base);
 
   // Luodaan uusi tai palautetaan olemassaoleva sessio
   if(session_id() == '') {
