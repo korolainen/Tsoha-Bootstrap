@@ -328,4 +328,18 @@ $(document).ready(function(){
             scrollTop: $("#"+$('#item-search').attr('id')).offset().top - 80
         }, 400);
     });
+    
+
+    $('.toggle-disabled').click(function(){
+    	var attr = $(this).attr('data-disabled');
+    	if(!(typeof attr !== typeof undefined && attr !== false)){
+    		$(this).attr('data-disabled',"show");
+    		$('.btn-danger').prop('disabled', false);
+    		$('.toggle-disabled .fa-lock').removeClass('fa-lock').addClass('fa-unlock');
+	    }else{
+	    	$(this).removeAttr('data-disabled');
+	    	$('.btn-danger').prop('disabled', true);
+	    	$('.toggle-disabled .fa-unlock').removeClass('fa-unlock').addClass('fa-lock');
+	    }
+    });
 });

@@ -1,5 +1,5 @@
 {% macro remove(action) %}
-	<button type="submit" class="btn btn-danger" onclick="window.location.href='{{action}}';"><em class="fa fa-trash"></em></button>
+	<button type="submit" disabled="disabled" class="btn btn-danger" onclick="window.location.href='{{action}}';"><em class="fa fa-trash"></em></button>
 {% endmacro %}
 
 {% macro filter() %}

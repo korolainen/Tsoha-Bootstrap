@@ -90,7 +90,7 @@
 				                        <th>Tuote</th>
 				                        <th class="narrow-column"><i class="fa fa-thumbs-o-up"></i></th>
 				                        <th>Hinta</th>
-				                        <th></th>
+				                        <th><button class="btn btn-default toggle-disabled" type="button"><em class="fa fa-lock"></em></button></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
@@ -109,7 +109,7 @@
 											</td>
 				                            <td><input type="text" class="price-input form-control input-lg inline-edit serialize-value" name="price" value="{{shop_product.price_html}}" /></td>
 				                            <td align="center">
-				                              	<button class="btn btn-danger remove-inline-button" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/remove/{{shop.id}}/{{shop_product.product_id}}"><em class="fa fa-trash"></em></button>
+				                              	<button class="btn btn-danger remove-inline-button" disabled="disabled" type="button" data-loader="{{base_path}}/assets/img/ajax-loader.gif" data-action="{{base_path}}/shopproducts/remove/{{shop.id}}/{{shop_product.product_id}}"><em class="fa fa-trash"></em></button>
 				                            </td>
 				                          </tr>
 										{% endfor %}

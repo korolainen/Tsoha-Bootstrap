@@ -16,7 +16,7 @@
 				                    <tr>
 				                        <th>Nimi</th>
 				                        <th>Voimassa</th>
-				                        <th class="hidden-xs"><em class="fa fa-cog"></em></th>
+				                        <th class="hidden-xs"><button class="btn btn-default toggle-disabled" type="button"><em class="fa fa-lock"></em></button></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
@@ -26,7 +26,9 @@
 				                            <td>{{shoppinglist.active_date}}</td>
 				                            <td class="hidden-xs" align="center">
 				                              <a href="{{base_path}}/shoppinglists/shoppinglist/{{shoppinglist.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
-				                              {{forms.remove("#{base_path}/shoppinglists/remove/#{shoppinglist.id}")}}
+				                              {% if shoppinglist.created_by_me %}
+				                              	{{forms.remove("#{base_path}/shoppinglists/remove/#{shoppinglist.id}")}}
+				                              {% endif %}
 				                            </td>
 				                          </tr>
 										{% endfor %}

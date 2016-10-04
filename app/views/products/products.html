@@ -16,7 +16,7 @@
 				                        <th>Tuote</th>
 				                        <th>Halvin kauppa</th>
 				                        <th>Löytyy kaupoista</th>
-				                        <th class="hidden-xs"><em class="fa fa-cog"></em></th>
+				                        <th class="hidden-xs"><button class="btn btn-default toggle-disabled" type="button"><em class="fa fa-lock"></em></button></th>
 				                    </tr> 
 				                  </thead>
 				                  <tbody>
@@ -34,7 +34,7 @@
 				                            <td class="hidden-xs" align="center">
 				                              <a href="{{base_path}}/products/product/{{product.id}}?edit=true" class="btn btn-default"><em class="fa fa-pencil"></em></a>
 				                              {% if product.created_by_me %}
-				                              {{forms.remove("#{base_path}/products/remove/#{product.id}")}}
+				                              	{{forms.remove("#{base_path}/products/remove/#{product.id}")}}
 				                              {% endif %}
 				                            </td>
 				                          </tr>
