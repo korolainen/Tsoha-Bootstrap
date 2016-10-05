@@ -1,17 +1,21 @@
 <?php
 
 class LoggedUser{
-    const SESSION_KEY = 'shopuserkey';
+    const SESSION_USER_KEY = 'shopuserkey';
+    const SESSION_USER_ID = 'shopuserid';
     private static $user_secure_key = '';
+    private static $user_secure_id = '';
     private static $user_id = 0;
     private static $is_logged = false;
     
 	public static function init_login(){
-		self::$user_secure_key = Session::get(self::SESSION_KEY);
+		self::$user_secure_key = Session::get(self::SESSION_USER_KEY);
+		self::$user_secure_id = Session::get(self::SESSION_USER_ID);
 		if(empty(self::$user_secure_key)){
-			self::$user_secure_key = Cookies::get(self::SESSION_KEY);
+			self::$user_secure_key = Cookies::get(self::SESSION_USER_KEY);
+			self::$user_secure_id = Cookies::get(self::SESSION_USER_ID);
 		}
-		self::set_user_data(Me::get_by_secure_key(self::$user_secure_key));
+		self::set_user_data(Me::get_by_secure_key(self::$user_secure_id, self::$user_secure_key));
 	}
 	
 	public static function id(){
@@ -22,27 +26,34 @@ class LoggedUser{
 		return self::$is_logged;
 	}
 	
+
+	private static function set_user_session($secure_key, $id){
+		Session::set(self::SESSION_USER_KEY, $secure_key);
+		Session::set(self::SESSION_USER_ID, $id);
+	}
+	
+
+	private static function set_user_cookie($secure_key, $id){
+		Cookies::set(self::SESSION_USER_KEY, $secure_key);
+		Cookies::set(self::SESSION_USER_ID, $id);
+	}
+	
     public static function set_user_data($user){
-    	if($user->exists){
-    		$secure_key = self::build_secure_key($user->hash, $user->id);
-			Session::set(self::SESSION_KEY, $secure_key);
+    	if(!empty($user)){
+    		$secure_key = Security::build_session_key($user->hash, $user->id);
+			self::set_user_session($secure_key, $user->id);
 			self::$user_id = intval($user->id);
 			self::$is_logged = true;
     	}
     }
-	
-    private static function build_secure_key($hash, $id){
-    	$salt = substr($hash, 32);
-    	return md5($id.$salt);
-    }
     
     public static function login($username, $password, $remember_me = false){
         $user = User::get_by_account_and_pass($username, $password);
-        if(!$user->exists) return false;
-        $secure_key = self::build_secure_key($user->hash, $user->id);
-        Session::set(self::SESSION_KEY, $secure_key);
+        if(empty($user)) return false;
+        $secure_key = Security::build_session_key($user->hash, $user->id);
+        self::set_user_session($secure_key, $user->id);
         if($remember_me){
-        	Cookies::set(self::SESSION_KEY, $secure_key);
+        	self::set_user_cookie($secure_key, $user->id);
         }
         return true;
     }

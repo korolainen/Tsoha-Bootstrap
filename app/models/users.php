@@ -104,18 +104,21 @@ class User extends UserModel{
 	/**
 	 * https://crackstation.net/hashing-security.htm
 	 * Salasanan tallentaminen salt:n avulla
+	 * 
+	 * PHP crypt parempi
 	 * */
 	public static function get_by_account_and_pass($username, $password){
-		$statement = 'SELECT id, hash
+		$query = DB::connection()->prepare('SELECT id, hash
                     	FROM users
                     	WHERE account LIKE :account 
-                    		AND SUBSTRING(hash, 1, 32)=MD5(:password || SUBSTRING(hash, 33)) 
-				            LIMIT 1;';
-		$query = DB::connection()->prepare($statement);
-		$query->bindParam(':account', $username);
-		$query->bindParam(':password', $password);
-		$query->execute();
-		return new User($query->fetch(PDO::FETCH_ASSOC));
+				        LIMIT 1;');
+		$query->execute(array('account' => $username));
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			if(Security::password_verify($password, $row['hash'])){
+				return new User($row);
+			}
+		}
+		return null;
 	}
 	
 	
@@ -181,12 +184,18 @@ class Me extends UserModel{
 		$query->execute(array('id' => LoggedUser::id()));
 	}
 	
-	public static function get_by_secure_key($key){
+	public static function get_by_secure_key($account_id, $key){
+		if(empty($account_id)) return null;
 		$query = DB::connection()->prepare('SELECT id, account, first_name, last_name, phone, hash
 											FROM users
-											WHERE MD5(id::text || SUBSTRING(hash, 33)) LIKE :key
+											WHERE id=:id 
 											LIMIT 1;');
-		$query->execute(array('key' => $key));
-		return new Me($query->fetch(PDO::FETCH_ASSOC));
+		$query->execute(array('id' => $account_id));
+		if($row = $query->fetch(PDO::FETCH_ASSOC)){
+			if(Security::compare_session_key($row['hash'], $key)){
+				return new Me($row);
+			}
+		}
+		return null;
 	}
 }
