@@ -66,16 +66,15 @@
 		                                
 			                                    <div class="sub-title">Tuote</div>
 			                                    <div>
-			                                        <input type="text" class="form-control" id="new-product-name" name="name" value="" />
+			                                        <input type="text" class="form-control {% if visibility.is_add %}run-new-product-name{% endif %}" id="new-product-name" name="productname" value="{{attributes.productname}}" />
 			                                    </div>
 		                                		<div id="related-products" data-action="{{base_path}}/shops/link/{{shop.id}}"></div>
 			                                    <div class="sub-title">Hinta</div>
 			                                    <div>
-			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />
+			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="{{attributes.price}}" />
 			                                    </div>
 		                                    </div>
 		                                    {{forms.save_cancel_target("#{here_no_params}")}}
-	                                    
 	                                	</form>
 	                                </div>
 	                            </div>

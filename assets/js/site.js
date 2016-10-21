@@ -310,12 +310,23 @@ $(document).ready(function(){
 	    	$('#related-products').html('');
 	    }
 	});
+    $('.run-new-product-name').each(function(){
+    	link_product($(this));
+    });
     
     $('#productfilter #add-item-button').mouseup(function(){
     	var starts = $('#productfilter #item-search').val().toLowerCase();
     	$('#shoppriceselect option').each(function(){
     		var option = $(this).text().toLowerCase();
     		if(option.startsWith(starts)){
+    			$(this).prop('selected', true);
+    		}
+    	});
+    });
+    $('.run-add-shop').each(function(){
+    	var shopid = $(this).attr('data-shopid');
+    	$('#shoppriceselect option').each(function(){
+    		if(shopid==$(this).attr('value')){
     			$(this).prop('selected', true);
     		}
     	});

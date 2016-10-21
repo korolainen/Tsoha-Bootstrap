@@ -90,7 +90,7 @@
     }
     
     public function validate_price(){
-    	if(empty($this->price)) return array('Hintatieto on pakollinen!');
+    	if(empty($this->price)) return array('Hintatieto on virheellinen!');
     	return $this->validate_float($this->price, 'Hinta');
     }
     

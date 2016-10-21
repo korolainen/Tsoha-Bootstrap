@@ -10,7 +10,6 @@
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="card">
-                                
                                 <div class="card-header">
 									<div class=".col-xs-9 .col-md-7">
 								    	<div class="card-title">
@@ -21,11 +20,9 @@
 								    	{{headers.edit_button()}}  
 								    {% endif %}    
 								</div>
-								
                                 <div class="card-body {{visibility.edit}}">
                                 	<form action="{{base_path}}/products/edit/{{product.id}}" method="post">
 	                                	<div class="form-group">
-	                                
 		                                    <div class="sub-title">Nimi</div>
 		                                    <div>
 		                                        <input type="text" class="form-control" name="name" value="{{product.name}}" />
@@ -58,7 +55,7 @@
 		                                
 			                                    <div class="sub-title">Kauppa</div>
 			                                    <div>
-													  <select id="shoppriceselect" class="selectpicker" data-style="btn-info" name="shop_id">
+													  <select id="shoppriceselect"{% if visibility.is_add %} data-shopid="{{attributes.shop_id}}"{% endif %} class="selectpicker{% if visibility.is_add %} run-add-shop{% endif %}" data-style="btn-info" name="shop_id">
 				                  						  {% for notshop in product_not_shops %}
 													      	<option value="{{notshop.shop_id}}">{{notshop.name}}</option>
 													      {% endfor %}
@@ -66,7 +63,7 @@
 			                                    </div>
 			                                    <div class="sub-title">Hinta</div>
 			                                    <div>
-			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="" />
+			                                        <input type="text" class="form-control" id="new-product-price" name="price" value="{{attributes.price}}" />
 			                                    </div>
 			                                    <input type="hidden" name="return" value="{{here_no_params}}?add=true" />
 		                                    </div>

@@ -19,7 +19,8 @@ class ProductController extends BaseController{
 													'visibility' => CssClass::visibility(), 
 													'product_shops' => $product_shops, 
 													'product_not_shops' => $product_not_shops,
-													'errors' => Messages::errors()));
+													'errors' => Messages::errors(),
+													'attributes' => Session::pop('attributes')));
 	}
 	
 	public static function create_new_form(){

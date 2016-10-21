@@ -21,12 +21,12 @@ class ShopProductController extends BaseController{
 	}
 	
 	public static function add($shop_id){
-		CheckPost::required_redirect(array('name'), '/shops/shop/'.$shop_id);
+		CheckPost::required_redirect(array('productname'), '/shops/shop/'.$shop_id);
 		$price = CheckData::text_to_float($_POST['price']);
 		$product_id = CheckData::post_by_key('product_id');
 		$product = Product::get($product_id);
 		if(empty($product)){
-			$product = new Product(array('name' => $_POST['name']));
+			$product = new Product(array('name' => $_POST['productname']));
 			$product->check_errors_and_redirect();
 			$product_id = $product->save();
 		}
